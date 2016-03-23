@@ -1,10 +1,377 @@
-<!DOCTYPE html>
-<html lang="en">
+<DOCTYPE html>
+<html lang="cn">
 <head>
     <meta charset="UTF-8">
-    <title>superframe </title>
+    <title>PS Superframe</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            color: #212121;
+            background: #fafafa;
+        }
+        ul,ol,li {
+            list-style: none;
+        }
+        #header {
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: #039BE5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+            transition: all 0.3s;
+        }
+        #header #logo {
+            font-size: 22px;
+            line-height: 64px;
+            margin-left: 20px;
+            float: left;
+        }
+        #header #logo a {
+            color: #fff;
+            text-decoration: none;
+        }
+        #header #download {
+            float: right;
+            margin: 14px 20px;
+        }
+        #header #download a {
+            display: block;
+            width: 140px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            text-decoration: none;
+            background: #C9EEFF;
+            color: #123D9F;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.6s;
+        }
+        #header #download a:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 20px #fff;
+        }
+        #container {
+            width: 100%;
+            min-width: 1024px;
+            margin: 0 auto;
+            padding-top: 100px;
+            overflow: hidden;
+        }
+        #con-doc {
+            margin: 0 410px 30px 170px;
+            padding: 0 30px;
+        }
+        #con-doc h1 {
+            font-family: Helvetica, Arial, "Microsoft Yahei", "Helvetica Neue", sans-serif;
+            color: #039BE5;
+        }
+        #con-menu {
+            width: 170px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #fff;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        #con-menu * {
+            transition: all 0.3s;
+        }
+        #con-menu ul {
+            width: 170px;
+            margin: 80px 0 50px 0;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        #con-menu ul li {
+            padding: 8px 16px;
+        }
+        #con-menu ul li:hover {
+            background: rgba(0, 0, 0, 0.1);
+            padding-left: 25px; 
+        }
+        #con-menu ul a {
+            color: #666;
+            text-decoration: none;
+            display: block;
+        }
+        #con-menu ul li.selected {
+            padding-left: 25px;
+            background: #FAFAFA;
+            border-right: 5px solid #039BE5;
+        }
+        #con-menu ul li.selected a {
+            color: #0894ec;
+        }
+        /* 滚动条 start */
+        #con-menu::-webkit-scrollbar {
+            width: 0;
+        }
+        #con-menu:hover::-webkit-scrollbar {
+            width: 4px;
+        }
+        #con-menu::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+        #con-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        /* 滚动条 end */
+        #con-example {
+            position: relative;
+            width: 410px;
+            height: 850px;
+            float: right;
+        }
+        #device {
+            width: 400px;
+            height: 813px;
+            background: url("./assets/device-sprite.png") 0 0 no-repeat;
+            background-size: 300%;
+        }
+        #device #device-content {
+            position: absolute;
+            top: 119px;
+            left: 38px;
+            width: 324px;
+            height: 575px;
+            overflow: hidden;
+        }
+        #demo-link {
+            position: absolute;
+            top: 87px;
+            left: 38px;
+        }
+        #demo-link a {
+            display: block;
+            width: 324px;
+            line-height: 30px;
+            text-align: center;
+            text-decoration: none;
+            background: #03a9f4;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+        #demo-qrcode {
+            display: none;
+            position: absolute;
+            top: 32px;
+            width: 324px;
+            height: 324px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 0px 10px rgba(0, 0, 0, 0.5);
+        }
+        #demo-qrcode canvas {
+            margin: 12px;
+        }
+        #footer {
+            width: 100%;
+            color: #fff;
+            font-size: 14px;
+            padding: 20px 0;
+            background: #333;
+        }
+        #footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+        #footer a:hover {
+            text-decoration: underline;
+        }
+        #footer p {
+            margin-left: 200px;
+        }
+    </style>
+    <link media="all" rel="stylesheet" href="./assets/pretty.css" type="text/css">
+    <link media="all" rel="stylesheet" href="./assets/tomorrow.css" type="text/css">
+    <script src="./assets/jquery.js"></script>
+    <script src="./assets/jquery.qrcode.min.js"></script>
+    <script src="./assets/marked.js"></script>
+    <script src="./assets/highlight.min.js"></script>
 </head>
+
 <body>
-    hello superframe
+    <div id="header">
+        <div id="logo"><a href="./">PS Superframe</a></div>
+        <div id="download"><a href="http://gitlab.baidu.com/psfe/superframe">view on gitlab</a></div>
+    </div>
+
+    <div id="container">
+        <!-- 左侧菜单 -->
+        <div id="con-menu">
+            <ul><!-- 导航 file:menu.html --></ul>
+        </div>
+        <!-- 右侧示例 -->
+        <div id="con-example">
+            <div id="device">
+                <div id="device-content">
+                    <iframe id="demo_container" width="324" height="575" frameborder="0"></iframe>
+                </div>
+                <div id="demo-link">
+                    <div id="demo-qrcode"></div>
+                    <a href="#" target="_blank">新窗口打开示例</a>
+                </div>
+            </div>
+        </div>
+        <!-- mardown文档 -->
+        <div id="con-doc" class="markdown-body">
+            <!-- markdown文档内容 -->
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2016 Baidu PSFE - <a href="http://gitlab.baidu.com/groups/psfe" target="_blank">GitLab</a></p>
+        <p><a href="http://sfe.baidu.com/" target="_blank">PSDoc</a> / <a href="http://speedup.baidu.com/" target="_blank">SpeedUp</a> / <a href="http://webb.baidu.com/" target="_blank">Webb</a></p>
+    </div>
+
+    <script type="text/javascript">
+        // 加载导航html
+        $('#con-menu ul').load('./doc/menu.html', function() {
+            // 导航点击
+            $('#con-menu li').each(function() {
+                var $this = $(this);
+                var uiType = $this.attr('data-type');
+                $this.on('click', function() {
+                    renderUI(uiType);
+                });
+            });
+            // 刷新默认加载
+            defaultLoad();
+        });
+
+        function defaultLoad() {
+            var hash = window.location.hash.replace('#', '');
+            if (hash.length > 0) {
+                renderUI(hash); 
+            } else {
+                $.get('./readme.md', function(doc) {
+                    $('#con-doc').html(marked(doc));
+                });
+            }
+        }
+
+        function renderUI(type) {
+            var url = './doc/' + type + '/readme.md';
+            //set demo src
+            /*
+            var iframeUrl = './build/components/' + type + '/demo.html';
+            $('#demo_container').attr('src', iframeUrl);
+            $('#demo-link a').attr('href', iframeUrl);
+            $('#demo-qrcode').empty().qrcode({
+                width: 300,
+                height: 300,
+                text: location.href.replace(location.hash, '') + iframeUrl.replace('./', '')
+                });
+            */
+            // load markedown doc src
+            // 直接使用错误hash导致未找到文档文件时
+            $.ajax({
+                url: url,
+                dataType: 'text',
+                // 不使用缓存可以让每次请求命中最新文件内容
+                cache: false,
+                success: function (doc) {
+                    scrollTo(0, 0);
+                    $('#con-doc').html(marked(doc)).css({
+                        'position': 'relative',
+                        'left': '-50px',
+                        'opacity': '0'
+                    }).animate({
+                        'left': '0',
+                        'opacity': '1'
+                    }, 260, 'swing');
+                },
+                error: function () {
+                    scrollTo(0, 0);
+                    var doc = [];
+                    doc.push('# 组件未找到');
+                    doc.push('> 如有问题请联系 yangfan16@baidu.com');
+                    $('#con-doc').html(marked(doc.join('\n')));
+                }
+            });
+
+            // 切换导航hover状态
+            $('#con-menu').find('.selected').removeClass('selected');
+            $('#con-menu').find('li[data-type="' + type + '"]').addClass('selected');
+        }
+
+        // 如果demo中iframe出现滚动条，则demo中滚动时阻止父页面滚动
+        $('#demo_container').load(function() {
+            if ($('#demo_container').contents().find('body').height() > $('#demo_container').height()) {
+                $('#device-content').on('mousewheel', function(e) {
+                    e.preventDefault();
+                });
+            } else {
+                $('#device-content').off('mousewheel');
+            };
+        });
+        
+        // 处理demo二维码显示隐藏
+        $('#demo-link a').on('mouseover', function() {
+            $('#demo-qrcode').show();
+        }).on('mouseout', function() {
+            $('#demo-qrcode').hide();
+        });
+
+
+        var renderer = new marked.Renderer();
+        /*
+         * 修改渲染head时候的id属性
+         */
+        renderer.heading = function(text, level) {
+            var headHtml = [
+                '<h' + level + ' id="' + 'makedown-doc-' + encodeURIComponent(text.toLowerCase()) + '">',
+                text,
+                '</h' + level + '>\n'
+            ].join('');
+            return headHtml; 
+        };
+
+        marked.setOptions({
+            highlight: function(code) {
+                return hljs.highlightAuto(code).value;
+            },
+            renderer: renderer
+        });
+
+
+        // demo&menu浮动
+        $(window).on('scroll', function(){
+            if (pageYOffset > 80) {
+                $('#header').css({
+                    'top': '-64px'
+                });
+                $('#con-menu ul').css({
+                    'margin-top': '10px'
+                });
+                $('#device').css({
+                    'position': 'fixed',
+                    'top': document.body.clientHeight < 870 ? '-85px' : '15px'
+                });
+            } else {
+                $('#header').css({
+                    'top': '0'
+                });
+                $('#con-menu ul').css({
+                    'margin-top': '80px'
+                });
+                $('#device').css({
+                    'position': 'static'
+                });
+            };
+        });
+    </script>
 </body>
 </html>
