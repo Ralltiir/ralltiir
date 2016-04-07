@@ -1,5 +1,4 @@
-# superFrame方案说明
-> by shenzhou
+# 了解SuperFrame
 
 ## 背景
 
