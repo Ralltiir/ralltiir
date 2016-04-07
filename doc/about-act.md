@@ -15,24 +15,20 @@ Activity是superframe框架中实现单页APP的核心类，它定义了一个�
 
     基类在创建时，会调用View层，实现整体情景页全屏效果的展现。同时，进行Activity的各参数初始化
 
-####start（开始）
+#### start（开始）
 
     基类在start周期里，建议对进行页面的数据加载以及渲染等操作，这些操作可以通过注入function到start中完成，提供注入接口。
     注意：start状态会在上一个controller或activity的destroy方法后执行。
 
-####stop（停止）
+#### stop（停止）
 
     当调起下一个activity时，当前的基类会被替换，此时最先执行基类的stop方法。
 
-####destroy（销毁）
+#### destroy（销毁）
 
     销毁方法在上一个基类的create方法之后执行，主要进行整体activity实例析构、dom隐藏/销毁等操作，提供注入接口。
 
-####change（变更）
-
-    change方法主要用于处理相同的activity实例之间的切换。
-
-###Activity应用的生命周期
+### Activity应用的生命周期
     
     按时序，Activity组件从初始化到销毁会经历create、start、change、stop、destroy操作改变运行状态
         create  创建组件实例，处理view展现前的初始化工作
@@ -41,8 +37,7 @@ Activity是superframe框架中实现单页APP的核心类，它定义了一个�
         stop    停止当前场景，一般在此开始对view进行隐藏/屏蔽
         destroy 销毁当前组件
 
-##Activity Controller
-```
+## Activity Controller
     Activity组件管理模块，管理Activity生命周期及HASH。
 
     任何关于Activity的Hash改变均应该调用Activity Controller的API来实现，后者会操作HASH，改变各个Activity的运行状态。
