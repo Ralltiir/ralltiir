@@ -1,6 +1,6 @@
 # Superframe入门指南
 
->>>通过以下步骤，你可以快速掌握Superframe并进行开发：
+>通过以下步骤，你可以快速掌握Superframe并进行开发：
 
 1. 了解Superframe的技术原理
 
