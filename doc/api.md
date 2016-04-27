@@ -437,7 +437,8 @@
 # dataBrige使用API规范
 ## dataBrige功能说明
     
-    用来作为结果页各个Activity直接数据传递，有些时候，我们在activity切换的时候，需要传递大量的数据，但是这些数据记录在url上并不合适。所以我们可以使用dataBrige来进行数据的传递。
+    用来作为结果页各个Activity直接数据传递，有些时候，我们在activity切换的时候，需要传递大量的数据，但是这些数据记录在url上并不合适。
+    所以我们可以使用dataBrige来进行数据的传递。
 
 ### dataBridge.set
 
