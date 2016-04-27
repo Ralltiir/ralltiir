@@ -360,3 +360,39 @@
 
 
 
+# View使用API规范
+## View功能说明
+    
+    View层作为展示层，由activity负责调用，负责DOM的渲染，事件的绑定等界面的逻辑处理
+
+### Activity.render
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    view的渲染，及参数的绑定(可自行酌情重写逻辑)
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|opts|Object|自定义模板的参数|{customClassName:'', headTitle:'', headTool: '', bodyHtml: ''}|
+
+### Activity.create
+
+#### 类型
+    
+    Function
+
+#### 说明
+    
+    view入场前准备及动画执行（不包含执行完毕后的结束状态
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|scope|Object|自定义模板的参数|{customClassName:'', headTitle:'', headTool: '', bodyHtml: ''}|
