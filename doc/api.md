@@ -2,9 +2,11 @@
 
 ## Controller功能说明
 
-    Controller模块功能与MVC中的Controller基本一致，主要用于异步单页应用的调度管理，目前Superframe使用此模式，当前只有一个controller:actController，后续结果页其他单页模式需迁移至controller下。
+    Controller模块功能与MVC中的Controller基本一致，主要用于异步单页应用的调度管理。
+    目前Superframe使用此模式，当前只有一个controller:actController，后续结果页其他单页模式需迁移至controller下。
     controller本身生命周期为:beforeActivity,doActivity,afterActivity，并before和after每个阶段，可传入callback参数类
-    controller作为一个抽象类，生命周期是定义好的流程，但是流程中的处理，需要用户自行添加，所以用户需要清楚的知道，周期中的某一步，需要执行自己的什么样的逻辑。controller自身模块会集成至Route模块中。
+    controller作为一个抽象类，生命周期是定义好的流程，但是流程中的处理，需要用户自行添加，所以用户需要清楚的知道，周期中的某一步，需要执行自己的什么样的逻辑。
+    controller自身模块会集成至Route模块中。
 
 
 ## Controller API说明
