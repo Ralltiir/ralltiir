@@ -242,8 +242,8 @@
 
 
 
-# activity使用API规范
-## activity功能说明
+# Activity使用API规范
+## Activity功能说明
     
     Activity为情景页基类，情景页的交互、展现、日志等通用接口，统一由Activity进行接管。针对Activity生命周期，对外提供注入功能。
     功能上，Activity提供一个屏幕，用来和用户完成指定交互，当任何Activity应用调起时，会隐藏检索结果页。
