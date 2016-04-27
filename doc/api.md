@@ -15,7 +15,7 @@ controller作为一个抽象类，生命周期是定义好的流程，但是流�
 
 #### 类型
 
-function
+    function
 
 #### 说明
 
