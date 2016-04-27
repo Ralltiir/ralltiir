@@ -19,13 +19,13 @@ controller作为一个抽象类，生命周期是定义好的流程，但是流�
 
 #### 说明
 
-生成controller，并挂载生命周期中的各个方法。
-
-当route变更时，注册的各个方法会被执行。
+    生成controller，并挂载生命周期中的各个方法。
+    当route变更时，注册的各个方法会被执行。
 
 #### 参数说明
 
-|*名称*|*类型*|*描述*|*例值*|
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:|
 |name|String||\*|
 |option|Object|生命周期中的各个回调方法|{doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function}|
 
