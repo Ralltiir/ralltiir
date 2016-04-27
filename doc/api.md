@@ -23,8 +23,8 @@
 #### 参数说明
 
 |名称|类型|描述|例值|
-| ------------- |:-------------:| -----:|
-|name|String||\*|
+| ------------- |:-------------:| -----:| -----:|
+|name|String|||
 |option|Object|生命周期中的各个回调方法|{doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function}|
 
 #### 返回值
@@ -44,7 +44,7 @@
 #### 参数说明
 
 |名称|类型|描述|例值|
-| ------------- |:-------------:| -----:|
+| ------------- |:-------------:| -----:| -----:|
 |option|Object|生命周期中的各个回调方法|{doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function}|
 
 
@@ -117,6 +117,7 @@
     require controller模块，获取本模块需要的controller支持
 
 #### 参数
+
     无
 
 
