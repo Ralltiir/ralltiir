@@ -365,7 +365,7 @@
     
     View层作为展示层，由activity负责调用，负责DOM的渲染，事件的绑定等界面的逻辑处理
 
-### Activity.render
+### View.render
 
 #### 类型
     
@@ -381,7 +381,8 @@
 | ------------- |:-------------:| -----:| -----:|
 |opts|Object|自定义模板的参数|{customClassName:'', headTitle:'', headTool: '', bodyHtml: ''}|
 
-### Activity.create
+
+### View.create
 
 #### 类型
     
@@ -389,10 +390,90 @@
 
 #### 说明
     
-    view入场前准备及动画执行（不包含执行完毕后的结束状态
+    view入场前准备及动画执行（不包含执行完毕后的结束状态）
 
 #### 参数说明
 
 |名称|类型|描述|例值|
 | ------------- |:-------------:| -----:| -----:|
 |scope|Object|自定义模板的参数|{customClassName:'', headTitle:'', headTool: '', bodyHtml: ''}|
+
+
+### View.stop
+
+#### 类型
+    
+    Function
+
+#### 说明
+    
+    view退场前准备状态，对应activity.stop
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|scope|Object|自定义模板的参数|{status: {action: 'back', type: 'virtual'}}|
+
+
+### View.destroy
+
+#### 类型
+    
+    Function
+
+#### 说明
+    
+    view退场动画执行及结束，对应activity.destroy
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|scope|Object|自定义模板的参数|{status: {action: 'back', type: 'virtual'}}|
+
+
+
+# dataBrige使用API规范
+## dataBrige功能说明
+    
+    用来作为结果页各个Activity直接数据传递，有些时候，我们在activity切换的时候，需要传递大量的数据，但是这些数据记录在url上并不合适。所以我们可以使用dataBrige来进行数据的传递。
+
+### dataBridge.set
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    存入数据
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|key|String|对应的activity的name路径|'detail'|
+|value|\*|希望传递给activity的数据|\*|
+
+### dataBridge.get
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    获取某个activity需要的数据
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|key|String|对应的activity的name路径|'detail'|
+
+#### 返回值
+
+    set过的value
+
+
