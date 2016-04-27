@@ -5,9 +5,6 @@
     </head>
     <body>
         <button id="sview">show view</button>
-        <button id="dview">distroy view</button>
-        <button id="cview">change view</button>
-        <button id="swview">switch view</button>
         <div id="viewArea"></div>
         <script src="./static/js/lib/esl.js"></script>
         <script src="./static/js/lib/esl_config.js"></script>
@@ -19,6 +16,7 @@
                 function (controller) {
                 
                     controller.start();
+                    
                     $('#sview')
                     .on(
                         'click',
@@ -26,33 +24,11 @@
                             controller.pushState({
                                 activity: 'app/myActivity',
                                 state: {
-                                    title: 'init page'
+                                    title: 'Hello SuperFrame!'
                                 }
                             });
                         }
                     );
-                    $('#cview')
-                    .on(
-                        'click',
-                        function () {
-                            controller.pushState({
-                                activity: 'app/myActivity',
-                                state: {
-                                    title: 'change page'
-                                }
-                            });
-                        }
-                    );
-
-                    $('#dview')
-                    .on(
-                        'click',
-                        function () {
-                            controller.pushState({
-                                activity: 'base',
-                            });
-                        }
-                     );
                 }
             );
         </script>
