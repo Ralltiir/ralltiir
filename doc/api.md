@@ -13,7 +13,7 @@
 
 #### 类型
 
-    function
+    Function
 
 #### 说明
 
@@ -25,7 +25,7 @@
 |名称|类型|描述|例值|
 | ------------- |:-------------:| -----:| -----:|
 |name|String|||
-|option|Object|生命周期中的各个回调方法|{doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function}|
+|option|Object|生命周期中的各个回调方法|doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function|
 
 #### 返回值
     undefined
@@ -45,7 +45,7 @@
 
 |名称|类型|描述|例值|
 | ------------- |:-------------:| -----:| -----:|
-|option|Object|生命周期中的各个回调方法|{doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function}|
+|option|Object|生命周期中的各个回调方法|doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function|
 
 
 #### 返回值
@@ -70,7 +70,7 @@
 |名称|类型|描述|例值|
 | ------------- |:-------------:| -----:| -----:|
 |name|String|当次controller的名称||
-|scope|Object|当次及上次执行的上下文，包含path及执行参数||
+|scope|Object|当次及上次执行的上下文，包含path及执行参数|1|
 
 
 #### 返回值
