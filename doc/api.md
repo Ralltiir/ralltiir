@@ -193,10 +193,12 @@
 ### Route.on
 
 #### 类型
-function
+    
+    Function
 
 #### 说明
-注册controller到特定的path，达到特定的path条件的时候，会调用controller的生命周期
+
+    注册controller到特定的path，达到特定的path条件的时候，会调用controller的生命周期
 
 #### 参数说明
 |*名称*|*类型*|*描述*|*例值*|
@@ -242,11 +244,119 @@ function
 
 # activity使用API规范
 ## activity功能说明
+    
+    Activity为情景页基类，情景页的交互、展现、日志等通用接口，统一由Activity进行接管。针对Activity生命周期，对外提供注入功能。
+    功能上，Activity提供一个屏幕，用来和用户完成指定交互，当任何Activity应用调起时，会隐藏检索结果页。
+    同一个页面内，只存在一个Activity的应用/实例
+
+### Activity.create
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    activity的创建，会调用view的渲染及创建，同时进行activity的各个变量的初始化
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|state|String||'act'|
+|scope|Object|执行的当前上下文|'act'|
+
+
+### Activity.start
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    activity的“唤醒”，同样会调用view的，建议对进行页面的数据加载以及渲染等操作，这些操作可以通过注入function到start中完成，提供注入接口。
+    注意：start状态会在上一个controller或activity的destroy方法后执行。
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|state|String||'act'|
+|scope|Object|执行的当前上下文|'act'|
+
+
+### Activity.stop
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    当调起下一个activity时，当前的基类会被替换，此时最先执行基类的stop方法。
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|state|String||'act'|
+|scope|Object|执行的当前上下文|'act'|
+
+
+### Activity.destroy
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    销毁方法在上一个基类的create方法之后执行，主要进行整体activity实例析构、dom隐藏/销毁等操作，提供注入接口。
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|state|String||'act'|
+|scope|Object|执行的当前上下文|'act'|
 
 
 
+### Activity.change
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    Activity的变更方法，在单个Activity内部状态变更，或者单个Activity内部进行切换(自己切换到自己)的时候，调用此方法。
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|state|String||'act'|
+|scope|Object|执行的当前上下文|'act'|
 
 
+### Activity.resume
+
+#### 类型
+    
+    Function
+
+#### 说明
+
+    暂无实现
+
+#### 参数说明
+
+|名称|类型|描述|例值|
+| ------------- |:-------------:| -----:| -----:|
+|state|String||'act'|
+|scope|Object|执行的当前上下文|'act'|
 
 
 
