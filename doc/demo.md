@@ -312,7 +312,7 @@
     `
 
 ### 7. 点击sview按钮，得到效果：
-![image](img/hello_superframe.png)
+![image](img/hello_superframe.jpg)
 
 
 
