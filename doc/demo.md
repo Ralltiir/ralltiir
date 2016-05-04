@@ -410,6 +410,7 @@
 ![image](img/hello_sf_2.jpg)
 
 
+[完整的代码示例请戳我](http://newicafe.baidu.com/ "完整的代码示例请戳我")
 
 
 
