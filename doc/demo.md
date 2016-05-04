@@ -272,7 +272,96 @@
 
     上面的代码可根据自己产品进行改造，制作好了我们自己的controller,我们就可以管理我们的activity了。
 
-### 5. 调用页面整体的controller，可以自行书写，或者使用目前现成的
+
+### 5. 添加一个自己实现的activity(myActivity.js)，其中含有activity生命周期的各阶段：
+    `
+    define(
+        ['app/myView'],
+        function (View) {
+
+            function Detail() {
+                this.view = new View();
+            }
+            
+            Detail.prototype = {
+                constructor: Detail,
+
+                start: function (opt) {
+                    console.log('detail start!');
+                },
+
+                stop: function () {
+                    console.log('detail stop!');
+                },
+
+                create: function (opt) {
+                    console.log('detail create!');
+                    this.view.init(opt);
+                    this.view.create();
+                },
+
+                change: function (opt) {
+                    console.log('detail change!');
+                    this.view.change(opt);
+                },
+
+                destroy: function (opt) {
+                    console.log('detail destroy!');
+                    this.view.destroy(opt);
+                }
+            };
+
+            //Detail.prototype = $.extend({}, Activity.prototype, Detail.prototype);
+
+            return new Detail();
+        }        
+    );
+    `
+
+
+### 6. 实现自己所需要的view,接下来将由activity在各个生命周期来调用此view的各个方法：
+    `
+    define(
+        function () {
+            var TPL = ''
+            +'<div>'
+            +   '#title'
+            +'</div>';
+            
+            function View() {
+                this.tpl = '';
+            }
+
+            View.prototype = {
+                init: function (opt) {
+                    this.dom = $(TPL.replace('#title', opt.title));
+                },
+
+                create: function () {
+                    $('#viewArea').append(this.dom);
+                },
+
+                show: function () {
+                    
+                },
+
+                hide: function () {
+                          
+                },
+                change: function (opt) {
+                    this.dom.html(opt.title);
+                },
+                destroy: function (opt) {
+                    this.dom.remove();         
+                }
+            };
+
+            return View;
+        }        
+    );
+    `
+
+### 7. 调用页面整体的controller，可以自行书写，或者使用目前现成的
     在这里，我们使用require进行调起写好的controller，然后唤醒controller。
     `
     <script>
@@ -285,7 +374,7 @@
     </script>
     `
 
-### 6. 在特定条件下，触发controller的更新状态
+### 8. 在特定条件下，触发controller的更新状态
     `
     <button id="sview">show view</button>
     <div id="viewArea"></div>
@@ -311,8 +400,12 @@
     </script>
     `
 
-### 7. 点击sview按钮，得到效果：
+### 9. 点击sview按钮，得到效果：
+我们看到view的create方法被调用，并且被渲染到了页面上：
 ![image](img/hello_superframe.jpg)
+
+我们也看到页面的hash变了：
+![image](img/hello_superframe_2.jpg)
 
 
 

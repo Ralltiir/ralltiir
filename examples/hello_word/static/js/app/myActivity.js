@@ -1,6 +1,6 @@
 /*
- *
- *
+ * @myActivity，自己实现的一个activity
+ * @author houyu(houyu01@baidu.com)
  */
 define(
     ['app/myView'],
