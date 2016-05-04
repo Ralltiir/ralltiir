@@ -410,7 +410,7 @@
 ![image](img/hello_sf_2.jpg)
 
 
-[完整的代码示例请戳我](http://newicafe.baidu.com/ "完整的代码示例请戳我")
+[完整的代码示例请戳我](http://***REMOVED***/psfe/superframe/tree/master/examples/hello_word "完整的代码示例请戳我")
 
 
 
