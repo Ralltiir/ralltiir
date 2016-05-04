@@ -402,10 +402,12 @@
 
 ### 9. 点击sview按钮，得到效果：
 我们看到view的create方法被调用，并且被渲染到了页面上：
+
 ![image](img/hello_superframe.jpg)
 
 我们也看到页面的hash变了：
-![image](img/hello_superframe_2.jpg)
+
+![image](img/hello_sf_2.jpg)
 
 
 
