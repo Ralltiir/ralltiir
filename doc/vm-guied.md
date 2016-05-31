@@ -238,3 +238,15 @@ ViewModel的生命周期如下图：
     自定义的渲染方法，如果在new ViewModel的时候，传入此方法，则在mount需要渲染的时机，略过内置渲染方法，转而采用此方法
     
 
+#### 例
+    var vm = new ViewModel({
+        $container: '#app',
+        data: {
+            words: 'hello'
+        },
+        irender: function (data, $container) {
+            // 用户自己去渲染
+            console.log('render!');
+        }
+    });
+    
