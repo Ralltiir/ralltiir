@@ -22,7 +22,7 @@ ViewModel的生命周期如下图：
 |update|setData|主动执行|触发VM数据更新，及重新渲染|
 |update|update|钩子函数|生命周期的update完成后的回调方法|
 |destroy|destroy|主动执行|销毁ViewModel组件方法|
-|destroy|destroyed|钩子函数|组件销毁后的毁掉方法|
+|destroy|destroyed|钩子函数|组件销毁后的回调方法|
 
 
 ## ViewModel API
@@ -223,4 +223,18 @@ ViewModel的生命周期如下图：
 
 
 
+### vm.irender
+
+#### 属于层面
+
+    VM的DOM层
+
+#### 类型
+
+    Function
+
+#### 说明
+
+    自定义的渲染方法，如果在new ViewModel的时候，传入此方法，则在mount需要渲染的时机，略过内置渲染方法，转而采用此方法
+    
 
