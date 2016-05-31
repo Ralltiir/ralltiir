@@ -30,7 +30,7 @@ ViewModel的生命周期如下图：
 
 #### 类型
     
-    Object/String
+    Object
 
 #### 说明
     
