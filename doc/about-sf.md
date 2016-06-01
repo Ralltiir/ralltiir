@@ -14,7 +14,7 @@ suerframe是一套前端解决方案，使用后可以有下面的收益：
 
 ## superframe的整体概述
 
-![img](./img/sf-process.png)
+![img](img/sf-process.png)
 
 superframe整个解决方案可以从三个方面来描述，下面的sf为superframe的缩写：
 
@@ -48,7 +48,7 @@ sf-mib：第三方直接提供mibhtml页面的形式，这种形式定位于浏�
 ## superframe的框架图
 superFrame整天框架图如下：
 
-![image](./img/sf-frame.png)
+![image](img/sf-frame.png)
 
 * Route：route模块主要用于管理结果页Hash，基于当前的hash lib再做一层封装，直接面向Superframe框架提供由hash转化后的结构化数据。
 * Controller:Controller模块功能与MVC中的Controller基本一致，主要用于异步单页应用的调度管理，处理业务逻辑。
