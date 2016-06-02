@@ -18,6 +18,10 @@ ViewModel的生命周期如下图：
 |init|init|主动执行|初始化VM对象，会自行调用|
 |mount|mount|主动执行|模板渲染，会自行调用|
 |mount|render|钩子函数|获取渲染模板的方法|
+|mount|tplWillRender|钩子函数|在tpl渲染之前执行的钩子函数|
+|mount|tplDidRender|钩子函数|在tpl渲染之后执行的钩子函数|
+|mount|jsWillExecute|钩子函数|在tpl渲染之后模板中的script执行之前的钩子函数|
+|mount|jsDidExecute|钩子函数|在tpl渲染之后模板中的script执行之后的钩子函数|
 |mount|didmount|钩子函数|模板渲染后的回调方法|
 |update|setData|主动执行|触发VM数据更新，及重新渲染|
 |update|update|钩子函数|生命周期的update完成后的回调方法|
