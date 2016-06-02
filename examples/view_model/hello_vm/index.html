@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <script src="./esl.js"></script>
+        <script src="./zepto.js"></script>
+        <div id="app">
+        </div>
+        <script>
+            require(
+                ['ViewModel'],
+                function (ViewModel) {
+                    // 0. 定义采用与VUE类似的方式
+                    var vm = new ViewModel({
+                        // 指定外层容器
+                        $container: '#app',
+                        // 指定初始数据
+                        data: {
+                            words: 'hello',
+                            ext: {
+                                me: 1
+                            }
+                        },
+                        // 指定渲染
+                        render: function () {
+                            return '<div>' + this.data.words + '</div>'
+                                  +'<div data-vmbind="data.ext.me">'
+                                  + this.data.ext.me
+                                  + '</div>';
+                        },
+                        renderLocal: {
+                            //自定义局部更新的方式
+                            render_data_ext_me: function (data, container) {
+                                // 更新局部视图的内容
+                                return '<span>' + data.ext.me + '</span>';
+                            }
+                        }
+                        // 自定义渲染方式，如果定义了此方法，则不会使用内置方法进行渲染
+                        /*irender: function (data, $container) {
+                            console.log('render!', arguments);
+                        }*/
+                    });
+                    
+
+                    // 1. 普通数据驱动视图更新
+                    document.getElementById('app')
+                    .addEventListener('click', function () {
+                        //vm.setData({
+                        //    words: vm.data.words === 'click' ? 'hello' : 'click'
+                        //});
+                        vm.fetch({
+                            url: './vm.json'
+                        });
+                    });
+
+
+                    // 2. 数据驱动视图，更新规则自定义
+                    /*document.getElementById('app')
+                    .addEventListener('click', function () {
+                        vm.setData(
+                        {
+                            words: 'click'
+                        },
+                        {
+                            //自定义更新的方式
+                            irender: function (data, $container) {
+                                console.log(data);
+                            }
+                        }
+                        );
+                    });*/
+                    // 可指定接下来的自定义渲染规则
+                    /*vm.irender = function (data, $container) {
+                        $container.querySelector('script').outerHTML = 'irender';
+                    };*/
+
+                    // 3. 数据驱动，视图局部更新
+                    /*document.getElementById('app')
+                    .addEventListener('click', function () {
+                        console.log('再次设置数据');
+                        vm.setData(
+                        {
+                            ext: {
+                                me: 2
+                            }
+                        },
+                        {
+                            renderLocal: true
+                            //{
+                                //自定义局部更新的方式
+                            //    render_data_ext_me: function (data, container) {
+                            //        // 更新局部视图的内容
+                            //        return '<span>' + data.ext.me + '</span><script>console.log("rerender");<\/script>';
+                            //    }
+                            //}
+                        }
+                        );
+                    });*/
+
+                    // 4. 视图的变化可以引起数据的变化，由于代码量的问题
+                    // 目前实现放在使用者这边
+                    /*vm.on(
+                        'viewchange',
+                        function (data) {
+                            console.log(data);
+                            vm.setData(data);
+                        }
+                    );
+
+                    document.getElementById('app')
+                    .addEventListener('click', function () {
+                        vm.trigger('viewchange', {ext: {me: 2}});
+                    });*/
+
+                    // 5. DOM事件之绑定与trigger
+                    /*vm
+                    .on(
+                        'click',
+                        '[data-vmbind]',
+                        function () {
+                            vm.setData({
+                                words: 'click'
+                            });
+                        }
+                    );
+
+                    vm
+                    .trigger(
+                        'click',
+                        '[data-vmbind]'
+                    );*/
+                    //vm.mount();
+                }
+            );
+        </script>
+    </body>
+</html>
