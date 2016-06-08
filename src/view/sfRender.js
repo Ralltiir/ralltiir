@@ -80,7 +80,7 @@ define(function() {
             ['card', global.card]
         ];
         if (content.sf_async_merge_js) {
-            execScript(content.sf_async_merge_js, jsargs);
+            execScript(content.sf_async_merge_js.replace(/<\/?script>/,''), jsargs);
         }
        var jsargs = [
             ['_global_', global],
