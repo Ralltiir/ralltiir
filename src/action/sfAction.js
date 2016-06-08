@@ -19,12 +19,6 @@ define(function() {
         currentActivity = _activityParser(current);
         prevActivity = _activityParser(prev);
 
-        /*
-        if(scope.last.path === scope.path) {
-            lastActivity = _activityParser(lastState);
-        }
-        */
-
         return excute(currentActivity, prevActivity, current, prev);
     }
     
@@ -43,13 +37,8 @@ define(function() {
      *  @return {"name":"acvitityName","state":"avtivityState"}
      * */
     function _activityParser(state) {
-        var prefix = 'sf/activity';
-        var suffix = 'Activity';
-        var result = {};
-        if(state && state.path === '/sf') {
-            result["name"] = prefix + state.path + suffix;
-            result["state"] = state;
-            return result;
+        if(state.path === '/sf') {
+            return require('../activity/sfActivity');
         } else {
             return false; 
         }
@@ -79,7 +68,9 @@ define(function() {
             dtd = $.Deferred();
 
         for(var i in arguments) {
-            activitys.push(arguments[i].name);
+            if(arguments[i].name && typeof arguments[i].name === 'string') {
+                activitys.push(arguments[i].name);
+            }
         }
         if(activitys.length > 0) {
             _routeScope = {
