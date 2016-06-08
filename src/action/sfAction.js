@@ -67,38 +67,24 @@ define(function() {
         var activitys = [],
             dtd = $.Deferred();
 
-        for(var i in arguments) {
-            if(arguments[i].name && typeof arguments[i].name === 'string') {
-                activitys.push(arguments[i].name);
-            }
+        var _routeScope = {
+            "from" : prev,
+            "to" : current
+        };
+
+        // 上一状态或下一状态是base（结果页）时，加上标识
+        var activityScope = _routeScope;
+        var methodProxy = new MethodProxy();
+
+        if(!ready) {
+            activity && methodProxy.push(activity.create, activity, activityScope);
+        } else {
+            lastActivity && methodProxy.push(lastActivity.stop, lastActivity, activityScope);
+            activity && methodProxy.push(activity.start, activity, activityScope);
+            lastActivity && methodProxy.push(lastActivity.destroy, lastActivity, activityScope);
         }
-        if(activitys.length > 0) {
-            _routeScope = {
-                "from" : prev,
-                "to" : current
-            };
-
-            require(activitys, function(Activity, LastActivity) {
-
-                // 上一状态或下一状态是base（结果页）时，加上标识
-                var activityScope = _routeScope;
-                var methodProxy = new MethodProxy();
-
-                if(!LastActivity) {
-                    LastActivity = Activity; 
-                }
-
-                if(!ready) {
-                    activity && methodProxy.push(Activity.create, Activity, activityScope);
-                } else {
-                    lastActivity && methodProxy.push(LastActivity.stop, LastActivity, activityScope);
-                    activity && methodProxy.push(Activity.start, Activity, activityScope);
-                    lastActivity && methodProxy.push(LastActivity.destroy, LastActivity, activityScope);
-                }
-                
-                methodProxy.excute(dtd);
-            }); 
-        }
+        
+        methodProxy.excute(dtd);
 
         return dtd;
 
