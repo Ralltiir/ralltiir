@@ -79,9 +79,7 @@ define(function() {
             dtd = $.Deferred();
 
         for(var i in arguments) {
-            if(arguments[i] && B.amd.exist(arguments[i].name)) {
-                activitys.push(arguments[i].name);
-            }
+            activitys.push(arguments[i].name);
         }
         if(activitys.length > 0) {
             _routeScope = {
