@@ -42,12 +42,11 @@ define(function() {
             argvals.push(argitem[1]);
         }
         argkeys.push(code);
-        fn = Function.apply(null, argkeys);
-        //console.log(fn.toString());
        try{
+         fn = Function.apply(null, argkeys);
          ret = fn.apply(this, argvals);
        }catch(e){
-         //console.log(e)
+         console.log(e)
        }
         return ret;
     }
