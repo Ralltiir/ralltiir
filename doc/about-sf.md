@@ -2,7 +2,7 @@
 
 ## 背景
 
-suerframe是一套前端解决方案，使用后可以有下面的收益：
+suerframe：极速浏览框架，是一套前端解决方案，使用后可以有下面的收益：
 
 * 提升用户点出的交换体验，提供NA化的浏览方式，增加用户浏览媒体时长；
 * 增加用户结果页交换步长，构建完整的用户闭环体验，创造变现空间；
@@ -10,15 +10,21 @@ suerframe是一套前端解决方案，使用后可以有下面的收益：
 * 在手百上可以获取NA加强体验
 * 增加点击率等用户指标
 
-下面将从数据流拆解、框架图、模块划分几个角度来介绍superframe
+superframe产品流示意图
+
+![img](img/sf_pr_pd.png)
 
 ## superframe的整体概述
+###组件图
 
 ![img](img/sf-process.png)
 
 superframe整个解决方案可以从三个方面来描述，下面的sf为superframe的缩写：
 
 * 数据接入层
+
+数据接入方式
+![img](img/sf_data_in.png)
 
 ```
   对于数据的接入，整体分为2种类型：内部资源（百度系的产品），外部资源（第三方站点）；
@@ -30,6 +36,8 @@ superframe整个解决方案可以从三个方面来描述，下面的sf为super
   	4. spider抓取
   
 ```
+
+
 * 技术实现层
 
 ```
@@ -43,7 +51,20 @@ sf-mib：第三方直接提供mibhtml页面的形式，这种形式定位于浏�
 	不管采用那种形式，产品表现上，都是沉浸式的浏览体验，在手百上，可以获取更好的，端的体验
 	
 ```
+###mip：移动网页加速器
 
+* MIP（mobile instant page）：移动网页加速器，是百度提出的应用于移动网页，提供更好的页面加速和浏览体验的一套开放性的技术标准* MIP与SuperFrame：MIB是站点共享SuperFrame体验方式接入百度结果页的一种合作方式；站点通过MIP打通SuperFrame框架，简称：SF-MIP
+
+* MIP系统组成
+
+
+![img](img/mip_module.png)
+
+**如图，蓝色部分是mip的组成部分**
+
+* MIP如何接入百度
+
+![img](img/mip_in_baidu.png)
 
 ## superframe的框架图
 superFrame整天框架图如下：
@@ -55,6 +76,9 @@ superFrame整天框架图如下：
 * View：统一的视图层，用于统一单页的模板渲染、交互，以及框架级别日志整合。
 
 
+## superframe-mip
+
+##mip
 
 ## 关于日志和统计
 
