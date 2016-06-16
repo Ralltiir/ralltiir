@@ -15,7 +15,6 @@ superframe产品流示意图
 ![img](img/sf_pr_pd.png)
 
 ## superframe的整体概述
-###组件图
 
 ![img](img/sf-process.png)
 
@@ -23,7 +22,7 @@ superframe整个解决方案可以从三个方面来描述，下面的sf为super
 
 * 数据接入层
 
-数据接入方式
+**数据接入方式**
 ![img](img/sf_data_in.png)
 
 ```
@@ -51,7 +50,7 @@ sf-mib：第三方直接提供mibhtml页面的形式，这种形式定位于浏�
 	不管采用那种形式，产品表现上，都是沉浸式的浏览体验，在手百上，可以获取更好的，端的体验
 	
 ```
-###mip：移动网页加速器
+### mip：移动网页加速器
 
 * MIP（mobile instant page）：移动网页加速器，是百度提出的应用于移动网页，提供更好的页面加速和浏览体验的一套开放性的技术标准* MIP与SuperFrame：MIB是站点共享SuperFrame体验方式接入百度结果页的一种合作方式；站点通过MIP打通SuperFrame框架，简称：SF-MIP
 
