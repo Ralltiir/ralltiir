@@ -52,16 +52,17 @@ sf-mib：第三方直接提供mibhtml页面的形式，这种形式定位于浏�
 ```
 ### mip：移动网页加速器
 
-* MIP（mobile instant page）：移动网页加速器，是百度提出的应用于移动网页，提供更好的页面加速和浏览体验的一套开放性的技术标准* MIP与SuperFrame：MIB是站点共享SuperFrame体验方式接入百度结果页的一种合作方式；站点通过MIP打通SuperFrame框架，简称：SF-MIP
-
-* MIP系统组成
+```
+MIP（mobile instant page）：移动网页加速器，是百度提出的应用于移动网页，提供更好的页面加速和浏览体验的一套开放性的技术标准MIP与SuperFrame：MIB是站点共享SuperFrame体验方式接入百度结果页的一种合作方式；站点通过MIP打通SuperFrame框架，简称：SF-MIP
+```
+* **MIP系统组成**
 
 
 ![img](img/mip_module.png)
 
 **如图，蓝色部分是mip的组成部分**
 
-* MIP如何接入百度
+* **MIP如何接入百度**
 
 ![img](img/mip_in_baidu.png)
 
