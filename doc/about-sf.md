@@ -13,11 +13,11 @@ suerframe：极速浏览框架，是一套前端解决方案，使用后可以�
 
 superframe产品流示意图
 
-![img](img/sf_pr_pd.png =700)
+![img](img/sf_pr_pd.png =600x)
 
 ## superframe的整体概述
 
-![img](img/sf-process.png =700)
+![img](img/sf-process.png)
 superframe整个解决方案可以从三个方面来描述，下面的sf为superframe的缩写：
 
 * 数据接入层
