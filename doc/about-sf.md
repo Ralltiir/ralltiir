@@ -18,6 +18,7 @@ superframe产品流示意图
 ## superframe的整体概述
 
 ![img](img/sf-process.png)
+
 superframe整个解决方案可以从三个方面来描述，下面的sf为superframe的缩写：
 
 * 数据接入层
