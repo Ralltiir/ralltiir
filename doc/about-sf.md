@@ -13,7 +13,7 @@ suerframe：极速浏览框架，是一套前端解决方案，使用后可以�
 
 superframe产品流示意图
 
-![]{width:700px}(img/sf_pr_pd.png)
+![](img/sf_pr_pd.png)
 
 ## superframe的整体概述
 
@@ -24,6 +24,7 @@ superframe整个解决方案可以从三个方面来描述，下面的sf为super
 
 **数据接入方式**
 ![img](img/sf_data_in.png)
+
 ```
   对于数据的接入，整体分为2种类型：内部资源（百度系的产品），外部资源（第三方站点）；
   内部资源：推荐使用sf-aladdin的形式来接入sf；对于sf-aladdin的方式，数据通过xml或者AE连接第三方服务，然后接入情景页的app；
