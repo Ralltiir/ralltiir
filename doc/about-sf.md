@@ -13,17 +13,17 @@ suerframe：极速浏览框架，是一套前端解决方案，使用后可以�
 
 superframe产品流示意图
 
-![img](img/sf_pr_pd.png){ max-width: 700px; }
+![img](img/sf_pr_pd.png =700)
 
 ## superframe的整体概述
 
-![img](img/sf-process.png){ max-width: 700px; }
+![img](img/sf-process.png =700)
 superframe整个解决方案可以从三个方面来描述，下面的sf为superframe的缩写：
 
 * 数据接入层
 
 **数据接入方式**
-![img](img/sf_data_in.png){ max-width: 700px; }
+![img](img/sf_data_in.png)
 ```
   对于数据的接入，整体分为2种类型：内部资源（百度系的产品），外部资源（第三方站点）；
   内部资源：推荐使用sf-aladdin的形式来接入sf；对于sf-aladdin的方式，数据通过xml或者AE连接第三方服务，然后接入情景页的app；
@@ -57,18 +57,18 @@ MIP（mobile instant page）：移动网页加速器，是百度提出的应用�
 * **MIP系统组成**
 
 
-![img](img/mip_module.png){ max-width: 700px; }
+![img](img/mip_module.png)
 
 **如图，蓝色部分是mip的组成部分**
 
 * **MIP如何接入百度**
 
-![img](img/mip_in_baidu.png){ max-width: 700px; }
+![img](img/mip_in_baidu.png)
 
 ## superframe的框架图
 superFrame整天框架图如下：
 
-![image](img/sf-frame.png){ max-width: 700px; }
+![image](img/sf-frame.png)
 
 * Route：route模块主要用于管理结果页Hash，基于当前的hash lib再做一层封装，直接面向Superframe框架提供由hash转化后的结构化数据。
 * Controller:Controller模块功能与MVC中的Controller基本一致，主要用于异步单页应用的调度管理，处理业务逻辑。
