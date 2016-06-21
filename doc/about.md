@@ -14,6 +14,7 @@ SuperFrame：前端极速浏览框架，是一种前端异步单页技术。用�
 <img src="img/about/sf_process.png" width="500">
 
 **superframe的整个数据流示意图**
+
 <img src="img/about/sf_in_baidu.png" width="700">
 
 
@@ -48,6 +49,7 @@ sf-mib：第三方直接提供mibhtml页面的形式，这种形式定位于浏�
 ## MIP
 
 **整个MIP系统的组成如下所示**
+
 <img src="img/about/mib_module.png" width="900">
 
 * MIP规范
