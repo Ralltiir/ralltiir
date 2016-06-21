@@ -2,7 +2,7 @@
 ##框架基础
 Superframe框架整体思想也是源于业界MV*模式的思想。框架包含以下几个核心模块
 
-**Router模块：**进行框架整体的路由控制。D
+**Router模块：**进行框架整体的路由控制。
 
 **Action模块：**直接面向开发者，提供整体页面动作（reset、back、redirect等）控制接口，提供动作管理（on、remove、run）接口。
 
