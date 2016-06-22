@@ -11,7 +11,7 @@ SuperFrame：前端极速浏览框架，是一种前端异步单页技术。用�
 
 **流程如下图显示**
 
-<img src="img/about/sf_process.png" width="700">
+<img src="img/about/sf_process.png" width="500">
 
 **superframe的整个数据流示意图**
 
@@ -19,30 +19,7 @@ SuperFrame：前端极速浏览框架，是一种前端异步单页技术。用�
 
 
 ## Superframe与MIP关系
-### Superframe框架图
 
-<img src="img/about/sf_all.png" width="600">
-
-* 数据接入层
-
-```
-整体分为2种类型：内部资源（百度系的产品），外部资源（第三方站点）；
-内部资源：推荐使用sf-aladdin的形式来接入sf；对于sf-aladdin的方式，数据通过xml或者AE连接第三方服务，然后接入情景页的app，也可以直接通过sf-appservice的方式接入；
-  外部资源：
-      1. xml形式提交数据
-      2. cms提交自媒体数据
-      3. 站长提交符合mip规范的html页面
-      4. spider抓取
-      
-```
- 
-* 技术实现：
-
-```
-在技术上支持sf-aladdin和sf-mib的展现形式：
-sf-aladdin: 数据需要打通到情景页的服务，产品体验会更好，兼容性更好，性能体验更好
-sf-mib：第三方直接提供mibhtml页面的形式，这种形式定位于浏览型页面，对于交互要求不高；因为技术层面有一些无法逾越的bug，因此如果有非常复杂的交互，建议选用sf-aladdin形式；
-```
 ### Superframe、MIP和SF-MIP
 * MIP（mobile instant page）：移动网页加速器，是百度提出的应用于移动网页，提供更好的页面加速和浏览体验的一套开放性的技术标准* MIP与SuperFrame：MIB是站点共享SuperFrame体验方式接入百度结果页的一种合作方式；站点通过MIP打通SuperFrame框架，简称：**SF-MIP** 
 
@@ -60,7 +37,7 @@ sf-mib：第三方直接提供mibhtml页面的形式，这种形式定位于浏�
 通过MIP方式接入百度，可以有下面几个途径:
 
 
-<img src="img/about/mib_in_baidu.png" width="700">
+<img src="img/about/mib_in_baidu.png" width=600">
 
 ## 业界的方案
 
