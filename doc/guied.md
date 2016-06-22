@@ -64,9 +64,9 @@ Superframe的页面是可以通过类似搜索结果页的卡片化的形式来�
 #### 接入规范
 
 ##### 页面JS规范
-    参看 [情景页JS规范](http://sfe.baidu.com/#/superframe/card/4、js+开发规范)
+参看[情景页JS规范](http://sfe.baidu.com/#/superframe/card/4、js+开发规范)
 ##### 页面CSS规范
-    参看 [情景页CSS规范](http://sfe.baidu.com/#/superframe/card/3、css+开发规范)
+参看[情景页CSS规范](http://sfe.baidu.com/#/superframe/card/3、css+开发规范)
 
 ## MIP接入
 ### 适用场景
