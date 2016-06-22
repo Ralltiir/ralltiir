@@ -16,7 +16,7 @@
 
 <img src="img/about/sf_process.png" width="400">
 
-###资源方数据接入superframe方式
+### 资源方数据接入superframe方式
 
 <img src="img/about/sf_data.png" width="600">
 
