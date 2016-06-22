@@ -37,7 +37,7 @@ SuperFrame：前端极速浏览框架，是一种前端异步单页技术。用�
 通过MIP方式接入百度，可以有下面几个途径:
 
 
-<img src="img/about/mib_in_baidu.png" width=600">
+<img src="img/about/mib_in_baidu.png" width="600">
 
 ## 业界的方案
 
