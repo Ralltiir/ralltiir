@@ -96,8 +96,9 @@ CSS命名统一使用产品线缩写(产品线标识)- 开头
 一般情况下，使用class作为选择器
 
 [了解详细规范]()
+[了解接入流程]()
 
-#### 接入指南(coming soon)
+#### 产品线改造指南(coming soon)
 
 ##### 模板改造建议
 ##### JS开发建议
@@ -108,15 +109,20 @@ CSS命名统一使用产品线缩写(产品线标识)- 开头
     对于卡片以及应用服务两种接入方式均无法使用的产品线，Superframe框架也提供了较为开放的JS模块接入方案。
     进行接入时，需要满足《Superframe JS模块接入规范》
 
-#### 接入规范
+#### 接入要求概述
 
 ##### 页面JS规范
 参看[情景页JS规范](http://sfe.baidu.com/#/superframe/card/4、js+开发规范)
 ##### 页面CSS规范
 参看[情景页CSS规范](http://sfe.baidu.com/#/superframe/card/3、css+开发规范)
 
+[了解详细规范]()
+[了解接入流程]()
+
 #### 接入指南
-参看[JS模块接入指南](http://sfe.baidu.com/#/superframe/card/7、actCard模式开发方式)
+
+[了解详细规范](http://sfe.baidu.com/#/superframe/card/7、actCard模式开发方式)
+[了解接入流程]()
 
 ## MIP接入
 ### 适用场景
