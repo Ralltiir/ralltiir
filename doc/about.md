@@ -11,7 +11,7 @@ SuperFrame：前端极速浏览框架，是一种前端异步单页技术。用�
 
 **流程如下图显示**
 
-<img src="img/about/sf_process.png" width="500">
+<img src="img/about/sf_process.png" width="700">
 
 **superframe的整个数据流示意图**
 
