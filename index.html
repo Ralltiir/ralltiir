@@ -295,6 +295,10 @@
             $('#con-menu').find('li[data-type="' + type + '"]').addClass('selected');
         }
 
+        $(window).on('hashchange', function() {
+            console.log(location.hash);        
+        });
+
         // 如果demo中iframe出现滚动条，则demo中滚动时阻止父页面滚动
         $('#demo_container').load(function() {
             if ($('#demo_container').contents().find('body').height() > $('#demo_container').height()) {
