@@ -251,44 +251,6 @@
         }
 
         function renderUI(type) {
-            var url = './doc/' + type + '.md';
-            //set demo src
-            /*
-            var iframeUrl = './build/components/' + type + '/demo.html';
-            $('#demo_container').attr('src', iframeUrl);
-            $('#demo-link a').attr('href', iframeUrl);
-            $('#demo-qrcode').empty().qrcode({
-                width: 300,
-                height: 300,
-                text: location.href.replace(location.hash, '') + iframeUrl.replace('./', '')
-                });
-            */
-            // load markedown doc src
-            // 直接使用错误hash导致未找到文档文件时
-            $.ajax({
-                url: url,
-                dataType: 'text',
-                // 不使用缓存可以让每次请求命中最新文件内容
-                cache: false,
-                success: function (doc) {
-                    scrollTo(0, 0);
-                    $('#con-doc').html(marked(doc)).css({
-                        'position': 'relative',
-                        'left': '-50px',
-                        'opacity': '0'
-                    }).animate({
-                        'left': '0',
-                        'opacity': '1'
-                    }, 260, 'swing');
-                },
-                error: function () {
-                    scrollTo(0, 0);
-                    var doc = [];
-                    doc.push('# 页面未找到');
-                    $('#con-doc').html(marked(doc.join('\n')));
-                }
-            });
-
             // 切换导航hover状态
             $('#con-menu').find('.selected').removeClass('selected');
             $('#con-menu').find('li[data-type="' + type + '"]').addClass('selected');
