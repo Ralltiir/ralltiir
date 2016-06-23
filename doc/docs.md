@@ -1,9 +1,18 @@
 # 文档
 
-## 开发指南
+## 开发教程
 ### 卡片
-### JS模块
+
+[卡片开发教程](http://sfe.baidu.com/#/superframe/card/1、开发入门)
+
 ### 标准应用服务
+
+[标准应用服务开发教程](http://sfe.baidu.com/sf/#docs-sf-service)
+
+### JS模块
+
+[JS模块开发教程](http://sfe.baidu.com/#/superframe/card/7、actCard模式开发方式)
+
 ### MIP
 
 ## 框架基础
