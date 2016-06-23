@@ -232,7 +232,7 @@
                 var $this = $(this);
                 var uiType = $this.attr('data-type');
                 $this.on('click', function() {
-                    renderUI(uiType);
+                    changeSelect(uiType);
                 });
             });
             // 刷新默认加载
@@ -252,13 +252,6 @@
 
         function renderUI(type) {
             // 切换导航hover状态
-            $('#con-menu').find('.selected').removeClass('selected');
-            $('#con-menu').find('li[data-type="' + type + '"]').addClass('selected');
-        }
-
-        $(window).on('hashchange', function() {
-            var hash = location.hash;
-            type = hash.replace('#','');
             var url = './doc/' + type + '.md';
             $.ajax({
                 url: url,
@@ -283,6 +276,18 @@
                     $('#con-doc').html(marked(doc.join('\n')));
                 }
             });
+            changeSelect(type);
+        }
+
+        function changeSelect(type) {
+            $('#con-menu').find('.selected').removeClass('selected');
+            $('#con-menu').find('li[data-type="' + type + '"]').addClass('selected');
+        }
+
+        $(window).on('hashchange', function() {
+            var hash = location.hash;
+            type = hash.replace('#','');
+            renderUI(type);
 
         });
 
