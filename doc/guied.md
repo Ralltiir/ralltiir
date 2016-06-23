@@ -10,7 +10,9 @@
 ### 优先阅读
     
 了解如何选择资源的接入方式，请直接阅读：《实用教程：资源使用阿拉丁接入还是MIP接入》
+
 [了解阿拉丁接入方案](http://sfe.baidu.com/sf/#guied-aladdin)
+
 [了解MIP接入方案](http://sfe.baidu.com/sf/#guied-mip)
 
 ## MIP接入
