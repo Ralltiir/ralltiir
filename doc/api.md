@@ -1,17 +1,13 @@
-# Controller模块API说明
+# Action模块API说明
 
-## Controller功能说明
+## Action功能说明
 
-    Controller模块功能与MVC中的Controller基本一致，主要用于异步单页应用的调度管理。
-    目前Superframe使用此模式，当前只有一个controller:actController，后续结果页其他单页模式需迁移至controller下。
-    controller本身生命周期为:beforeActivity,doActivity,afterActivity，并before和after每个阶段，可传入callback参数类
-    controller作为一个抽象类，生命周期是定义好的流程，但是流程中的处理，需要用户自行添加，所以用户需要清楚的知道，周期中的某一步，需要执行自己的什么样的逻辑。
-    controller自身模块会集成至Route模块中。
+    主要用于异步单页应用的调度管理。
+    action实例生命周期为:before,do,after，并before和after每个阶段，可传入callback参数类
 
+## Action API说明
 
-## Controller API说明
-
-### Controller.regist
+### Action.regist
 
 #### 类型
 
@@ -19,7 +15,7 @@
 
 #### 说明
 
-    生成controller，并挂载生命周期中的各个方法。
+    生成action，并挂载生命周期中的各个方法。
     当route变更时，注册的各个方法会被执行。
 
 #### 参数说明
@@ -27,13 +23,13 @@
 |名称|类型|描述|例值|
 | ------------- |:-------------:| -----:| -----:|
 |name|String|||
-|option|Object|生命周期中的各个回调方法|{doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function}|
+|option|Object|生命周期中的各个回调方法|{do:function, before: function, after: function, destroy: function, ready: function}|
 
 #### 返回值
     undefined
 
 
-### Controller.create
+### Action._create
 
 #### 类型
 
@@ -41,20 +37,19 @@
 
 #### 说明
 
-    创建一个controller
+    创建一个action，内部方法
 
 #### 参数说明
 
 |名称|类型|描述|例值|
 | ------------- |:-------------:| -----:| -----:|
-|option|Object|生命周期中的各个回调方法|{doActivity:function, beforeActivity: function, afterActivity: function, destroy: function, ready: function}|
+|option|Object|生命周期中的各个回调方法|{do:function, before: function, after: function, destroy: function, ready: function}|
 
 
 #### 返回值
-    包含生命周期各个方法的controller对象
+    包含生命周期各个方法的action对象
 
-
-### Controller.run
+### Action.run
 
 #### 类型
 
@@ -62,16 +57,15 @@
 
 #### 说明
 
-    当前controller的执行，会依次执行：
-    1. 本次controller的beforeActivity/doActivity/afterActivity
-    2. 上一个controller的destroy
-    3. 本次controller的ready方法
+    当前action的执行，会依次执行：
+    1. 本次controller的before/do/after
+    2. 上一个action的destroy
+    3. 本次action的ready方法
 
 #### 参数说明
 
 |名称|类型|描述|例值|
 | ------------- |:-------------:| -----:| -----:|
-|name|String|当次controller的名称|'act'|
 |scope|Object|当次及上次执行的上下文，包含path及执行参数|{last: Object, path: "act", params: "app/myActivity=%7B%22title%22%3A%22init%20page%22%7D"}|
 
 
@@ -79,7 +73,7 @@
     promise对象，待生命周期执行完毕后resolve
 
 
-### Controller.remove
+### Action.remove
 
 #### 类型
 
@@ -87,7 +81,7 @@
 
 #### 说明
 
-    将某个controller从controller的队列中移除
+    将某个action从action的队列中移除
 
 #### 参数说明
 
