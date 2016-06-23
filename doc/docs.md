@@ -7,6 +7,7 @@
 ## 标准应用服务
 
 [标准应用服务开发教程](http://sfe.baidu.com/sf/#docs-sf-service)
+
 [标准应用服务接入规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)
 
 ## JS模块

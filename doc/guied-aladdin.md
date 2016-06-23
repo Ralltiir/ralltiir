@@ -27,6 +27,7 @@ Superframe的页面是可以通过类似搜索结果页的卡片化的形式来�
 服务进行接入时，需要满足《Superframe标准应用服务接入规范》
 
 参看《[应用服务开发教程](http://sfe.baidu.com/sf/#docs-sf-service)》
+
 参看《[应用服务接入规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)》
 
 ## JS模块接入
