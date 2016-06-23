@@ -85,31 +85,31 @@
         #con-menu * {
             transition: all 0.3s;
         }
-        #con-menu ul {
+        .con-menu-ul {
             width: 170px;
             margin: 80px 0 50px 0;
             font-size: 16px;
             font-weight: bold;
             line-height: 1.5;
         }
-        #con-menu ul li {
+        .con-menu-ul li {
             padding: 8px 16px;
         }
-        #con-menu ul li:hover {
+        .con-menu-ul li:hover {
             background: rgba(0, 0, 0, 0.1);
             padding-left: 25px; 
         }
-        #con-menu ul a {
+        .con-menu-ul a {
             color: #666;
             text-decoration: none;
             display: block;
         }
-        #con-menu ul li.selected {
+        .con-menu-ul li.selected {
             padding-left: 25px;
             background: #FAFAFA;
             border-right: 5px solid #039BE5;
         }
-        #con-menu ul li.selected a {
+        .con-menu-ul li.selected a {
             color: #0894ec;
         }
         /* 滚动条 start */
@@ -211,7 +211,7 @@
     <div id="container">
         <!-- 左侧菜单 -->
         <div id="con-menu">
-            <ul><!-- 导航 file:menu.html --></ul>
+            <ul class="con-menu-ul"><!-- 导航 file:menu.html --></ul>
         </div>
         <!-- mardown文档 -->
         <div id="con-doc" class="markdown-body">
