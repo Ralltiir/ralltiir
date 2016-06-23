@@ -4,7 +4,7 @@
 
 [卡片开发教程](http://sfe.baidu.com/#/superframe/card/1、开发入门)
 
-## 标准应用服务
+## 应用服务
 
 [应用服务开发教程](http://sfe.baidu.com/sf/#docs-sf-service)
 
