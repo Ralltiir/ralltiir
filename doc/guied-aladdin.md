@@ -19,15 +19,15 @@ Superframe的页面是可以通过类似搜索结果页的卡片化的形式来�
     2. 开发者在开发过程中，可以直接复用相同展现样式的卡片，无需进行额外重复工作；
     3. 开发者无需关系具体的统计逻辑，有通用的统计方案/机制来处理。
 
-具体开发相关：[卡片开发传送门](yd)
+具体开发相关：[卡片开发传送门]()
 
 ## 应用服务接入(推荐)
 
 对于业务庞杂的产品线（例如：知道、百科、图片），Superframe也为此量身打造了合适的接入方式，便于产品线进行最小接入成本的服务改造。
 服务进行接入时，需要满足《Superframe标准应用服务接入规范》
 
-参看《[应用服务开发教程](http://sfe.baidu.com/#/superframe/docs-sf-service)》
-参看《[应用服务接入规范](http://sfe.baidu.com/#/superframe/docs-sf-service-standard)》
+参看《[应用服务开发教程](http://sfe.baidu.com/sf/#docs-sf-service)》
+参看《[应用服务接入规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)》
 
 ## JS模块接入
 
