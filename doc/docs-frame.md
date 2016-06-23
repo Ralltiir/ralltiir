@@ -1,4 +1,4 @@
-# Superframe框架基础
+# Superframe框架基础技术
 
 Superframe框架整体思想也是源于业界MV*模式的思想。框架包含以下几个核心模块
 
