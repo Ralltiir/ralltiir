@@ -284,8 +284,7 @@
                 error: function () {
                     scrollTo(0, 0);
                     var doc = [];
-                    doc.push('# 组件未找到');
-                    doc.push('> 如有问题请联系 yangfan16@baidu.com');
+                    doc.push('# 页面未找到');
                     $('#con-doc').html(marked(doc.join('\n')));
                 }
             });
@@ -296,7 +295,33 @@
         }
 
         $(window).on('hashchange', function() {
-            console.log(location.hash);        
+            var hash = location.hash;
+            type = hash.replace('#','');
+            var url = './doc/' + type + '.md';
+            $.ajax({
+                url: url,
+                dataType: 'text',
+                // 不使用缓存可以让每次请求命中最新文件内容
+                cache: false,
+                success: function (doc) {
+                    scrollTo(0, 0);
+                    $('#con-doc').html(marked(doc)).css({
+                        'position': 'relative',
+                        'left': '-50px',
+                        'opacity': '0'
+                    }).animate({
+                        'left': '0',
+                        'opacity': '1'
+                    }, 260, 'swing');
+                },
+                error: function () {
+                    scrollTo(0, 0);
+                    var doc = [];
+                    doc.push('# 页面未找到');
+                    $('#con-doc').html(marked(doc.join('\n')));
+                }
+            });
+
         });
 
         // 如果demo中iframe出现滚动条，则demo中滚动时阻止父页面滚动
