@@ -6,9 +6,9 @@
 
 ## 标准应用服务
 
-[标准应用服务开发教程](http://sfe.baidu.com/sf/#docs-sf-service)
+[应用服务开发教程](http://sfe.baidu.com/sf/#docs-sf-service)
 
-[标准应用服务接入规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)
+[应用服务接入规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)
 
 ## JS模块
 
@@ -19,4 +19,4 @@
 
 ## 框架基础
 
-[Superframe框架技术](http://sfe.baidu.com/sf/#docs-frame)
+[Superframe框架基础技术](http://sfe.baidu.com/sf/#docs-frame)
