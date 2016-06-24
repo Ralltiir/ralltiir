@@ -41,9 +41,9 @@
 
 ### 代码书写规范
 
->>JS变量不允许直接绑定在window上，使用的全局命名空间为global；
+>JS变量不允许直接绑定在window上，使用的全局命名空间为global；
     
->>JS代码中不允许直接重写原生JS对象（包括：Array、String、Date、Number、Functions、Math、RegExp、Boolean、Events）的prototype方法；
+>JS代码中不允许直接重写原生JS对象（包括：Array、String、Date、Number、Functions、Math、RegExp、Boolean、Events）的prototype方法；
 
 ### 模块化使用规范
 
