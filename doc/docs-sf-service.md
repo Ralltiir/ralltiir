@@ -18,6 +18,12 @@
 
 [查看完整规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)
 
+## 框架运行环境
+
+> zepto.js
+> esl.js
+> superframe frame
+
 ## 联调测试(coming soon)
 
 ## 产品线改造指南(coming soon)
