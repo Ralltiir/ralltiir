@@ -4,72 +4,21 @@
 
 ## 接入要求概述
 
-### 服务path与接口
+服务接入时，需要满足以下规范：
 
-#### path
-产品线需要提供Superframe页面url切换时的path定义，例如：结果页调起知道Superframe页面，则会异步将页面url从m.baidu.com/s切换为m.baidu.com/zhidao
-而m.baidu.com/zhidao则是服务需要提供的。
-#### 接口
-产品线需要提供Superframe页面切换时的访问接口，以及接口规则，便于框架集成接口的fetch方法。
+> 1. 提供服务接入path与数据接口
 
-### 返回数据格式
+> 2. 数据接口返回格式
 
-数据接口返回的MIME统一为：text/html
+> 3. 页面JS规范
 
-返回的数据格式有以下要求：
+> 4. 页面css规范
 
-1. 每个文本块都使用以下标签定义方法包装：
-    <template id="moduleId"></template>
-2. mouduleId有白名单，目前提供的moduleId有：
-    ```
-    <template id="sf_async_head_js">
-        {%* 头部js 直接输出不带script标签的js代码 *%}
-    </template>
+> 5. 页面生命周期规范 
 
-    <template id="sf_async_body">
-        {%* 正文部分，输出DOM，不包含JS *%}
-    </template>
+[查看完整规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)
 
-    <template id="sf_async_merge_js">
-        {%* 全局变量 直接输出不带script标签的js代码 *%}
-    </template>
-
-    <template id="sf_async_foot_js">
-        {%* 底部js 直接输出不带script标签的js代码 *%}
-    </template>
-    ```
-
-### 页面JS规范
-
-由于页面的JS代码是框架从服务提供的接口中提取的，所以框架在执行JS时，使用的是new Function方法，对于页面内部来说，所有代码都是在Superframe的沙盒执行的，在沙盒中，页面能全局使用的变量仅有global。如有其他需要全局使用的js变量，可以通过global.sandbox(object)来传递。对应的，JS书写有以下几个规则需要遵循：
-
-#### 代码书写规范
-
->>JS变量不允许直接绑定在window上，使用的全局命名空间为global；
-    
->>JS代码中不允许直接重写原生JS对象（包括：Array、String、Date、Number、Functions、Math、RegExp、Boolean、Events）的prototype方法；
-
-#### 模块化使用规范
-
-目前许多产品线已经在使用AMD/CMD的模块化管理，所以在使用中也需要明确模块化的name/id命名规范
-
-##### 同步require
-
-同步require
-
-##### 异步require
-
-### 页面CSS规范
-
-#### 命名规范
-CSS命名统一使用产品线缩写(产品线标识)- 开头
-
-#### 选择器
-一般情况下，使用class作为选择器
-
-### 页面生命周期
-
-## 联调测试
+## 联调测试(coming soon)
 
 ## 产品线改造指南(coming soon)
 
