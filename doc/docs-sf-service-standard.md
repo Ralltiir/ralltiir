@@ -49,11 +49,31 @@
 
 目前许多产品线已经在使用AMD/CMD的模块化管理，所以在使用中也需要明确模块化的name/id命名规范
 
-#### 同步require
+#### esl方案
 
-同步require
+无论同步还是异步require，产品线require id都需要改造为require(['产品线id/xxx'])的形式，例如：
 
-#### 异步require
+    搜索使用require: require(['search/ui','search/sf'])
+
+##### 同步require
+
+同步require保证id符合规范即可
+
+##### 异步require
+
+由于大搜环境使用的是esl amd方案，所以如果同样使用的
+
+#### 非esl方案
+
+##### require&define
+
+目前Superframe容器统一使用的是esl的方案，如果使用了require但不是esl的（例如fisp），则通过如下方式解决：
+
+产品线将之前全局的(window)require&define方案传入global.sandbox中，Superframe容器会将sandbox中的对象再次传入沙盒，对于沙盒中的代码，依然可以安全的使用自身的require和define。
+
+##### 异步加载脚本/资源
+
+如果产品线还在使用<script src="url"></script>加载脚本的方式，则需要将对应js文件改为支持esl的形式：<script>require(['url'])</script>
 
 ## 页面CSS规范
 
