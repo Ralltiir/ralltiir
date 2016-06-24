@@ -63,7 +63,7 @@
 
 ##### 异步require
 
-由于大搜环境使用的是esl amd方案，所以如果同样使用的
+由于大搜环境使用的是esl amd方案，在使用异步加载时，需要产品线修改自己id对应的完整path的config，来映射到自己的线上静态文件目录；
 
 #### 非esl方案
 
@@ -71,7 +71,11 @@
 
 目前Superframe容器统一使用的是esl的方案，如果使用了require但不是esl的（例如fisp），则通过如下方式解决：
 
-产品线将之前全局的(window)require&define方案传入global.sandbox中，Superframe容器会将sandbox中的对象再次传入沙盒，对于沙盒中的代码，依然可以安全的使用自身的require和define。
+产品线将之前全局的(window)require&define方案传入global.sandbox中，Superframe容器会将sandbox中的对象再次传入沙盒，对于沙盒中的代码，依然可以安全的使用自身的require和define。例如：
+
+    require.config({
+        'productId/xxx' : 'http://productdomain/static/xxx.js'
+    });
 
 ##### 异步加载脚本/资源
 
