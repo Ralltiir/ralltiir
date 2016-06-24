@@ -13,7 +13,7 @@
 
 [阿拉丁接入方案](http://sfe.baidu.com/sf/#guied-aladdin)
 
-[MIP接入方案](http://sfe.baidu.com/sf/#guied-mip)
+[MIP接入方案](http://sfe.baidu.com/sf/#guide-mip)
 
 ## 开发指南
 
