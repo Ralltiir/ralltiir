@@ -73,7 +73,11 @@
 
 ##### 异步加载脚本/资源
 
-如果产品线还在使用<script src="url"></script>加载脚本的方式，则需要将对应js文件改为支持esl的形式：
+如果产品线还在使用
+
+    <script src="url"></script>
+    
+加载脚本的方式，则需要将对应js文件改为支持esl的形式：
 
     <script>require(['url'])</script>
 
