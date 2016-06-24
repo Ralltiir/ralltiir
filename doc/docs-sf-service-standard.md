@@ -45,6 +45,8 @@
     
 >JS代码中不允许直接重写原生JS对象（包括：Array、String、Date、Number、Functions、Math、RegExp、Boolean、Events）的prototype方法；
 
+>JS不允许使用全局嵌入JS标签的形式进行加载
+
 ### 模块化使用规范
 
 目前许多产品线已经在使用AMD/CMD的模块化管理，所以在使用中也需要明确模块化的name/id命名规范
