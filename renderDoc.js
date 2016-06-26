@@ -5,7 +5,8 @@ var config = {
       '2_guides':'教程',
       'reference':'参考文档',
       '3_API':'接口文档',
-      '4_support':'技术支持'
+      '4_support':'技术支持',
+      'join-guied':'接入指南'
     }
 };
 var fs = require('fs'),
