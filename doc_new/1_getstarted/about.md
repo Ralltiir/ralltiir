@@ -16,12 +16,12 @@
 
 ### Superframe产品流变化
 
-!()[img/about/sf_process.png =400x]
-<img src="img/about/sf_process.png" width="400">
+![](img/about/sf_process.png =400x)
 
 ### 资源方数据接入superframe方式
 
-<img src="img/about/sf_data.png" width="600">
+![](img/about/sf_data.png =700x)
+
 
 注：
 
@@ -33,7 +33,7 @@
 
 ### 整个MIP系统的组成如下所示
 
-<img src="img/about/mib_module.png" width="900">
+![](img/about/mib_module.png =900x)
 
 * MIP规范：规定站长怎么来进行MIP HTML开发
 * MIP的运行环境：提供MIP HTML的运行环境
