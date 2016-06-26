@@ -1,4 +1,4 @@
-# Superframe阿拉丁应用服务开发教程
+# 应用服务开发教程
 
 ## 服务接入流程(Coming soon)
 
