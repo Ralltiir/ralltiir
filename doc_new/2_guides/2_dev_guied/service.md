@@ -16,8 +16,6 @@
 
 > 5. 页面生命周期规范 
 
-[查看完整规范](http://sfe.baidu.com/sf/#docs-sf-service-standard)
-
 ## 框架运行环境
 
 > zepto.js
