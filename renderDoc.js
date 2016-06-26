@@ -7,7 +7,8 @@ var config = {
       '3_API':'接口文档',
       '4_support':'技术支持',
       '1_join_guied':'接入指南',
-      '2_dev_guied':'开发指南'
+      '2_dev_guied':'开发指南',
+      '3_frame_guied':'框架基础'
     }
 };
 var fs = require('fs'),
