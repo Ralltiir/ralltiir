@@ -46,7 +46,7 @@ $(function(){
 
 
 
-    var menuPath = './doc_new/sidebar';
+    var menuPath = './docs/sidebar';
     $('#sidebar-container').load(menuPath,function(){
          $('#side-menu').metisMenu();
          defaultLoad();
@@ -103,7 +103,7 @@ $(function(){
             if (hash.length > 0) {
                 renderDoc(hash); 
             } else {
-                $.get('./doc_new/1_getstarted/about.md', function(doc) {
+                $.get('./docs/1_getstarted/about.md', function(doc) {
                     $('#con-doc').html(marked(doc));
                 });
             }
