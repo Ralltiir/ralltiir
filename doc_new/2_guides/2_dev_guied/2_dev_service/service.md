@@ -37,7 +37,7 @@ Superframe团队会提供基于检索结果页的Superframe框架环境，产品
 
 ## 产品线改造指南
 
-本章节基于Superframe的阿拉丁卡片服务为范例，来介绍产品线在进行Superframe接入改造时，
+本章节基于Superframe的阿拉丁卡片服务为范例，来介绍产品线在进行Superframe接入改造时。（未完待续）
 
 ### 模板改造建议
 ### JS开发建议
