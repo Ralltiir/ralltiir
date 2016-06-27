@@ -1,5 +1,5 @@
 var config = {
-    docPath:'./doc_new',
+    docPath:'./docs',
     nameMap:{
       '1_getstarted':'简介',
       '2_guides':'教程',
