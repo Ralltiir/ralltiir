@@ -1,14 +1,26 @@
 # 应用服务规范
 
-## 服务path与接口
+## 服务path
 
-### path
-产品线需要提供Superframe页面url切换时的path定义，例如：结果页调起知道Superframe页面，则会异步将页面url从m.baidu.com/s切换为m.baidu.com/zhidao
+产品线需要提供Superframe页面url切换时的path定义。Superframe的前端技术原理是异步的进行单页切换，并且切换时，会将地址栏中的path同时变换为当前单页的url。
+
+例如：结果页调起知道Superframe页面，则会异步将页面url从m.baidu.com/s切换为m.baidu.com/zhidao
 而m.baidu.com/zhidao则是服务需要提供的。
-### 接口
+
+    用户直接访问path如何处理？
+    
+    用户直接访问时，除/s、/sf等大搜索自己维护的业务外，会让例如m.baidu.com/zhidao?的请求302到zhidao.baidu.com访问，此时已脱离Suerframe。
+
+## 接口
+
 产品线需要提供Superframe页面切换时的访问接口，以及接口规则，便于框架集成接口的fetch方法。
 
-## 返回数据格式
+### 接口服务要求
+
+1. 服务接口本身支持跨域，允许域名白名单为：www.baidu.com,m.baidu.com（设置Access-Control-Allow-Origin Header）；
+2. 服务本身只针对固定refer的开放，例如：*.baidu.com。具体策略产品线服务自己制定；
+
+### 返回数据格式
 
 数据接口返回的MIME统一为：text/html
 
@@ -35,11 +47,13 @@
     </template>
     ```
 
-## 页面JS规范
+## 前端页面规范
+
+### 页面JS规范
 
 由于页面的JS代码是框架从服务提供的接口中提取的，所以框架在执行JS时，使用的是new Function方法，对于页面内部来说，所有代码都是在Superframe的沙盒执行的，在沙盒中，页面能全局使用的变量仅有global。如有其他需要全局使用的js变量，可以通过global.sandbox(object)来传递。对应的，JS书写有以下几个规则需要遵循：
 
-### 代码书写规范
+#### 代码书写规范
 
 >JS变量不允许直接绑定在window上，使用的全局命名空间为global；
     
@@ -47,21 +61,21 @@
 
 >JS不允许使用全局嵌入JS标签的形式进行加载
 
-### 模块化使用规范
+#### 模块化使用规范
 
 目前许多产品线已经在使用AMD/CMD的模块化管理，所以在使用中也需要明确模块化的name/id命名规范
 
-#### esl方案
+##### esl方案
 
 无论同步还是异步require，产品线require id都需要改造为require(['产品线id/xxx'])的形式，例如：
 
     搜索使用require: require(['search/ui','search/sf'])
 
-##### 同步require
+###### 同步require
 
 同步require保证id符合规范即可
 
-##### 异步require
+###### 异步require
 
 由于大搜环境使用的是esl amd方案，在使用异步加载时，需要产品线修改自己id对应的完整path的config，来映射到自己的线上静态文件目录，例如：
     
@@ -69,16 +83,16 @@
         'productId/xxx' : 'http://productdomain/static/xxx.js'
     });
 
-#### 非esl方案
+##### 非esl方案
 
-##### require&define
+###### require&define
 
 目前Superframe容器统一使用的是esl的方案，如果使用了require但不是esl的（例如fisp），则通过如下方式解决：
 
 产品线将之前全局的(window)require&define方案传入global.sandbox中，Superframe容器会将sandbox中的对象再次传入沙盒，对于沙盒中的代码，依然可以安全的使用自身的require和define。
 
 
-##### 异步加载脚本/资源
+###### 异步加载脚本/资源
 
 如果产品线还在使用
 
@@ -88,15 +102,15 @@
 
     <script>require(['url'])</script>
 
-## 页面CSS规范
+### 页面CSS规范
 
-### 命名规范
+#### 命名规范
 CSS命名统一使用产品线缩写(产品线标识)- 开头
 
-### 选择器
+#### 选择器
 一般情况下，使用class作为选择器
 
-## 页面生命周期
+### 页面生命周期
 
 框架本身会提供global.view对象，来给产品线绑定对应view的生命周期
 
