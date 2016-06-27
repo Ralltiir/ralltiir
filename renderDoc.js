@@ -67,7 +67,7 @@ function renderSideMenu(fileList,level){
     if(level == 0){
       preStr = '<ul class="nav" id="side-menu">';
     } else {
-      preStr = '<ul class="nav nav-' + (level + 1) + '-level" >';
+      preStr = '<ul class="nav nav-' + (level + 1) + '-level" data-level = "'+(level + 1)+'">';
     }
     var contStr = '';
     var menuStr = '';
