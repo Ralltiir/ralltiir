@@ -55,14 +55,15 @@ $(function(){
          $('#side-menu').metisMenu();
          defaultLoad();
          //设置默认右侧菜单
-         var url = window.location;
+        var url = window.location;
         var hash = location.hash;
+        if(hash == '') url = url + '#' + globalConf.firstDoc;
         var element = $('#sidebar-container a').filter(function() {
             return this.href == url;
-        }).parent().parent().addClass('in').parent();
-        if (element.is('li')) {
-            element.addClass('active');
-        }
+        });
+        var parentUl = element.parents('ul').filter(function(){
+            if($(this).attr('data-level')) $(this).addClass('in');
+        });
     });
     function renderDoc(path) {
         // 切换导航hover状态
