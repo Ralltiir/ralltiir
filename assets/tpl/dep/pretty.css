@@ -61,10 +61,11 @@ strong {
     margin: 20px 0 10px;
     padding: 0;
     position: relative;
+    color:#147bc1;
 }
 .markdown-body h1 .mini-icon-link, .markdown-body h2 .mini-icon-link, .markdown-body h3 .mini-icon-link, .markdown-body h4 .mini-icon-link, .markdown-body h5 .mini-icon-link, .markdown-body h6 .mini-icon-link {
-    color: #000000;
     display: none;
+    color:#1173c7;
 }
 .markdown-body h1:hover a.anchor, .markdown-body h2:hover a.anchor, .markdown-body h3:hover a.anchor, .markdown-body h4:hover a.anchor, .markdown-body h5:hover a.anchor, .markdown-body h6:hover a.anchor {
     line-height: 1;
