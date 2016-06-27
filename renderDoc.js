@@ -8,7 +8,10 @@ var config = {
       '4_support':'技术支持',
       '1_join_guied':'接入指南',
       '2_dev_guied':'开发指南',
-      '3_frame_guied':'框架基础'
+      '3_frame_guied':'框架基础',
+      '1_dev_card': '卡片开发',
+      '2_dev_service': '应用服务开发',
+      '3_dev_act':'JS模块开发'
     }
 };
 var fs = require('fs'),
