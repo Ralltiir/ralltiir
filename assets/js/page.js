@@ -86,7 +86,7 @@ $(function(){
 
                 $('#con-doc').html(marked(doc)).css({
                     'position': 'relative',
-                    'left': '-50px',
+                    'left': '-30px',
                     'opacity': '0.5'
                 }).animate({
                     'left': '0',
