@@ -1,6 +1,11 @@
 # 应用服务开发教程
 
-## 服务接入流程(Coming soon)
+## 服务接入流程
+
+1. 服务方与Superframe团队确定具体产品线业务；
+2. 服务方按照规范进行页面开发；
+3. Superframe团队进行框架服务接入配置，并与服务方联调；
+4. 服务方上线对应代码，Superframe框架开放调起；
 
 ## 接入要求概述
 
@@ -24,9 +29,15 @@
 
 > superframe frame
 
-## 联调测试(coming soon)
+## 联调测试
 
-## 产品线改造指南(coming soon)
+### Superframe框架环境
+
+Superframe团队会提供基于检索结果页的Superframe框架环境，产品线进行联调、测试或者上线预览时，均可以通过 Superframe的环境来进行Superframe调起后页面的效果检查。
+
+## 产品线改造指南
+
+本章节基于Superframe的阿拉丁卡片服务为范例，来介绍产品线在进行Superframe接入改造时，
 
 ### 模板改造建议
 ### JS开发建议
