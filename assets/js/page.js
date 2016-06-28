@@ -136,7 +136,7 @@ $(function(){
             path = hash.replace('#','');
             curentPath = path.replace(/[^/]*.md/,'');
             renderDoc(path);
-            $('#side-menu').metisMenu();
+            refreshSideBar();
         });
 
 })
