@@ -60,7 +60,7 @@ $(function(){
         if(hash == '') url = url + '#' + globalConf.firstDoc;
         var element = $('#sidebar-container a').filter(function() {
             return this.href == url;
-        });
+        }).addClass('active');
         var parentUl = element.parents('ul').filter(function(){
             if($(this).attr('data-level')) $(this).addClass('in');
         });
