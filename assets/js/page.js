@@ -68,6 +68,9 @@ $(function(){
             }
         });
     });
+    function refreshSideBar(){
+    
+    }
     function renderDoc(path) {
         // 切换导航hover状态
         var url = path;
@@ -132,6 +135,7 @@ $(function(){
             path = hash.replace('#','');
             curentPath = path.replace(/[^/]*.md/,'');
             renderDoc(path);
+            $('#side-menu').metisMenu();
         });
 
 })
