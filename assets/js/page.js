@@ -54,7 +54,11 @@ $(function(){
     $('#sidebar-container').load(menuPath,function(){
          $('#side-menu').metisMenu();
          defaultLoad();
-         //设置默认右侧菜单
+        refreshSideBar();
+    });
+    //刷新右侧菜单系统
+    function refreshSideBar(){
+        //设置默认右侧菜单
         var url = window.location;
         var hash = location.hash;
         if(hash == '') url = url + '#' + globalConf.firstDoc;
@@ -67,9 +71,6 @@ $(function(){
                 $(this).parent().addClass('active');
             }
         });
-    });
-    function refreshSideBar(){
-    
     }
     function renderDoc(path) {
         // 切换导航hover状态
