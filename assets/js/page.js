@@ -64,6 +64,7 @@ $(function(){
         var parentUl = element.parents('ul').filter(function(){
             if($(this).attr('data-level')) $(this).addClass('in');
         });
+        if(element.parent().is(li)) element.parent().addClass('active');
     });
     function renderDoc(path) {
         // 切换导航hover状态
