@@ -128,7 +128,7 @@ $(function(){
             if (hash.length == 0) {
                 defaultDoc = globalConf.firstDoc;
             }
-            curentPath = defaultDoc;
+            curentPath = defaultDoc.replace(/[^/]*.md/,'');
             renderDoc(defaultDoc);
         }
 
