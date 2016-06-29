@@ -60,5 +60,30 @@ Superframe团队会提供基于检索结果页的Superframe框架环境，产品
 
 之后即可正常使用page、view变量（勿加window对象）
 
+2、生命周期
+
+页面需要向框架传递生命周期状态，例如：
+```
+    view.trigger('ready');  // 表示dom ready
+    view.trigger('init');   // 框架js加载完毕
+```
+
+3、组件化
+
+所有js采用amd组件规范开发并使用，amd组件的key不应该固定，应该与目录结构相同，内联使用时，require均使用相对路径，例如：
+
+```
+    define(function () {
+        return EventEmitter;
+    });
+    
+    require(['../utils/eventEmitter', '../card/cardT'], function(View, Card) {
+        // do sth
+    });
+```
+
+js文件结构可参考http://sfe.baidu.com/sf/#./docs/2_guides/3_frame_guied/sf_app/2.javascript.md
+
+
 
 ### CSS开发建议
