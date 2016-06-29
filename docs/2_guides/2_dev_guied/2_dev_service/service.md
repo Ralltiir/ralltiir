@@ -41,5 +41,24 @@ Superframe团队会提供基于检索结果页的Superframe框架环境，产品
 
 ### 模板改造建议
 ### JS开发建议
-### CSS开发建议
 
+1、全局变量
+
+在页面中只暴露必须的全局变量，如page、view，分别用来绑定全局变量方法及传递页面事件。
+
+当页面异步打开时，框架会以new function方式创建js执行沙河环境，约定沙盒唯一对外暴露的全局变量为_global_，因此，为了兼容同步异步环境，可采用以下方法初始化全局变量：
+
+```
+    if (typeof(_global_) != 'undefined') {
+        _global_.view = new View;
+        _global_.page = {};
+    } else {
+        window.view = new View;
+        window.page = {};
+    };
+```
+
+之后即可正常使用page、view变量（勿加window对象）
+
+
+### CSS开发建议
