@@ -37,9 +37,48 @@ Superframe团队会提供基于检索结果页的Superframe框架环境，产品
 
 ## 产品线改造指南
 
-本章节基于Superframe的阿拉丁卡片服务为范例，来介绍产品线在进行Superframe接入改造时。（未完待续）
+本章节基于Superframe的阿拉丁卡片服务为范例，来介绍产品线在进行Superframe接入改造时。
 
 ### 模板改造建议
+
+至少需要一个同步模版及一个异步模版，用以在不同的请求方式下返回html片段。
+
+同步模版包含完整的html head body结构，例如：
+
+```
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta ... />
+        <style>头部css</style>
+        <script>头部js</script>
+    </head>
+    
+    <body>
+        <div>各种dom</div>
+        <script>框架js</script>
+        <script>业务js</script>
+    </body>
+</html>
+```
+
+异步模版可以采用template标签分段，异步渲染时方便js拆分并插入dom或执行js，例如：
+
+```
+<template id="sf_async_head_js">
+    <script>头部js</script>
+</template>
+
+<template id="sf_async_body">
+    <div>各种dom</div>
+</template>
+
+<template id="sf_async_foot_js">
+    <script>业务js</script>
+</template>
+```
+
+
 ### JS开发建议
 
 1、全局变量
