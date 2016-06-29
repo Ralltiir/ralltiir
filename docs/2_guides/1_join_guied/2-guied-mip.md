@@ -6,25 +6,25 @@
 
 ## 什么是MIP页面
 
-[mip介绍](http://ala-fe.baidu.com/mip/1_getStart.md)
+[mip介绍](http://mip.baidu.com/#./docs/1_getstarted/started.md)
 
 ## MIP页是怎么开发的
 
-[入门教程](http://ala-fe.baidu.com/mip/2_guides.md)
+[入门教程](http://mip.baidu.com/#./docs/2_guides/guides.md)
 
 ## MIP页有哪些规范需要注意：
 
-[MIP HTML规范](http://ala-fe.baidu.com/mip/0_standard.md)
+[MIP HTML规范](http://mip.baidu.com/#./docs/3_reference/standard.md)
 
-[MIP API说明](http://ala-fe.baidu.com/mip/3_reference.md)
+[MIP API说明](http://mip.baidu.com/#./docs/3_reference/reference.md)
 
-[MIP 页规范检查](http://ala-fe.baidu.com/mip/5_chenk_list.md)
+[MIP 页规范检查](http://mip.baidu.com/#./docs/2_guides/check_list.md)
 
 [让搜索发现你的MIP页面](http://ala-fe.baidu.com/mip/mippagediscover.md)
 
 ## 如果不支持https或者想让MIP加速怎么办：
 
-[MIP cache](http://ala-fe.baidu.com/mip/_cache.md)
+[MIP cache](http://mip.baidu.com/#./docs/3_reference/_cache.md)
 
 ## 新增的MIP页怎么进入百度搜索的视角：
 
