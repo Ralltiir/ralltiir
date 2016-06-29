@@ -128,6 +128,7 @@ $(function(){
             if (hash.length == 0) {
                 defaultDoc = globalConf.firstDoc;
             }
+            curentPath = defaultDoc;
             renderDoc(defaultDoc);
         }
 
