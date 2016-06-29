@@ -20,7 +20,7 @@
 
 [MIP 页规范检查](http://mip.baidu.com/#./docs/2_guides/check_list.md)
 
-[让搜索发现你的MIP页面](http://ala-fe.baidu.com/mip/mippagediscover.md)
+[让搜索发现你的MIP页面](http://mip.baidu.com/#./docs/2_guides/mippagediscover.md)
 
 ## 如果不支持https或者想让MIP加速怎么办：
 
