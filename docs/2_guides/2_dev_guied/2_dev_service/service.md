@@ -126,3 +126,9 @@ js文件结构可参考http://sfe.baidu.com/sf/#./docs/2_guides/3_frame_guied/sf
 
 
 ### CSS开发建议
+
+由于大搜结果页及大部分服务均全量引入了PMD：http://pmd.baidu.com/，因此建议以此作为基础css框架使用，保证样式及产品体验统一。
+
+其它框架必要的css文件应在同步模版头部加载，同时在框架view层中单例加载。
+
+CSS命名统一使用产品线缩写 (产品线标识)- 开头；并统一使用class作为选择器。
