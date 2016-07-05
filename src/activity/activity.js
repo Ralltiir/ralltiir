@@ -68,9 +68,9 @@ define(function() {
         
         var view = viewFactory.create(scope.to.url);
         
-        $.when(_proxy(self._scopeList["start"], self, [scope, view])).then(function() {
+        $.when((function() {
             return view.start(scope);
-        }).always(function() {
+        })()).then(_proxy(self._scopeList["start"], self, [scope, view])).always(function() {
             dtd.resolve();
         });
         
