@@ -50,24 +50,23 @@ Superframe团队会提供基于检索结果页的Superframe框架环境，产品
 ```
     require(['sf/router/router','sf/action/action','sf/action/sfAction'], function(router, action, sfAction) {
 
-        //router.stop();
+        //注册superframe action
         action.regist("/graph", sfAction);
 
+        //进行action参数配置
         action.config({
             fetch: {
                 '/graph': {
+                    //请求url
                     url: 'http://cq01-rdqa-dev021.cq01.baidu.com:8081/s',
+                    //请求跨域
                     withCredentials: true
                 }
             }
         });
+        
+        //注册superframe router
         router.add("/graph", action.run);
-
-        //关闭router
-        if(!window.__sam_async == true) {
-            //router.start();
-        }
-
     });
 ```
 
