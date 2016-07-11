@@ -37,6 +37,47 @@
 
 Superframe团队会提供基于检索结果页的Superframe框架环境，产品线进行联调、测试或者上线预览时，均可以通过 Superframe的环境来进行Superframe调起后页面的效果检查。
 
+当前联调可直接使用线上结果页环境进行联调，具体流程：
+
+1. 准备好自己的产品服务地址和对应path，如下：
+
+    服务地址：http://cq01-rdqa-dev021.cq01.baidu.com:8081/s
+    
+    对应path：/graph
+
+2. 如果你的服务接口与返回数据已按照规范填写，则可以直接在console执行以下配置操作：
+
+```
+    require(['sf/router/router','sf/action/action','sf/action/sfAction'], function(router, action, sfAction) {
+
+        //注册superframe action
+        action.regist("/graph", sfAction);
+
+        //进行action参数配置
+        action.config({
+            fetch: {
+                '/graph': {
+                    //请求url
+                    url: 'http://cq01-rdqa-dev021.cq01.baidu.com:8081/s',
+                    //请求跨域
+                    withCredentials: true
+                }
+            }
+        });
+        
+        //注册superframe router
+        router.add("/graph", action.run);
+    });
+```
+
+3. 配置ready以后，可在console中通过以下代码调起自己的APP页面
+```
+require(['sf/action/action'],function(action) {
+    action.redirect("/graph?params=test")
+});
+```
+
+
 ## 产品线改造指南
 
 本章节基于Superframe的阿拉丁卡片服务为范例，来介绍产品线在进行Superframe接入改造时。
