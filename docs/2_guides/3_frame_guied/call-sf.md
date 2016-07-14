@@ -30,6 +30,7 @@ smarty 生成调起链接：
 {%fe_fn_card_sflink_prefix url="http://m.baidu.com/sf?word={%$tplData.key|escape:url%}&pd=jingdian_comment&actname=act_poi_comments&title=" class='sfc-evaluate-a'%}
 test
 {%fe_fn_card_sflink_suffix%}
+```
 
 ## js调起
 
