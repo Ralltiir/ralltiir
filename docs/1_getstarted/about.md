@@ -15,11 +15,11 @@ Superframe：前端极速浏览框架，目标是提升用户体验，提供沉�
 
 ### Superframe产品流变化
 
-![](img/about/sf_process.png =500x)
+![](img/about/sf_process.png =600x)
 
 ### 资源方数据接入superframe方式
 
-![](img/about/sf_data.png =500x)
+![](img/about/sf_data.png =600x)
 
 
 说明：
@@ -32,7 +32,7 @@ Superframe：前端极速浏览框架，目标是提升用户体验，提供沉�
 
 ### 整个MIP系统的组成如下所示
 
-![](img/about/mip_module.png =600x)
+![](img/about/mip_module.png =700x)
 
 * MIP规范：规定站长怎么来进行MIP HTML开发
 * MIP的运行环境：提供MIP HTML的运行环境
