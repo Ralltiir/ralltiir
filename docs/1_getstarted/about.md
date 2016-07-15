@@ -32,7 +32,7 @@ Superframe：前端极速浏览框架，目标是提升用户体验，提供沉�
 
 ### 整个MIP系统的组成如下所示
 
-![](img/about/mib_module.png =600x)
+![](img/about/mip_module.png =600x)
 
 * MIP规范：规定站长怎么来进行MIP HTML开发
 * MIP的运行环境：提供MIP HTML的运行环境
@@ -41,7 +41,7 @@ Superframe：前端极速浏览框架，目标是提升用户体验，提供沉�
 ### 通过MIP接入百度方式
 内容生产者，通过MIP方式接入百度，可以有下面形式:
 
-![](img/about/mib_in_baidu.png =500x)
+![](img/about/mip_in_baidu.png =500x)
 
 ### 业界类似方案
 
