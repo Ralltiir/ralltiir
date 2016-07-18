@@ -44,3 +44,30 @@ require(['sf/action/action'], function(action) {
 //结果页action：sf/action/action
 //通用情景页action：sf/app/sf/action/action
 ```
+
+
+## url参数含义说明
+
+* `pd`：[必选]产品线唯一标识，需申请
+* `word`：[必选]查询词
+* `tn`：主模版(sf-app)版式选择，默认为normal
+
+* `openapi=1`：使用openapi召回
+* `dspName`：召回控制（表示在wise上召回）
+* `from_sf`：来源（openapi统计和召回用）
+* `resource_id`：资源id（openapi召回主资源号）
+* `apitn`：需要透传给openapi的tn参数，控制openapi召回
+
+* `actname`：js模块控制召回卡片
+* `ext`：前端使用的透传参数，标准json格式
+
+* `lid`：结果页lid（统计用）
+* `frsrcid`：结果页来源卡片srcid （统计用）
+* `frorder`：结果页来源卡片order （统计用）
+* `title`：sf页标题（展现控制，默认使用word）
+
+
+
+
+
+
