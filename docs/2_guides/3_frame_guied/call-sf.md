@@ -65,9 +65,3 @@ require(['sf/action/action'], function(action) {
 * `frsrcid`：结果页来源卡片srcid （统计用）
 * `frorder`：结果页来源卡片order （统计用）
 * `title`：sf页标题（展现控制，默认使用word）
-
-
-
-
-
-
