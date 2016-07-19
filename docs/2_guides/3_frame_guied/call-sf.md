@@ -38,12 +38,7 @@ test
 url配置调起Superframe是一种较为通用但不能完全满足需求的方式，如果开发者有执行js逻辑后再调起的需求，可使用js调起方法：
 
 ```
-require(['sf/action/action'], function(action) {
-    action.redirect("/sf?params", null, {"view":{"customClassName":"tagclass"}});
-});
-//注意，结果页的sf require key和sf通用情景页不一致
-//结果页action：sf/action/action
-//通用情景页action：sf/app/sf/action/action
+    fif.action.redirect("/sf?params", null, {"view":{"customClassName":"tagclass"}});
 //view的配置注入可通过第三个参数实现，如上
 ```
 
