@@ -7,8 +7,9 @@ Superframe的调起分为url配置调起和js调起。框架中调起直接使�
 url配置调起会极大简化开发者在框架中调起Superframe的使用。具体配置如下：
 
 ```
-
-<a href="landing page url" data-sf-href="/sf[otherpath]?params">
+url配置属性：data-sf-href
+其他配置：data-sf-options
+<a href="landing page url" data-sf-href="/sf[otherpath]?params" data-sf-options='{"view": {"customClassName":"tagclass"}}'>
 
 ```
 
@@ -38,11 +39,12 @@ url配置调起Superframe是一种较为通用但不能完全满足需求的方�
 
 ```
 require(['sf/action/action'], function(action) {
-    action.redirect("/sf?params");
+    action.redirect("/sf?params", null, {"view":{"customClassName":"tagclass"}});
 });
 //注意，结果页的sf require key和sf通用情景页不一致
 //结果页action：sf/action/action
 //通用情景页action：sf/app/sf/action/action
+//view的配置注入可通过第三个参数实现，如上
 ```
 
 
