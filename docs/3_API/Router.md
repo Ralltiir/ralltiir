@@ -1,6 +1,6 @@
 # Router API 说明
 
-## Router.config( options )
+## Router.config([options])
 
 ### 类型
 
@@ -14,13 +14,13 @@
 
 | 名称 | 类型 | 描述 | 例值 |
 | ------| ------ | ------ |-----|
-| options | Object | 可配置参数<br> options.path 默认路径;<br>options.root 根路径;<br>options.mode 路由模式（可选 async、page，默认为 async);|{ path:string, root: string, mode:async }|
+| options | Object | 可配置参数<br> options.path 初始路径，默认为`'/'`;<br>options.index index文件名 默认为`''`;<br>options.mode 路由模式（可选 async、page，默认为 async);|{ path:string, root: string, mode:async }|
 
 ### 返回值
 
 `null`
 
-## Router.add( path, fn, thisArg )
+## Router.add( path, fn [,thisArg])
 
 ### 类型
 
@@ -34,9 +34,9 @@
 
 | 名称 | 类型 | 描述 | 例值 |
 | ------| ------ | ------ |-----|
-| path | String/RegExp= | 路径 | “/graph”|
-| fn | Function | 路由处理函数 | action.run|
-| thisArg | Object | thisArg 路由处理函数的this指针 | |
+| path | String/RegExp | 路由路径，如果是空字符串则认为是设置默认路由。 | "/graph"|
+| fn | Function | 路由处理函数;<br>function(string, Object, Object, string, Object){}<br>路由处理函数（函数参数分别是：path、查询条件、路径参数、完整URL、跳转参数<br>跳转参数参考redirect(url, query, options) | action.run|
+| thisArg | Object | 路由处理函数的this指针 | this |
 
 ### 返回值
 
@@ -113,13 +113,13 @@
 | ------| ------ | ------ |-----|
 | url | String | 路径 | |
 | query | String | 查询条件 | |
-| options | Object | 当前 controller执行时需要的参数，是以 {k: v} 结构存储的Object ||
+| options | Object | 重置参数;<br>options.slient {boolean} 是否静默重置<br>如果静默重置则不会触发相应的路由规则处理|{slient: true}|
 
 ### 返回值
 
 `null`
 
-## Router.redirect(url, query, options)
+## Router.redirect(url, query [,options])
 
 ### 类型
 
@@ -127,15 +127,15 @@
 
 ### 说明
 
-路由跳转
+URL 跳转
 
 ### 参数
 
 | 名称 | 类型 | 描述 | 例值 |
 | ------| ------ | ------ |-----|
 | url | String | URL 路径 | |
-| query | String | 查询条件 | |
-| options | Object | 跳转参数<br>options.title 跳转后页面的title;<br>options.force 是否强制跳转；<br>options.silent 是否静默跳转（不改变url);||
+| query | Object | 查询条件 | |
+| options | Object | 跳转参数<br>options.force 是否强制跳转(默认情况下相同URL不跳转);<br>options.silent 是否静默跳转（静默跳转则不改变当前url);|{force: false, silent: false}|
 
 ### 返回值
 
