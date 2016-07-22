@@ -11,6 +11,12 @@ url配置属性：data-sf-href
 其他配置：data-sf-options
 <a href="landing page url" data-sf-href="/sf[otherpath]?params" data-sf-options='{"view": {"customClassName":"tagclass"}}'>
 
+//view的配置注入可通过第三个参数实现，如上
+    customClassName: '',        // 自定义样式
+    headTitle: '',              // 自定义头部标题html
+    headTool: '',               // 自定义头部右侧工具html
+    headClose: false,           // 自定义关闭按钮,默认不显示
+
 ```
 
 在阿拉丁模板中和superframe-card 中分别提供了两个Smarty方法生成调起链接，详情见下面
@@ -40,6 +46,11 @@ url配置调起Superframe是一种较为通用但不能完全满足需求的方�
 ```
     fif.action.redirect("/sf?params", null, {"view":{"customClassName":"tagclass"}});
 //view的配置注入可通过第三个参数实现，如上
+    customClassName: '',        // 自定义样式
+    headTitle: '',              // 自定义头部标题html
+    headTool: '',               // 自定义头部右侧工具html
+    headClose: false,           // 自定义关闭按钮,默认不显示
+
 ```
 
 
