@@ -18,7 +18,8 @@ url配置属性：data-sf-href
     headTitle: '',              // 自定义头部标题html
     headTool: '',               // 自定义头部右侧工具html
     headClose: false,           // 自定义关闭按钮,默认不显示
-    useAnimate: true    //默认由框架控制，可强行覆盖
+    useAnimate: true,    //默认由框架控制，可强行覆盖
+    _hold: 2    //默认为1，2为不缓存
 
 ```
 
@@ -53,7 +54,8 @@ url配置调起Superframe是一种较为通用但不能完全满足需求的方�
     headTitle: '',              // 自定义头部标题html
     headTool: '',               // 自定义头部右侧工具html
     headClose: false,           // 自定义关闭按钮,默认不显示
-    useAnimate: true    //默认由框架控制，可强行覆盖
+    useAnimate: true,    //默认由框架控制，可强行覆盖
+    _hold: 2    //默认为1，2为不缓存
 
 ```
 
