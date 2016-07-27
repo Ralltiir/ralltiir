@@ -6,7 +6,6 @@
 
 为了兼容这一部分情景页，提供actCard开发的兼容方式。
 
-
 ## 控制召回
 
 一个actCard模式的sf请求url的例子：
@@ -50,6 +49,20 @@ actCard模版需要一个独立的app主模版来展现，tplName=actpage。
 
 
 ## 卡片模版开发
+
+#### 流程 
+
+actCard 模块开发、提测、上线也都在开发平台中，开发时选择 card 模块。
+
+具体请参见 http://sfe.baidu.com/#/阿拉丁/圣玛利亚/平台使用手册
+
+注意：目前平台不支持 JS 异步渲染预览，如果预览调试页面，可以点击预览按钮，然后通过 url 强制召回模板调试。
+
+必要配置参数 pd、actname，参考上一节控制召回。下面是一个平台预览 sf 请求 url 召回例子：
+
+```
+https://wwwhttps.baidu.com/sf?word=北京&mod=0&tn=normal&pd=jingdian_comment&actname=act_clbus_trav&title=北京_必游景点
+```
 
 #### 卡片名
 
