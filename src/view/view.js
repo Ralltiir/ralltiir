@@ -74,7 +74,7 @@ define(function() {
             if (!me.$superFrame.length) {
                 me.$superFrame = $('<div id="super-frame"></div>');
                 $('body').append(me.$superFrame);
-            };
+            }
         },
 
         /*
@@ -192,7 +192,7 @@ define(function() {
 
             if (typeof obj !== 'object') {
                 return;
-            };
+            }
             me.sflog.sendtcLog(obj, me.$sfView);
         },
 
@@ -205,7 +205,7 @@ define(function() {
 
             if (typeof obj !== 'object') {
                 return;
-            };
+            }
             me.sflog.sendWebbLog('other', obj, me.$sfView);
         },
 
