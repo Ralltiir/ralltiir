@@ -1,12 +1,16 @@
 define(function() {
     
     var basePageY;  // 记录结果页与activity切换时滚动条位置
-
+    
     var exports = {};
 
     //执行action逻辑
     exports.do = function(current, prev) {
-        location.reload();
+        window.view && window.view.trigger('start');
+        //展现搜索框
+        require(['../../uiamd/bdbox/util'], function(util) {
+            util.fullScreen(false);
+        });
     }
     
     /**
@@ -25,10 +29,7 @@ define(function() {
      *  注意：析构的一定是scope中的last
      * */
     exports.destroy = function(current, prev) {
-        // 采用absolute方式处理page隐藏，保持page内部layout，与route.js中方法一致
-        basePageY = prev.page && prev.page.pageYOffset;
-        var hidePageStyle = $('<style id="activitystyle">#page{width:100%;position:absolute;top:-99999px;opacity:0;}</style>');
-        $('head').append(hidePageStyle);
+        window.view && window.view.trigger('stop');
     }
 
     return exports;

@@ -188,7 +188,7 @@ define(function (require) {
      */
     exports.init = function (apply) {
         window.addEventListener('popstate', monitor, false);
-        document.body.addEventListener('click', hackClick, false);
+        //document.body.addEventListener('click', hackClick, false);
         applyHandler = apply;
 
         // 首次调用为同步渲染
@@ -255,7 +255,7 @@ define(function (require) {
      */
     exports.dispose = function () {
         window.removeEventListener('popstate', monitor, false);
-        document.body.removeEventListener('click', hackClick, false);
+        //document.body.removeEventListener('click', hackClick, false);
         curLocation = null;
     };
 
