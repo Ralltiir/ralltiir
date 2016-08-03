@@ -11,11 +11,11 @@
 /*
  * 单一场景容器
  */
-.sf-view {
+.sfa-view {
     z-index: 501;
     width: 100%;
     min-height: 100%;
-    background-color: #fff;
+    background-color: #f2f2f2;
     overflow: auto;
 }
 
@@ -23,7 +23,7 @@
 /*
  * 场景头部样式
  */
-.sf-view .sf-head {
+.sfa-view .sfa-head {
     position: fixed;
     top: 0;
     left: 0;
@@ -39,35 +39,35 @@
     transform: translate3d(0, 0, 0);
 }
 
-.sf-view .sf-back,
-.sf-view .sf-close,
-.sf-view .sf-tool {
+.sfa-view .sfa-back,
+.sfa-view .sfa-close,
+.sfa-view .sfa-tool {
     width: 50px;
     height: 44px;
     float: left;
     text-align: right;
 }
 
-.sf-view .sf-back {
+.sfa-view .sfa-back {
     width: 62px;
 }
 
-.sf-view .sf-close {
+.sfa-view .sfa-close {
     width: 43px;
 }
 
-.sf-view .sf-close span,
-.sf-view .sf-back span {
+.sfa-view .sfa-close span,
+.sfa-view .sfa-back span {
     font-size: 16px;
     vertical-align: middle;
 }
 
-.sf-view .sf-tool {
+.sfa-view .sfa-tool {
     float: right;
     text-align: center;
 }
 
-.sf-view .sf-title .c-line-clamp1 {
+.sfa-view .sfa-title .c-line-clamp1 {
     padding: 0 8px;
 }
 
@@ -75,43 +75,17 @@
 /*
  * 场景内容样式
  */
-.sf-view .sf-body {
+.sfa-view .sfa-body {
     overflow: hidden;
     text-align: left;
     padding-top: 44px;
 }
 
-
-/*
- * superframe下覆盖栅格现有样式
- * 左右边距 0.15rem->0.21rem
- * 临时覆盖 哥伦布2.0全量之后由pmd统一样式
- */
-.sf-view ul {
+.sfa-view ul {
     list-style: none;
 }
-.sf-view .c-container {
-    padding-left: 0.21rem;
-    padding-right: 0.21rem;
-}
-.sf-view .c-row-tile {
-    margin-left: -0.21rem;
-    margin-right: -0.21rem;
-}
-.sf-view .c-row-tile .c-row {
-    padding-left: 0.21rem;
-    padding-right: 0.21rem;
-}
-.sf-view .c-table-hihead th:first-child div {
-    margin-left: -0.21rem;
-    padding-left: 0.21rem;
-}
-.sf-view .c-table-hihead th:last-child div {
-    margin-right: -0.21rem;
-    padding-right: 0.21rem;
-}
-.sf-view .c-scroll-parent-gap {
-    /* 基于子元素0.1rem间距 */
-    padding-right: 0.11rem;
-    padding-left: 0.21rem;
+
+/* 消除第一个元素的上间距 */
+.sfa-results .c-result:first-of-type .c-container:first-of-type {
+    margin-top: 0;
 }

@@ -7,7 +7,7 @@ define(function(){
         self.container = document.createElement('div');
         self.container.setAttribute('id',self.containerId);
         self.wrapper = options.container;
-        self.wrapper.append(self.container);
+        self.wrapper.html(self.container);
         self.key = options.key;
         //一个情景的全局信息
         self.global = {};
@@ -18,10 +18,22 @@ define(function(){
         return self;    
     }
 
-    viewModel.prototype.fetch = function(url){
-            
+    var action = require('../action/action');
+    
+    var Cache = require('./cache.js');
+
+    Cache.create('ViewModel');
+
+    viewModel.prototype.fetch = function(url, path){
+       
        var conf = {};
-       conf.url = url;
+       var reg = new RegExp('^' + path);
+       var config = action.config();
+
+       var fetchUrl = config.fetch && config.fetch[path] ? config.fetch[path].url : path;
+
+       conf.url = url.replace(reg, fetchUrl);
+       conf.withCredentials = config.fetch && config.fetch[path] && config.fetch[path].withCredentials;
        conf.dataType = 'text';
         var dtd = $.Deferred();
         var self = this;
@@ -35,19 +47,40 @@ define(function(){
     
     viewModel.prototype.render = function(){
           var dtd = $.Deferred;    
-          this._render(this.data,this.global);
+          //如果有cache，则不进行渲染
+          if(!(Cache.get('ViewModel', this.key) && this.rendered)) {
+              this._render(this.data,this.global);
+              this.rendered = true;
+          }
           dtd.resolve;
           return dtd;
     };
+
+    viewModel.prototype.start = function(scope){
+        this.global.view && this.global.view.trigger('start');
+    };
     
-    viewModel.prototype.destroy = function(){
-        if(!this._hold) {
-            this.global.view && this.global.view.trigger('destroy');
-            this.container.remove("#"+this.hashId);
+    viewModel.prototype.stop = function(scope){
+        this.global.view && this.global.view.trigger('stop');
+    };
+    
+    viewModel.prototype.destroy = function(scope){
+        if(!(scope && scope.from.options && scope.from.options.view._hold === 1)) {
+            this.global && this.global.view && this.global.view.trigger('destroy');
+            this.container && this.container.remove && this.container.remove("#"+this.hashId);
             this.global = null;
             this.container = null;
             this.data = null;
             delete viewMap[this.key];
+            Cache.remove('ViewModel', this.key);
+        }
+    };
+
+    function get(key) {
+        if(typeof(key) != 'undefined'){
+            return viewMap[key];
+        } else {
+            return false;
         }
     };
 
@@ -61,13 +94,19 @@ define(function(){
 
             if(viewMap[key]){
                 return viewMap[key];
-            }else{
-                viewMap[key] = new viewModel(options);
+            } else if(Cache.get('ViewModel', key)){
+                viewMap[key] = Cache.get('ViewModel', key);
                 return viewMap[key];
+            } else{
+                var view = new viewModel(options);
+                viewMap[key] = view;
+                Cache.set('ViewModel', key, view);
+                return view;
             }
         }
-        var view = new viewModel(options);
-        return view;
     }
-    return {create:create}
+    return {
+        create : create,
+        get : get
+    }
 });

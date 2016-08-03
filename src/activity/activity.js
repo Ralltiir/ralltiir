@@ -45,7 +45,13 @@ define(function() {
         var dtd = $.Deferred();
 
         var view = viewFactory.create(scope.to.url);
-    
+
+        //view配置注入
+        var viewOpt = $.extend({
+            headTitle: scope.to.query.title ? scope.to.query.title : scope.to.query.word
+        }, scope.to.options && scope.to.options.view);
+
+        view.set(viewOpt);
         
         $.when(_proxy(self._scopeList["create"], self, [scope, view])).then(function() {
             view.render();
@@ -66,11 +72,13 @@ define(function() {
         var self = this;
         var dtd = $.Deferred();
         
-        var view = viewFactory.create(scope.to.url);
+        var view = viewFactory.get(scope.to.url);
         
         $.when((function() {
-            return view.start(scope);
-        })()).then(_proxy(self._scopeList["start"], self, [scope, view])).always(function() {
+            return view && view.start(scope);
+        })()).then(function() {
+            return _proxy(self._scopeList["start"], self, [scope, view]);
+        }).always(function() {
             dtd.resolve();
         });
         
@@ -86,10 +94,10 @@ define(function() {
         var self = this;
         var dtd = $.Deferred();
         
-        var view = viewFactory.create(scope.from.url);
+        var view = viewFactory.get(scope.from.url);
 
         $.when(_proxy(self._scopeList["stop"], self, [scope, view])).then(function() {
-            return view.stop(scope);
+            return view && view.stop(scope);
         }).always(function() {
             dtd.resolve();
         });
@@ -105,13 +113,20 @@ define(function() {
     function _destroy(scope) {
         var self = this;
         var dtd = $.Deferred();
-        
-        var view = viewFactory.create(scope.from.url);
+
+        var view = viewFactory.get(scope.from.url);
         
         
         $.when(_proxy(self._scopeList["destroy"], self, [scope, view])).then(function() {
-            viewFactory.destroy(scope.from.url);
-            return view.destroy(scope);
+            if(scope.from.options) {
+                scope.from.options.view = scope.from.options.view ? scope.from.options.view : {};
+                scope.from.options.view._hold = scope.from.options.view._hold > 1 ? scope.from.options.view._hold : 1;
+                //uc的popstate处理，会对页面做cache，android下需要关闭uc的cache策略
+                if((/android/i.test(window.navigator.userAgent) && /UCBrowser/i.test(window.navigator.userAgent))) {
+                    scope.from.options.view._hold = 2;
+                }
+            }
+            return viewFactory.destroy(scope);
         }).always(function() {
             dtd.resolve();
         });
