@@ -31,7 +31,7 @@ define(function() {
         me._init();
 
         // 加载sflog日志模块,加载时已绑定tclog事件代理
-        me.sflog = require('sf/sflog');
+        //me.sflog = require('sf/sflog');
     };
 
     View.prototype = {
@@ -74,7 +74,7 @@ define(function() {
             if (!me.$superFrame.length) {
                 me.$superFrame = $('<div id="super-frame"></div>');
                 $('body').append(me.$superFrame);
-            }
+            };
         },
 
         /*
@@ -92,23 +92,27 @@ define(function() {
                 bodyHtml: ''                // 自定义结果内容html
             }, me.options, opts);
 
+            if(me.$sfView && me.$sfView.length > 0) {
+                return;
+            }
+
             var sfHeadHtml = [
-                '<div class="sf-head">',
-                    '<div class="sf-back"><i class="c-icon">&#xe783</i><span>返回</span></div>',
-                    me.options.headClose ? '<div class="sf-close"><span>关闭</span></div>' : '',
-                    '<div class="sf-tool">' + me.options.headTool + '</div>',
-                    '<div class="sf-title"><div class="c-line-clamp1">' + me.options.headTitle + '</div></div>',
+                '<div class="sfa-head">',
+                    '<div class="sfa-back"><i class="c-icon">&#xe783</i><span>返回</span></div>',
+                    me.options.headClose ? '<div class="sfa-close"><span>关闭</span></div>' : '',
+                    '<div class="sfa-tool">' + me.options.headTool + '</div>',
+                    '<div class="sfa-title"><div class="c-line-clamp1">' + me.options.headTitle + '</div></div>',
                 '</div>'
             ].join('');
             // title包裹两层div为了解决手百样式bug...wtf!
 
             var sfBodyHtml = [
-                '<div class="sf-body">',
+                '<div class="sfa-body">',
                 '</div>'
             ].join('');
 
             // 初始化sf dom
-            me.$sfView = $('<div class="sf-view"></div>');
+            me.$sfView = $('<div class="sfa-view"></div>');
             me.$sfHead = $(sfHeadHtml);
             me.$sfBody = $(sfBodyHtml);
 
@@ -156,9 +160,9 @@ define(function() {
 
             // todo: 检查activity set/update连用依赖 去除默认执行开关
             // 更新标题html
-            opt.headTitle && me.$sfHead.find('.sf-title > div').html(me.options.headTitle);
+            opt.headTitle && me.$sfHead.find('.sfa-title > div').html(me.options.headTitle);
             // 更新右侧工具html
-            opt.headTool && me.$sfHead.find('.sf-tool').html(me.options.headTool);
+            opt.headTool && me.$sfHead.find('.sfa-tool').html(me.options.headTool);
             // 更新内容html
             opt.bodyHtml && me.$sfBody.html(me.options.bodyHtml);
         },
@@ -170,14 +174,14 @@ define(function() {
             var me = this;
 
             // 绑定回退按钮事件
-            me.$sfHead.find('.sf-back').on('click', function(e) {
+            me.$sfHead.find('.sfa-back').on('click', function(e) {
                 action.back();
                 e.preventDefault();
             });
 
             // 绑定关闭按钮事件
             // TODO 新框架下，需要redirect到结果页
-            me.$sfHead.find('.sf-close').on('click', function(e) {
+            me.$sfHead.find('.sfa-close').on('click', function(e) {
                 B.route.push('base');
                 e.preventDefault();
             });
@@ -192,7 +196,7 @@ define(function() {
 
             if (typeof obj !== 'object') {
                 return;
-            }
+            };
             me.sflog.sendtcLog(obj, me.$sfView);
         },
 
@@ -205,7 +209,7 @@ define(function() {
 
             if (typeof obj !== 'object') {
                 return;
-            }
+            };
             me.sflog.sendWebbLog('other', obj, me.$sfView);
         },
 
@@ -261,7 +265,7 @@ define(function() {
                     dtd.resolve();
                 });
             } else {
-                me.$sfView.show();
+                me.$sfView.css(me.animateState.enter[1]).show();
                 dtd.resolve();
             };
 
@@ -278,17 +282,23 @@ define(function() {
             var current = scope.to;
 
             // 使用动画, 需要在start中设置sfview动画结束状态的样式
-            if (me.enterAnimate) {
-                me.$sfView.css(me.animateState.enter[2]);
-            };
+            me.$sfView.css(me.animateState.enter[2]);
 
             // 所有pushState操作均认为是开启新情景, 将页面滚动条默认置顶
             if (current && current.options && current.options.src !== 'history' && current.options.src !== 'back') {
                 scrollTo(0, 0);
             };
 
+            // 消除sfHead上的translate样式(这个样式是用来消除ios头部闪烁的)
+            setTimeout(function(){
+                me.$sfHead.css({
+                    '-webkit-transform': 'none',
+                    'transform': 'none'
+                });
+            }, 0);
+
             // 发送webb日志标识场景进入行为
-            me.sflog.sendWebbLog('show', {}, me.$sfView);
+            //me.sflog.sendWebbLog('show', {}, me.$sfView);
         },
 
         /*
@@ -312,7 +322,7 @@ define(function() {
             };
 
             // 发送webb日志标识场景退出行为
-            me.sflog.sendWebbLog('close', {}, me.$sfView);
+            //me.sflog.sendWebbLog('close', {}, me.$sfView);
         },
 
         /*
@@ -326,21 +336,21 @@ define(function() {
             var dtd = $.Deferred();
 
             // 使用动画
-            if (me.exitAnimate) {
+            if (me.exitAnimate && scope && scope.to) {
                 // 动画开始及动画运行状态都放在destroy中执行
-                me.$sfView.css(me.animateState.exit[0]).animate(me.animateState.exit[1], me.options.duration, 'ease', function() {
+                me.$sfView && me.$sfView.css(me.animateState.exit[0]).animate(me.animateState.exit[1], me.options.duration, 'ease', function() {
                     // 结束状态
                     me.$sfView.css(me.animateState.exit[2]);
                     // 销毁view
-                    if (!(me.options.holdView == true)) {
+                    if(!(scope && scope.from.options && scope.from.options.view._hold === 1)) {
                         me._destroyView();
                     };
                     dtd.resolve();
                 });
             } else {
-                me.$sfView.hide();
-                // 销毁view
-                if (!(me.options.holdView == true)) {
+                me.$sfView && me.$sfView.hide();
+                // 销毁view，无参数传递时，也进行销毁
+                if(!(scope && scope.from.options && scope.from.options.view._hold === 1)) {
                     me._destroyView();
                 };
                 dtd.resolve();
@@ -355,7 +365,7 @@ define(function() {
         _destroyView: function() {
             var me = this;
 
-            me.$sfHead.find('.sf-back, .sf-close').off('click');
+            me.$sfHead.find('.sfa-back, .sfa-close').off('click');
             me.$sfView.remove();
             me.$sfView = null;
             me.$sfHead = null;
