@@ -8,6 +8,8 @@ define(function() {
 
     var _options = {};
 
+    var _indexAction;
+
     /**
      *  action 注册，只有注册过的action，才会执行
      *  @params name,option
@@ -36,6 +38,7 @@ define(function() {
         _action.after = option.after || function(){};
         _action.destroy = option.destroy || function(){};
         _action.ready = option.ready || function(){};
+        _action.update = option.update || function(){};
         return _action;
     }
 
@@ -49,10 +52,34 @@ define(function() {
         
         var name = current.path;
 
+        //容器初始化，不执行逻辑
+        if(current.options.src === 'sync') {
+            _indexAction = current.url;
+            return;
+        }
+        
+        //回到容器页，使用容器方法交互
+        if(current.url === _indexAction) {
+            name = '/index';
+        }
+        
+        //与容器交互时，单独处理容器action
+        if(prev.url === _indexAction) {
+            prev.isBase = true;
+            prev.name = '/index';
+        } else {
+            prev.name = prev.path;
+        }
+
         //处理action src逻辑
         if(_options.src) {
             current.options.src = _options.src;
         }
+
+        //记录部分位置信息
+        prev.page = {
+            pageYOffset: pageYOffset
+        };
 
         var methodProxy = new _MethodProxy();
         if(_actions.hasOwnProperty(name)) {
@@ -62,8 +89,8 @@ define(function() {
             methodProxy.push(action.after, action, current, prev);
         }
         //执行上一个action的destroy方法
-        if(_actions.hasOwnProperty(name) && name !== (prev && prev.path) ) {
-            methodProxy.push(_destroy, this, prev.path, current, prev);
+        if(_actions.hasOwnProperty(name) && (name !== (prev && prev.path) || prev.isBase) ) {
+            methodProxy.push(_destroy, this, prev.name, current, prev);
         }
         //destroy以后，当前action状态设为ready
         if(_actions.hasOwnProperty(name)) {
@@ -163,5 +190,82 @@ define(function() {
         router.reset(url, query, options);
     }
 
+    /**
+     *  代理全局链接，通过配置可直接调起Action跳转，无需JS控制
+     *  @inner
+     *  @params {Event} e 事件参数
+     * */
+    function _delegateClick(e) {
+        
+        var $target = $(this);
+
+        var link = $target.attr('data-sf-href');
+
+        if(link) {
+            //link当前只接受相对路径跳转
+            //TODO redirect 支持绝对路径
+            var options = $target.attr('data-sf-options');
+
+            try {
+                options = $.parseJSON(options) ? $.parseJSON(options) : {};
+            } catch(e) {
+                options = {};
+            }
+
+            options = $.extend(options, {"src": "hijack"});
+
+            exports.redirect(link, null, options);
+
+            e.preventDefault();
+        }
+    }
+
+    /**
+     *  action开始，进行一些事件初始化工作
+     * */
+    exports.start = function() {
+        $(document).delegate('a', 'click', _delegateClick);
+    } 
+
+    /**
+     *  action参数配置
+     * */
+    exports.config = function(options) {
+        $.extend(_options, options);
+        return _options;
+    };
+
+    /**
+     *  更新局部状态
+     * */
+    exports.update = function(url, query, options, extend) {
+        options = options ? options : {};
+        
+        //默认进行路由禁默处理
+        if(!options.hasOwnProperty('silent')) {
+            options.silent = true;
+        }
+
+        var prevUrl = location.href.replace(/.*\/([^/]+$)/,'/$1');
+
+        var name = location.pathname.replace(/.*\/([^/]+$)/,'/$1');
+
+        if(_actions.hasOwnProperty(name)) {
+            var action = _actions[name];
+            action.update({
+                path: name,
+                url: url,
+                prevUrl: prevUrl,
+                query: query,
+                options: options,
+                container: extend.container,
+                view: extend.view
+            });
+        }
+        
+        //不进行路由规则处理
+        router.reset(url, query, options);
+    } 
+    
     return exports;
 });

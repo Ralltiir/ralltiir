@@ -42,12 +42,12 @@ define(function() {
             argvals.push(argitem[1]);
         }
         argkeys.push(code);
-       try{
-         fn = Function.apply(null, argkeys);
-         ret = fn.apply(this, argvals);
-       }catch(e){
-         console.log(e)
-       }
+        try{
+            fn = Function.apply(null, argkeys);
+            ret = fn.apply(this, argvals);
+        }catch(e){
+            console.log(e)
+        }
         return ret;
     }
     function render(html, global) {
@@ -61,7 +61,7 @@ define(function() {
         ];
 
         if (content.sf_async_head_js) {
-            execScript(content.sf_async_head_js, jsargs);
+            execScript(content.sf_async_head_js.replace(/<\/?script>/ig,''), jsargs);
         }
        var jsargs = [
             ['_global_', global],
@@ -88,7 +88,7 @@ define(function() {
             ['card', global.card]
         ];
         if (content.sf_async_foot_js) {
-            execScript(content.sf_async_foot_js, jsargs);
+            execScript(content.sf_async_foot_js.replace(/<\/?script>/ig,''), jsargs);
         }
     }
 
