@@ -14,6 +14,12 @@ define(function() {
      *  @return null
      * */
     exports.regist = function(name, option) {
+        if(!name){
+            throw new Error('illegal action name');
+        } 
+        if(!option){
+            throw new Error('illegal action option');
+        }
         var action = _create(option);
         _actions[name] = action; 
     }
