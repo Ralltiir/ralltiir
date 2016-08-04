@@ -59,6 +59,15 @@ define(['src/action/action', 'src/router/router'], function(action, router) {
                 };
                 action.regist('foo', option);
             });
+            it('should call do with correct arguments', function() {
+                var current = {
+                        path: 'foo',
+                        url: '/foo'
+                    },
+                    prev = {};
+                action.run(current, prev);
+                expect(option.do).to.have.been.calledWith(current, prev);
+            });
             it('should call before,do,after in a sequence', function() {
                 action.run({
                     path: 'foo',
