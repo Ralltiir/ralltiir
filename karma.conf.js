@@ -15,7 +15,8 @@ module.exports = function(config) {
             'karma-mocha',
             'karma-chai',
             'karma-chai-as-promised',
-            'karma-sinon',
+            //'karma-sinon',
+            'karma-chai-sinon',
 
             // reporters
             'karma-mocha-reporter',
@@ -29,11 +30,14 @@ module.exports = function(config) {
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         // Important: 下列数组中文件将『逆序载入』
-        frameworks: ['mocha', 'chai-as-promised', 'sinon', 'chai'],
+        frameworks: ['mocha', 'chai-as-promised', 'chai-sinon', 'chai'],
 
 
         // list of files / patterns to load in the browser
         files: [
+            'lib/zepto.js', 
+            'lib/zepto-deferred.js', 
+            'lib/zepto-callbacks.js', 
             'lib/esl.js',
             'test/index.js', {
                 pattern: 'src/**/*.js',
