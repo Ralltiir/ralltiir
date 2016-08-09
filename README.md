@@ -1,8 +1,11 @@
-# 大搜索Superframe框架
+## 大搜索Superframe框架
 
-> 关于使用文档请移步[Superframe Docs][doc]。
+### 相关链接
 
-## 环境准备
+* 关于使用文档，请移步[Superframe Docs][doc]。
+* 关于编码规范和设计文档，请移步[wiki][wiki]
+
+### 环境准备
 
 安装Make, fis3：
 
@@ -17,7 +20,7 @@ npm install -g fis3
 npm install
 ```
 
-## 运行测试
+### 运行测试
 
 本仓库使用Karma作为Test Runner。关于Karma测试环境，请移步<http://gitlab.baidu.com/psfe/karma-testing>，运行一次测试：
 
@@ -38,7 +41,7 @@ make watch
 make build
 ```
 
-## 测试报告
+### 测试报告
 
 生成测试结果（HTML格式）报告：
 
@@ -61,3 +64,4 @@ make reports
 ```
 
 [doc]: http://superframe.baidu.com/
+[wiki]: http://gitlab.baidu.com/psfe/superframe/wikis/home
