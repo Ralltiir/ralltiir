@@ -11,6 +11,7 @@
     "karma": "^0.12.31",
     "karma-chai": "^0.1.0",
     "karma-chai-as-promised": "^0.1.2",
+    "karma-chai-sinon": "^0.1.5",
     "karma-chrome-launcher": "^0.1.7",
     "karma-coverage": "^1.1.1",
     "karma-html-reporter": "^0.2.7",
@@ -18,8 +19,8 @@
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.0.4",
     "karma-requirejs": "^1.0.0",
-    "karma-sinon": "^1.0.5",
     "mocha": "^2.5.3",
-    "sinon": "^1.17.5"
+    "sinon": "^1.17.5",
+    "sinon-chai": "^2.8.0"
   }
 }

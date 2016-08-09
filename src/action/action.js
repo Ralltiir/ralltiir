@@ -52,6 +52,8 @@ define(function() {
         
         var name = current.path;
 
+        current.options = current.options || {};
+
         //容器初始化，不执行逻辑
         if(current.options.src === 'sync') {
             _indexAction = current.url;
@@ -151,6 +153,20 @@ define(function() {
     }
 
     /**
+     *  是否已注册
+     * */
+    exports.exist = function(name) {
+        return _actions.hasOwnProperty(name);
+    }
+
+    /**
+     *  移除所有action
+     * */
+    exports.clear = function(){
+        _actions = {};
+    }
+
+    /**
      *  action析构，在action切换时发生
      *  @params name,scope
      *  @return null
@@ -208,7 +224,7 @@ define(function() {
 
             try {
                 options = $.parseJSON(options) ? $.parseJSON(options) : {};
-            } catch(e) {
+            } catch(err) {
                 options = {};
             }
 
