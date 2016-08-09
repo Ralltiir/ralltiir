@@ -17,7 +17,7 @@ define(function() {
         // 恢复结果页滚动条位置
         if (typeof(basePageY) != "undefined") {
             scrollTo(0, basePageY);
-        };
+        }
     }
     
     /**
