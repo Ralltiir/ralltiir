@@ -48,7 +48,7 @@ define(function() {
 
         //view配置注入
         var viewOpt = $.extend({
-            headTitle: scope.to.query.title ? scope.to.query.title : scope.to.query.word
+            headTitle: scope.to.query.title || scope.to.query.word
         }, scope.to.options && scope.to.options.view);
 
         view.set(viewOpt);
@@ -116,11 +116,11 @@ define(function() {
 
         var view = viewFactory.get(scope.from.url);
         
-        
         $.when(_proxy(self._scopeList["destroy"], self, [scope, view])).then(function() {
             if(scope.from.options) {
-                scope.from.options.view = scope.from.options.view ? scope.from.options.view : {};
-                scope.from.options.view._hold = scope.from.options.view._hold > 1 ? scope.from.options.view._hold : 1;
+                scope.from.options.view = scope.from.options.view || {};
+                scope.from.options.view._hold = scope.from.options.view._hold > 1 ? 
+                    scope.from.options.view._hold : 1;
                 //uc的popstate处理，会对页面做cache，android下需要关闭uc的cache策略
                 if((/android/i.test(window.navigator.userAgent) && /UCBrowser/i.test(window.navigator.userAgent))) {
                     scope.from.options.view._hold = 2;
