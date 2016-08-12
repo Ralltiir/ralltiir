@@ -74,7 +74,7 @@ define(function() {
             if (!me.$superFrame.length) {
                 me.$superFrame = $('<div id="super-frame"></div>');
                 $('body').append(me.$superFrame);
-            };
+            }
         },
 
         /*
@@ -105,6 +105,7 @@ define(function() {
                 '</div>'
             ].join('');
             // title包裹两层div为了解决手百样式bug...wtf!
+            // +1
 
             var sfBodyHtml = [
                 '<div class="sfa-body">',
@@ -196,7 +197,7 @@ define(function() {
 
             if (typeof obj !== 'object') {
                 return;
-            };
+            }
             me.sflog.sendtcLog(obj, me.$sfView);
         },
 
@@ -209,7 +210,7 @@ define(function() {
 
             if (typeof obj !== 'object') {
                 return;
-            };
+            }
             me.sflog.sendWebbLog('other', obj, me.$sfView);
         },
 
@@ -230,7 +231,7 @@ define(function() {
                     frsrcid: me.options.srcid,
                     frorder: me.options.order
                 });
-            };
+            }
 
             return '';
         },
@@ -251,12 +252,12 @@ define(function() {
             if (current && current.options 
                       && current.options.src !== 'history'
                       && current.options.src !== 'back' 
-                      && me.options.useAnimate != false 
-                      && me.options.duration != 0) {
+                      && me.options.useAnimate
+                      && me.options.duration > 0) {
                 me.enterAnimate = true;
-            } else if (!scope && me.options.useAnimate == true && me.options.duration != 0) {
+            } else if (!scope && me.options.useAnimate && me.options.duration > 0) {
                 me.enterAnimate = true;
-            };
+            }
 
             // 使用动画
             if (me.enterAnimate) {
@@ -267,7 +268,7 @@ define(function() {
             } else {
                 me.$sfView.css(me.animateState.enter[1]).show();
                 dtd.resolve();
-            };
+            }
 
             return dtd.promise();
         },
@@ -287,7 +288,7 @@ define(function() {
             // 所有pushState操作均认为是开启新情景, 将页面滚动条默认置顶
             if (current && current.options && current.options.src !== 'history' && current.options.src !== 'back') {
                 scrollTo(0, 0);
-            };
+            }
 
             // 消除sfHead上的translate样式(这个样式是用来消除ios头部闪烁的)
             setTimeout(function(){
@@ -314,12 +315,12 @@ define(function() {
             me.exitAnimate = false;
             if (current && current.options 
                       && current.options.src === 'back' 
-                      && me.options.useAnimate != false 
-                      && me.options.duration != 0) {
+                      && me.options.useAnimate
+                      && me.options.duration > 0) {
                 me.exitAnimate = true;
-            } else if (!scope && me.options.useAnimate == true && me.options.duration != 0) {
+            } else if (!scope && me.options.useAnimate && me.options.duration > 0) {
                 me.exitAnimate = true;
-            };
+            }
 
             // 发送webb日志标识场景退出行为
             //me.sflog.sendWebbLog('close', {}, me.$sfView);
@@ -344,7 +345,7 @@ define(function() {
                     // 销毁view
                     if(!(scope && scope.from.options && scope.from.options.view._hold === 1)) {
                         me._destroyView();
-                    };
+                    }
                     dtd.resolve();
                 });
             } else {
@@ -352,9 +353,9 @@ define(function() {
                 // 销毁view，无参数传递时，也进行销毁
                 if(!(scope && scope.from.options && scope.from.options.view._hold === 1)) {
                     me._destroyView();
-                };
+                }
                 dtd.resolve();
-            };
+            }
 
             return dtd.promise();
         },
@@ -477,7 +478,7 @@ define(function() {
                     break;
                 default:
                     return;
-            };
+            }
         },
 
         constructor: View
