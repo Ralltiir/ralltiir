@@ -14,7 +14,60 @@
 
 ```
 
->注意：update方法，对url会进行replace变更。同时，使用update，也需要做好同步和异步的切换处理。
+>注意：update方法，对url会进行replace变更, 通过 mod = 5 参数标识为局部更新。同时，使用update，也需要做好同步和异步的切换处理。
 
 ## Demo
 
+下面是一个通过切换 Tab 进行局部更新视图的例子。
+
+```js
+{%extends "../base/result.tpl"%}
+
+{%block name="title"%}{%/block%}
+
+{%block name="data_modifier"%}
+
+{%/block%}
+
+{%block name="content"%}
+<div class="sfe-page-wrap">
+		{%*不更新视图部分*%}
+    <div class="c-row sfc-tab-wrap">
+        {%fe_fn_card_sflink_prefix class="c-span4 sfc-tab c-blocka" url="{%$tplData.url1%}"%}
+            Tab1
+        {%fe_fn_card_sflink_suffix%}
+
+        {%fe_fn_card_sflink_prefix class="c-span4 sfc-tab c-blocka sfc-tab-selected" url="{%$tplData.url2%}"%}
+            Tab2
+        {%fe_fn_card_sflink_suffix%}
+    </div>
+		{%*更新视图部分*%}
+		<div class="sfc-updated-content">
+		    ......
+		</div>
+</div>
+
+
+<script>
+	card.setup(function () {
+   		var $tab = $('.sfc-tab-wrap', me.container);
+        if ($tab.length !== 0) {
+            $tab.on('click', 'a', function (e) {
+                e.preventDefault();
+                $tab.find('.sfc-tab-selected').removeClass('sfc-tab-selected');
+                $(this).addClass('sfc-tab-selected');
+                var content = $('.sfc-updated-content', me.container);
+                // 调用局部更新方法
+                fif.action.update(
+                    $(this).data('sf-href'), null, null,{
+                        container: content,
+                        view: view
+                    }
+                );
+            });
+        }
+    });
+</script>
+{%/block%}
+
+```
