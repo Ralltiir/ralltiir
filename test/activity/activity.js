@@ -51,7 +51,7 @@ define(['src/activity/activity', 'src/view/viewFactory'], function(Activity, vie
         describe('new', function(){
             it('should construct with no error', function(){
                 function fn(){
-                    var a = Activity()
+                    var a = Activity();
                 }
                 expect(fn).to.not.throw();
             });

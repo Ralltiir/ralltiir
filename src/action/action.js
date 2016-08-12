@@ -24,7 +24,7 @@ define(function() {
         }
         var action = _create(option);
         _actions[name] = action; 
-    }
+    };
 
     /**
      *  创建一个action
@@ -101,11 +101,11 @@ define(function() {
 
         //清除options.src
         methodProxy.push(function() {
-            _options.src = undefined
+            _options.src = undefined;
         });
 
         return methodProxy.excute();
-    }
+    };
 
     /**
      *  代理函数执行，同时兼容有deferred和无deferred返回的函数，统一处理加上derferred，保证执行顺序。
@@ -139,7 +139,7 @@ define(function() {
         return {
             push : push,
             excute : excute
-        }
+        };
     }
 
     /**
@@ -150,21 +150,21 @@ define(function() {
         if(_actions.hasOwnProperty(name)) {
             delete _actions[name];
         }
-    }
+    };
 
     /**
      *  是否已注册
      * */
     exports.exist = function(name) {
         return _actions.hasOwnProperty(name);
-    }
+    };
 
     /**
      *  移除所有action
      * */
     exports.clear = function(){
         _actions = {};
-    }
+    };
 
     /**
      *  action析构，在action切换时发生
@@ -185,7 +185,7 @@ define(function() {
      * */
     exports.redirect = function(url, query, options) {
         router.redirect(url, query, options);
-    }
+    };
 
     /**
      *  action回退，退场交互使用
@@ -195,7 +195,7 @@ define(function() {
     exports.back = function(options) {
         _options.src = 'back';
         history.back(); 
-    }
+    };
 
     /**
      *  action重置，不产生新的history
@@ -204,7 +204,7 @@ define(function() {
      * */
     exports.reset = function(url, query, options) {
         router.reset(url, query, options);
-    }
+    };
 
     /**
      *  代理全局链接，通过配置可直接调起Action跳转，无需JS控制
@@ -241,7 +241,7 @@ define(function() {
      * */
     exports.start = function() {
         $(document).delegate('a', 'click', _delegateClick);
-    } 
+    } ;
 
     /**
      *  action参数配置
@@ -281,7 +281,7 @@ define(function() {
         
         //不进行路由规则处理
         router.reset(url, query, options);
-    } 
+    };
     
     return exports;
 });

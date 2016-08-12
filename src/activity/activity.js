@@ -19,24 +19,6 @@ define(function() {
     
     var viewFactory = require('../view/viewFactory');
 
-    /**
-     *  make hash
-     * */
-    function _hashCode(str) {
-        try {
-            var hash = 0, i, chr, len;
-            if (str.length === 0) return hash;
-            for (i = 0, len = str.length; i < len; i++) {
-                chr   = str.charCodeAt(i);
-                hash  = (hash * 31) + chr;
-                hash |= 0; // Convert to 32bit integer
-            }
-            return Math.abs(hash);
-        } catch(e) {
-            return;
-        }
-    }
-
     /*
      * activity创建时执行，整体框架交互进场
      */
