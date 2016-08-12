@@ -16,7 +16,7 @@ define(function(){
         self.global.container = self.container;
         self._render = require('./sfRender');
         return self;    
-    }
+    };
 
     var action = require('../action/action');
     
@@ -26,34 +26,35 @@ define(function(){
 
     viewModel.prototype.fetch = function(url, path){
        
-       var conf = {};
-       var reg = new RegExp('^' + path);
-       var config = action.config();
+        var conf = {};
+        var reg = new RegExp('^' + path);    // TODO: escapeRegExp(path)
+        var config = action.config();
 
-       var fetchUrl = config.fetch && config.fetch[path] ? config.fetch[path].url : path;
+        var fetchUrl = config.fetch && config.fetch[path] ? config.fetch[path].url : path;
 
-       conf.url = url.replace(reg, fetchUrl);
-       conf.withCredentials = config.fetch && config.fetch[path] && config.fetch[path].withCredentials;
-       conf.dataType = 'text';
+        conf.url = url.replace(reg, fetchUrl);
+        conf.withCredentials = config.fetch && config.fetch[path] && config.fetch[path].withCredentials;
+
+        conf.dataType = 'text';
         var dtd = $.Deferred();
         var self = this;
+
         $.ajax(conf).done(function(data){
-            //console.log(data);
-          self.data = data; 
+            self.data = data; 
             dtd.resolve();
         });
         return dtd;
     };
     
     viewModel.prototype.render = function(){
-          var dtd = $.Deferred;    
-          //如果有cache，则不进行渲染
-          if(!(Cache.get('ViewModel', this.key) && this.rendered)) {
-              this._render(this.data,this.global);
-              this.rendered = true;
-          }
-          dtd.resolve;
-          return dtd;
+        var dtd = $.Deferred();
+        var renderedAndCached = Cache.get('ViewModel', this.key) && this.rendered;
+        if(!renderedAndCached) {
+            this._render(this.data,this.global);
+            this.rendered = true;
+        }
+        dtd.resolve();
+        return dtd;
     };
 
     viewModel.prototype.start = function(scope){
@@ -82,11 +83,11 @@ define(function(){
         } else {
             return false;
         }
-    };
+    }
 
     function create(key, options){
 
-        var options = options || {};
+        options = options || {};
 
         if(typeof(key) != 'undefined'){
 
@@ -105,8 +106,14 @@ define(function(){
             }
         }
     }
+
+    function clear(){
+        viewMap = {};
+    }
+
     return {
         create : create,
-        get : get
-    }
+        get : get,
+        clear: clear
+    };
 });

@@ -13,8 +13,7 @@ define(function(){
     Cache.create('View');
 
     function create(key, options){
-
-        var options = options || {};
+        options = options || {};
 
         if(typeof(key) != 'undefined'){
 
@@ -54,9 +53,14 @@ define(function(){
         return view && view.destroy(scope);
     }
 
+    function clear(){
+        viewMap = {};
+    }
+
     return {
         create : create,
         get : get,
-        destroy : destroy
-    }
+        destroy : destroy,
+        clear: clear
+    };
 });
