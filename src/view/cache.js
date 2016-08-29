@@ -9,7 +9,7 @@ define(function() {
 
     var storage = {};
 
-    function normalize(options) {
+    function _normalize(options) {
         options = options || {};
         options.CACHE_NUM = options.CACHE_NUM || DEFAULT_CACHE_NUM;
         return options;
@@ -19,7 +19,7 @@ define(function() {
      * 创建名为 name 的缓存序列
      */
     exports.create = function(name, options) {
-        options = normalize(options);
+        options = _normalize(options);
 
         if (!storage[name]) {
             storage[name] = {
