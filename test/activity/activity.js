@@ -3,7 +3,7 @@
  * @file 测试src/activity/activity.js
  */
 
-define(['src/activity/activity', 'src/view/viewFactory'], function(Activity, viewFactory) {
+define(['activity/activity', 'view/viewFactory'], function(Activity, viewFactory) {
     describe('activity/activity', function() {
         var scope, view, activity;
         beforeEach(function() {

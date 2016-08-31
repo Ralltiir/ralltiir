@@ -11,6 +11,11 @@ fis.set('project.files', [
     'test/**'
 ]);
 
+fis.match('src/(**).js', {
+    isMod: true,
+    moduleId: '$1'
+});
+
 fis.hook('amd', {
     baseUrl: '/base'
 });
