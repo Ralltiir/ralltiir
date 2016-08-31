@@ -3,38 +3,48 @@
  * @file 测试脚本载入器
  */
 
+var TEST_FILES = Object.keys(window.__karma__.files).filter(isTestFile);
+
 /*
  * 依赖配置
  */
-
+var paths = pathMap(TEST_FILES);
+console.log(paths);
 require.config({
-    baseUrl: '/base'
+    baseUrl: '/base/src',
+    paths: paths
 });
 
 /*
  * 启动测试
  */
-
 // Important: 禁用__karma__.loaded()，它会在DOM载入后立即调用 mocha.run()
 //     此时esl尚未载入测试脚本。
 window.__karma__.loaded = function() {};
-require(resolveTests(), window.__karma__.start);
+var mods = TEST_FILES.map(getModuleId);
+console.log(mods);
+require(mods, window.__karma__.start);
 
 
 /*
  * 工具函数
  */
-
-function resolveTests() {
-    var tests = [];
-    var regex = /\/base\/test\//;
-
-    // Get a list of all the test files to include
-    Object.keys(window.__karma__.files).forEach(function(file) {
-        if (file !== '/base/test/index.js' && regex.test(file)) {
-            var mod = file.replace(/.js$/g, '').replace(/\/base\//, '');
-            tests.push(mod);
-        }
+function pathMap(arr) {
+    var map = {};
+    arr.forEach(function(file){
+        var mod = getModuleId(file);
+        map[mod] = file.slice(0, -3);
     });
-    return tests;
+    return map;
+}
+
+function isTestFile(filepath){
+    return /\/base\/test\//.test(filepath) && 
+        filepath !== '/base/test/index.js';
+}
+
+function getModuleId(filepath){
+    // 0123456
+    // /base/test/xx => test/xx
+    return filepath.slice(6, -3);
 }

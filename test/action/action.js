@@ -3,7 +3,7 @@
  * @file 测试src/action/action.js
  */
 
-define(['src/action/action', 'src/router/router'], function(action, router) {
+define(['action/action', 'router/router'], function(action, router) {
     describe('action/action', function() {
         /*
          * Stub 外部对象
@@ -177,7 +177,7 @@ define(['src/action/action', 'src/router/router'], function(action, router) {
                 calledWith('foo', null, options);
             });
             it('should use empty options when data-sf-options illegal', function() {
-                $a.data('sf-options', '{fdafda}')
+                $a.data('sf-options', '{fdafda}');
                 action.start();
                 $a.click();
                 expect(router.redirect).to.have.been.calledWith('foo', null, {
@@ -230,3 +230,4 @@ define(['src/action/action', 'src/router/router'], function(action, router) {
         });
     });
 });
+

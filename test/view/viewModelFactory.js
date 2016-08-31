@@ -3,7 +3,7 @@
  * @file 测试src/view/viewModelFactory.js
  */
 
-define(['src/view/viewModelFactory', 'src/view/cache', 'src/action/action'], function(viewModelFactory, cache, action) {
+define(['view/viewModelFactory', 'view/cache', 'action/action'], function(viewModelFactory, cache, action) {
     describe('view/viewModelFactory', function() {
         var instance = {},
             options = {
