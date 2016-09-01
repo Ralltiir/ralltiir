@@ -6,24 +6,24 @@
 define(function (require) {
     var Host = require('router/uri/component/Host');
 
-    describe('Host', function () {
+    describe('router/uri/componet/Host', function () {
 
-        describe('set', function () {
+        describe('#set()', function () {
 
             it('should not case sensitive', function () {
                 var host = new Host();
                 host.set('www.Baidu.com');
-                expect(host.data).toEqual('www.baidu.com');
+                expect(host.data).to.deep.equal('www.baidu.com');
             });
 
         });
 
-        describe('equal', function () {
+        describe('#equal()', function () {
             it('should not case sensitive', function () {
                 var host = new Host('www.baidu.com');
 
-                expect(host.equal('www.baidu.com')).toBeTruthy();
-                expect(host.equal('WWW.BAIDU.COM')).toBeTruthy();
+                expect(host.equal('www.baidu.com')).to.be.ok;
+                expect(host.equal('WWW.BAIDU.COM')).to.be.ok;
             });
 
             it('should compare with Host object', function () {
@@ -32,10 +32,10 @@ define(function (require) {
                 var host2 = new Host(hostStr);
                 var host3 = new Host();
 
-                expect(host1.equal(host2)).toBeTruthy();
-                expect(host2.equal(host1)).toBeTruthy();
-                expect(host1.equal(host3)).toBeFalsy();
-                expect(host3.equal(host1)).toBeFalsy();
+                expect(host1.equal(host2)).to.be.ok;
+                expect(host2.equal(host1)).to.be.ok;
+                expect(host1.equal(host3)).to.not.be.ok;
+                expect(host3.equal(host1)).to.not.be.ok;
             });
         });
 

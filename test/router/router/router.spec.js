@@ -28,19 +28,21 @@ define(function (require) {
 
     router.controller(controller);
 
-    describe('main', function () {
+    describe('router/router', function () {
 
         describe('start/stop', function () {
 
             it('should init controller and dipose controller', function () {
-                spyOn(controller, 'init');
-                spyOn(controller, 'dispose');
+                sinon.spy(controller, 'init');
+                sinon.spy(controller, 'dispose');
 
                 router.start();
                 router.stop();
 
-                expect(controller.init.calls.count()).toBe(1);
-                expect(controller.dispose.calls.count()).toBe(1);
+                expect(controller.init).have.been.calledOnce;
+                expect(controller.dispose).have.been.calledOnce;
+                controller.init.restore();
+                controller.dispose.restore();
             });
 
         });
@@ -64,13 +66,13 @@ define(function (require) {
                 catch (e) {
                     error = e;
                 }
-                expect(error).not.toBeUndefined();
-                expect(error.message.indexOf('route') >= 0).toBeTruthy();
+                expect(error).not.to.be.undefined;
+                expect(error.message.indexOf('route') >= 0).to.be.ok;
             });
 
             it('default handler', function () {
                 var error;
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
 
                 router.add('', fn);
                 try {
@@ -80,47 +82,47 @@ define(function (require) {
                     error = e;
                 }
 
-                expect(error).toBeUndefined();
-                expect(fn).toHaveBeenCalled();
+                expect(error).to.be.undefined;
+                expect(fn).to.have.been.called;
             });
 
             it('call handler with params', function () {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
                 var options = {foo: 'bar'};
 
                 router.add('/home/work', fn);
 
                 router.redirect('/home/work?name=treelite', {name: 'saber'}, options);
 
-                expect(fn).toHaveBeenCalled();
-                var params = fn.calls.argsFor(0);
+                expect(fn).to.have.been.called;
+                var params = fn.args[0];
                 var state = params[0];
-                expect(state.path).toEqual('/home/work');
-                expect(state.query).toEqual({name: ['treelite', 'saber']});
-                expect(state.params).toEqual({});
-                expect(state.options).toEqual(options);
-                expect(state.url).toEqual('/home/work?name=treelite&name=saber');
+                expect(state.path).to.equal('/home/work');
+                expect(state.query).to.deep.equal({name: ['treelite', 'saber']});
+                expect(state.params).to.deep.equal({});
+                expect(state.options).to.deep.equal(options);
+                expect(state.url).to.equal('/home/work?name=treelite&name=saber');
             });
 
             it('handler\'s prevState', function () {
-                var fn1 = jasmine.createSpy('fn1');
-                var fn2 = jasmine.createSpy('fn2');
+                var fn1 = sinon.spy();
+                var fn2 = sinon.spy();
 
                 router.add('/foo', fn1);
                 router.add('/bar', fn2);
 
                 router.redirect('/foo?type=f');
 
-                expect(fn1).toHaveBeenCalled();
-                var params1 = fn1.calls.argsFor(0);
-                expect(params1[1]).toEqual({});
+                expect(fn1).to.have.been.called;
+                var params1 = fn1.args[0];
+                expect(params1[1]).to.deep.equal({});
 
                 router.redirect('/bar');
 
-                expect(fn2).toHaveBeenCalled();
-                var params2 = fn2.calls.argsFor(0);
-                expect(params2[1]).toEqual(params1[0]);
-                expect(params2[1]).toEqual({
+                expect(fn2).to.have.been.called;
+                var params2 = fn2.args[0];
+                expect(params2[1]).to.deep.equal(params1[0]);
+                expect(params2[1]).to.deep.equal({
                     path: '/foo',
                     query: {type: 'f'},
                     params: {},
@@ -130,20 +132,20 @@ define(function (require) {
             });
 
             it('RESTful handler', function () {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
 
                 router.add('/product/:id', fn);
                 router.redirect('/product/100?type=n');
 
-                expect(fn).toHaveBeenCalled();
-                var params = fn.calls.argsFor(0);
+                expect(fn).to.have.been.called;
+                var params = fn.args[0];
                 var state = params[0];
-                expect(state.query).toEqual({type: 'n'});
-                expect(state.params).toEqual({id: '100'});
+                expect(state.query).to.deep.equal({type: 'n'});
+                expect(state.params).to.deep.equal({id: '100'});
             });
 
             it('RegExp handler', function () {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
 
                 router.add(/\/\d{1,2}$/, fn);
 
@@ -153,12 +155,12 @@ define(function (require) {
                     router.redirect('/100');
                 }
                 catch (e) {}
-                expect(fn.calls.count()).toBe(1);
+                expect(fn).to.have.been.calledOnce;
             });
 
             it('add the same handler repeatedly should throw error', function () {
                 var error;
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
 
                 router.add('/', fn);
                 try {
@@ -167,7 +169,7 @@ define(function (require) {
                 catch (e) {
                     error = true;
                 }
-                expect(error).toBeTruthy();
+                expect(error).to.be.ok;
 
                 error = false;
                 router.add('/list/:id', fn);
@@ -177,7 +179,7 @@ define(function (require) {
                 catch (e) {
                     error = true;
                 }
-                expect(error).toBeTruthy();
+                expect(error).to.be.ok;
 
                 error = false;
                 router.add(/\/abc$/, fn);
@@ -187,24 +189,24 @@ define(function (require) {
                 catch (e) {
                     error = true;
                 }
-                expect(error).toBeTruthy();
+                expect(error).to.be.ok;
             });
 
             it('remove rule', function () {
-                var fn1 = jasmine.createSpy('fn1');
-                var fn2 = jasmine.createSpy('fn2');
-                var fn3 = jasmine.createSpy('fn3');
+                var fn1 = sinon.spy();
+                var fn2 = sinon.spy();
+                var fn3 = sinon.spy();
 
                 router.add('/', fn1);
                 router.add('/list/:id', fn2);
                 router.add(/\/abc$/, fn3);
 
                 router.redirect('/');
-                expect(fn1.calls.count()).toBe(1);
+                expect(fn1).to.have.been.calledOnce;
                 router.redirect('/list/100');
-                expect(fn2.calls.count()).toBe(1);
+                expect(fn2).to.have.been.calledOnce;
                 router.redirect('/abc');
-                expect(fn3.calls.count()).toBe(1);
+                expect(fn3).to.have.been.calledOnce;
 
                 function tryRedirect(path) {
                     try {
@@ -217,16 +219,16 @@ define(function (require) {
                 }
 
                 router.remove('/');
-                expect(tryRedirect('/')).toBeFalsy();
-                expect(fn1.calls.count()).toBe(1);
+                expect(tryRedirect('/')).to.not.be.ok;
+                expect(fn1).to.have.been.calledOnce;
 
                 router.remove('/list/:id');
-                expect(tryRedirect('/list/100')).toBeFalsy();
-                expect(fn2.calls.count()).toBe(1);
+                expect(tryRedirect('/list/100')).to.not.be.ok;
+                expect(fn2).to.have.been.calledOnce;
 
                 router.remove(/\/abc$/);
-                expect(tryRedirect('/abc')).toBeFalsy();
-                expect(fn3.calls.count()).toBe(1);
+                expect(tryRedirect('/abc')).to.not.be.ok;
+                expect(fn3).to.have.been.calledOnce;
             });
 
         });
@@ -248,26 +250,26 @@ define(function (require) {
             });
 
             it('default path is "/"', function () {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
                 router.add('/', fn);
 
                 router.redirect();
-                expect(fn).toHaveBeenCalled();
+                expect(fn).to.have.been.called;
             });
 
             it('set path', function () {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
                 router.config({
                     path: '/abc/'
                 });
                 router.add('/abc/', fn);
 
                 router.redirect();
-                expect(fn).toHaveBeenCalled();
+                expect(fn).to.have.been.called;
             });
 
             it('set root', function () {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
                 router.config({
                     // 正确的root是'/hello'
                     // 此处验证容错性
@@ -276,10 +278,10 @@ define(function (require) {
                 router.add('/', fn);
 
                 router.redirect('/');
-                expect(fn).toHaveBeenCalled();
-                var args = fn.calls.argsFor(0);
+                expect(fn).to.have.been.called;
+                var args = fn.args[0];
                 var state = args[0];
-                expect(state).toEqual({
+                expect(state).to.deep.equal({
                     path: '/',
                     query: {},
                     params: {},
@@ -306,7 +308,7 @@ define(function (require) {
                     setTimeout(done, 300);
                 };
 
-                var fn2 = jasmine.createSpy('fn2');
+                var fn2 = sinon.spy();
 
                 router.add('/', fn1);
                 router.add('/new', fn2);
@@ -314,10 +316,10 @@ define(function (require) {
                 router.redirect('/');
                 router.redirect('/new');
 
-                expect(fn2).not.toHaveBeenCalled();
+                expect(fn2).to.not.have.been.called;
 
                 setTimeout(function () {
-                    expect(fn2).toHaveBeenCalled();
+                    expect(fn2).to.have.been.called;
                     done();
                 }, 400);
             });
@@ -327,8 +329,8 @@ define(function (require) {
                     setTimeout(done, 300);
                 };
 
-                var fn2 = jasmine.createSpy('fn2');
-                var fn3 = jasmine.createSpy('fn3');
+                var fn2 = sinon.spy();
+                var fn3 = sinon.spy();
 
                 router.add('/', fn1);
                 router.add('/new', fn2);
@@ -338,12 +340,12 @@ define(function (require) {
                 router.redirect('/new');
                 router.redirect('/detail');
 
-                expect(fn2).not.toHaveBeenCalled();
-                expect(fn3).not.toHaveBeenCalled();
+                expect(fn2).to.not.have.been.called;
+                expect(fn3).to.not.have.been.called;
 
                 setTimeout(function () {
-                    expect(fn2).not.toHaveBeenCalled();
-                    expect(fn3).toHaveBeenCalled();
+                    expect(fn2).to.not.have.been.called;
+                    expect(fn3).to.have.been.called;
                     done();
                 }, 400);
             });

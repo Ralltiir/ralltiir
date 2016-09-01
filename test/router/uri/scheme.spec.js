@@ -6,14 +6,14 @@
 define(function (require) {
     var Scheme = require('router/uri/component/Scheme');
 
-    describe('Scheme', function () {
+    describe('router/uri/component/Scheme', function () {
 
         describe('set', function () {
 
             it('should not case sensitive', function () {
                 var scheme = new Scheme();
                 scheme.set('HTTP');
-                expect(scheme.data).toEqual('http');
+                expect(scheme.data).to.deep.equal('http');
             });
 
         });
@@ -22,8 +22,8 @@ define(function (require) {
             it('should not case sensitive', function () {
                 var scheme = new Scheme('http');
 
-                expect(scheme.equal('http')).toBeTruthy();
-                expect(scheme.equal('HTTP')).toBeTruthy();
+                expect(scheme.equal('http')).to.be.ok;
+                expect(scheme.equal('HTTP')).to.be.ok;
             });
 
             it('should compare with Scheme object', function () {
@@ -32,10 +32,10 @@ define(function (require) {
                 var scheme2 = new Scheme(schemeStr);
                 var scheme3 = new Scheme();
 
-                expect(scheme1.equal(scheme2)).toBeTruthy();
-                expect(scheme2.equal(scheme1)).toBeTruthy();
-                expect(scheme1.equal(scheme3)).toBeFalsy();
-                expect(scheme3.equal(scheme1)).toBeFalsy();
+                expect(scheme1.equal(scheme2)).to.be.ok;
+                expect(scheme2.equal(scheme1)).to.be.ok;
+                expect(scheme1.equal(scheme3)).to.not.be.ok;
+                expect(scheme3.equal(scheme1)).to.not.be.ok;
             });
         });
 

@@ -9,7 +9,6 @@ var TEST_FILES = Object.keys(window.__karma__.files).filter(isTestFile);
  * 依赖配置
  */
 var paths = pathMap(TEST_FILES);
-console.log(paths);
 require.config({
     baseUrl: '/base/src',
     paths: paths
@@ -22,7 +21,6 @@ require.config({
 //     此时esl尚未载入测试脚本。
 window.__karma__.loaded = function() {};
 var mods = TEST_FILES.map(getModuleId);
-console.log(mods);
 require(mods, window.__karma__.start);
 
 
