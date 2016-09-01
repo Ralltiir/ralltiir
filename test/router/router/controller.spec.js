@@ -8,26 +8,31 @@ define(function (require) {
     var INTERVAL_TIME = 100;
     var controller = require('router/router/controller');
 
-    describe('Default Controller', function () {
+    describe('router/router/controller', function () {
+        var pathname;
+
+        beforeEach(function(){
+            pathname = location.pathname;
+        });
 
         describe('init/dipose', function () {
 
             it('should apply handler with current path', function (done) {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
                 history.pushState({}, document.title, '?name=treelite&w=1');
 
                 controller.init(fn);
                 controller.dispose();
 
-                expect(fn).toHaveBeenCalled();
+                expect(fn).to.have.been.called;
 
-                var args = fn.calls.argsFor(0);
-                expect(args.length).toBe(2);
+                var args = fn.args[0];
+                expect(args.length).to.equal(2);
 
                 var url = args[0];
-                expect(url.toString()).toEqual('/context.html?name=treelite&w=1');
-                expect(url.path.get()).toEqual('/context.html');
-                expect(url.query.get()).toEqual({name: 'treelite', w: '1'});
+                expect(url.toString()).to.deep.equal(pathname + '?name=treelite&w=1');
+                expect(url.path.get()).to.deep.equal(pathname);
+                expect(url.query.get()).to.deep.equal({name: 'treelite', w: '1'});
 
                 history.back();
                 setTimeout(function () {
@@ -36,7 +41,7 @@ define(function (require) {
             });
 
             it('should monitor hashchange', function (done) {
-                var fn = jasmine.createSpy('fn');
+                var fn = sinon.spy();
 
                 history.pushState({}, document.title, '/abc');
 
@@ -44,7 +49,7 @@ define(function (require) {
 
                 history.back();
                 setTimeout(function () {
-                    expect(fn.calls.count()).toBe(2);
+                    expect(fn).to.have.been.calledTwice;
                     controller.dispose();
                     done();
                 }, INTERVAL_TIME);
@@ -54,7 +59,7 @@ define(function (require) {
 
         describe('redirect', function () {
 
-            var handler = jasmine.createSpy('handler');
+            var handler = sinon.spy();
 
             function finish(done, count) {
                 count = count || 1;
@@ -64,7 +69,7 @@ define(function (require) {
 
             beforeEach(function () {
                 controller.init(handler);
-                handler.calls.reset();
+                handler.reset();
             });
 
             afterEach(function () {
@@ -75,8 +80,8 @@ define(function (require) {
                 var path = '/abc';
                 controller.redirect(path);
                 setTimeout(function () {
-                    expect(handler.calls.count()).toBe(1);
-                    expect(location.pathname).toEqual(path);
+                    expect(handler).to.have.been.calledOnce;
+                    expect(location.pathname).to.deep.equal(path);
                     finish(done);
                 }, INTERVAL_TIME);
             });
@@ -85,9 +90,9 @@ define(function (require) {
                 var path = '/abc';
                 controller.redirect(path, {name: 'treelite'});
                 setTimeout(function () {
-                    expect(handler.calls.count()).toBe(1);
-                    expect(location.pathname).toEqual(path);
-                    expect(location.search).toEqual('?name=treelite');
+                    expect(handler).to.have.been.calledOnce;
+                    expect(location.pathname).to.deep.equal(path);
+                    expect(location.search).to.deep.equal('?name=treelite');
                     finish(done);
                 }, INTERVAL_TIME);
             });
@@ -98,7 +103,7 @@ define(function (require) {
                 setTimeout(function () {
                     controller.redirect(path);
                     setTimeout(function () {
-                        expect(handler.calls.count()).toBe(1);
+                        expect(handler).to.have.been.calledOnce;
                         finish(done);
                     }, INTERVAL_TIME);
                 }, INTERVAL_TIME);
@@ -110,10 +115,10 @@ define(function (require) {
                 setTimeout(function () {
                     controller.redirect(path + '#hello');
                     setTimeout(function () {
-                        expect(handler.calls.count()).toBe(1);
+                        expect(handler).to.have.been.calledOnce;
                         history.back();
                         setTimeout(function () {
-                            expect(handler.calls.count()).toBe(1);
+                            expect(handler).to.have.been.calledOnce;
                             finish(done);
                         }, INTERVAL_TIME);
                     }, INTERVAL_TIME);
@@ -128,7 +133,7 @@ define(function (require) {
                     setTimeout(function () {
                         controller.redirect(path + '?name=saber');
                         setTimeout(function () {
-                            expect(handler.calls.count()).toBe(3);
+                            expect(handler).to.have.been.calledThrice;
                             finish(done, 3);
                         }, INTERVAL_TIME);
                     }, INTERVAL_TIME);
@@ -141,7 +146,7 @@ define(function (require) {
                 setTimeout(function () {
                     controller.redirect(path, null, {force: true});
                     setTimeout(function () {
-                        expect(handler.calls.count()).toBe(2);
+                        expect(handler).to.have.been.calledTwice;
                         finish(done);
                     }, INTERVAL_TIME);
                 }, INTERVAL_TIME);
@@ -151,8 +156,8 @@ define(function (require) {
             it('do not change the hash while call it with `silent` param', function (done) {
                 controller.redirect('/abc', null, {silent: true});
                 setTimeout(function () {
-                    expect(handler.calls.count()).toBe(1);
-                    expect(location.pathname).toEqual('/context.html');
+                    expect(handler).to.have.been.calledOnce;
+                    expect(location.pathname).to.deep.equal(pathname);
                     done();
                 }, INTERVAL_TIME);
             });
@@ -160,15 +165,15 @@ define(function (require) {
             it('fire the handler with URL param', function (done) {
                 controller.redirect('/abc?name=treelite');
                 setTimeout(function () {
-                    var url = handler.calls.argsFor(0)[0];
-                    expect(url.getPath()).toEqual('/abc');
-                    expect(url.getQuery()).toEqual({name: 'treelite'});
+                    var url = handler.args[0][0];
+                    expect(url.getPath()).to.deep.equal('/abc');
+                    expect(url.getQuery()).to.deep.equal({name: 'treelite'});
 
                     controller.redirect('/bbb', {query: 'abc'});
                     setTimeout(function () {
-                        var url = handler.calls.argsFor(1)[0];
-                        expect(url.getPath()).toEqual('/bbb');
-                        expect(url.getQuery()).toEqual({query: 'abc'});
+                        var url = handler.args[1][0];
+                        expect(url.getPath()).to.deep.equal('/bbb');
+                        expect(url.getQuery()).to.deep.equal({query: 'abc'});
                         finish(done, 2);
                     }, INTERVAL_TIME);
                 }, INTERVAL_TIME);
@@ -177,10 +182,10 @@ define(function (require) {
             it('fire the handler with options', function (done) {
                 controller.redirect('/abc', {name: 'treelite'}, {foo: 'bar'});
                 setTimeout(function () {
-                    var url = handler.calls.argsFor(0)[0];
-                    var options = handler.calls.argsFor(0)[1];
-                    expect(url.toString()).toEqual('/abc?name=treelite');
-                    expect(options).toEqual({foo: 'bar'});
+                    var url = handler.args[0][0];
+                    var options = handler.args[0][1];
+                    expect(url.toString()).to.deep.equal('/abc?name=treelite');
+                    expect(options).to.deep.equal({foo: 'bar'});
                     finish(done);
                 }, INTERVAL_TIME);
             });
@@ -190,15 +195,15 @@ define(function (require) {
                 setTimeout(function () {
                     controller.redirect('d');
                     setTimeout(function () {
-                        expect(handler.calls.count()).toBe(2);
-                        expect(location.pathname).toEqual('/a/b/d');
-                        var url = handler.calls.argsFor(1)[0];
-                        expect(url.toString()).toEqual('/a/b/d');
+                        expect(handler).to.have.been.calledTwice;
+                        expect(location.pathname).to.deep.equal('/a/b/d');
+                        var url = handler.args[1][0];
+                        expect(url.toString()).to.deep.equal('/a/b/d');
                         controller.redirect('../b/d');
                         setTimeout(function () {
                             setTimeout(function () {
-                                expect(handler.calls.count()).toBe(2);
-                                expect(location.pathname).toEqual('/a/b/d');
+                                expect(handler).to.have.been.calledTwice;
+                                expect(location.pathname).to.deep.equal('/a/b/d');
                                 finish(done, 2);
                             }, INTERVAL_TIME);
                         }, INTERVAL_TIME);
@@ -213,14 +218,14 @@ define(function (require) {
                 setTimeout(function () {
                     controller.redirect(query);
                     setTimeout(function () {
-                        expect(handler.calls.count()).toBe(2);
-                        expect(location.pathname).toEqual(url);
-                        expect(location.search).toEqual(query);
+                        expect(handler).to.have.been.calledTwice;
+                        expect(location.pathname).to.deep.equal(url);
+                        expect(location.search).to.deep.equal(query);
                         controller.redirect('', {name: 'saber'});
                         setTimeout(function () {
-                            expect(handler.calls.count()).toBe(3);
-                            expect(location.pathname).toEqual(url);
-                            expect(location.search).toEqual('?name=saber');
+                            expect(handler).to.have.been.calledThrice;
+                            expect(location.pathname).to.deep.equal(url);
+                            expect(location.search).to.deep.equal('?name=saber');
                             finish(done, 3);
                         });
                     }, INTERVAL_TIME);
@@ -231,7 +236,7 @@ define(function (require) {
 
         describe('reset', function () {
 
-            var handler = jasmine.createSpy('handler');
+            var handler = sinon.spy();
 
             function finish(done, count) {
                 count = count || 1;
@@ -241,7 +246,7 @@ define(function (require) {
 
             beforeEach(function () {
                 controller.init(handler);
-                handler.calls.reset();
+                handler.reset();
             });
 
             afterEach(function () {
@@ -253,15 +258,15 @@ define(function (require) {
                 setTimeout(function () {
                     controller.reset('/reset');
                     setTimeout(function () {
-                        expect(location.pathname).toEqual('/reset');
-                        expect(handler.calls.count()).toBe(2);
+                        expect(location.pathname).to.deep.equal('/reset');
+                        expect(handler).to.have.been.calledTwice;
                         controller.redirect('/reset');
                         setTimeout(function () {
-                            expect(handler.calls.count()).toBe(2);
+                            expect(handler).to.have.been.calledTwice;
                             history.back();
                             setTimeout(function () {
-                                expect(location.pathname).toEqual('/context.html');
-                                expect(handler.calls.count()).toBe(3);
+                                expect(location.pathname).to.deep.equal(pathname);
+                                expect(handler).to.have.been.calledThrice;
                                 done();
                             }, INTERVAL_TIME);
                         });
@@ -274,8 +279,8 @@ define(function (require) {
                 setTimeout(function () {
                     controller.reset('/reset', null, {silent: true});
                     setTimeout(function () {
-                        expect(location.pathname).toEqual('/reset');
-                        expect(handler.calls.count()).toBe(1);
+                        expect(location.pathname).to.deep.equal('/reset');
+                        expect(handler).to.have.been.calledOnce;
                         finish(done);
                     }, INTERVAL_TIME);
                 }, INTERVAL_TIME);
@@ -286,21 +291,21 @@ define(function (require) {
                 setTimeout(function () {
                     controller.reset('/reset');
                     setTimeout(function () {
-                        expect(handler.calls.count()).toBe(2);
+                        expect(handler).to.have.been.calledTwice;
                         controller.reset(('/reset'));
                         setTimeout(function () {
-                            expect(handler.calls.count()).toBe(2);
+                            expect(handler).to.have.been.calledTwice;
                             history.back();
                             setTimeout(function () {
-                                expect(handler.calls.count()).toBe(3);
-                                expect(location.pathname).toEqual('/context.html');
+                                expect(handler).to.have.been.calledThrice;
+                                expect(location.pathname).to.deep.equal(pathname);
                                 done();
                             }, INTERVAL_TIME);
                         }, INTERVAL_TIME);
                     }, INTERVAL_TIME);
                 }, INTERVAL_TIME);
             });
-        })
+        });
 
     });
 
