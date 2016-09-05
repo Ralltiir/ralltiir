@@ -16,7 +16,6 @@
     "karma-html-reporter": "^0.2.7",
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.0.4",
-    "karma-requirejs": "^1.0.0",
     "mocha": "^2.5.3",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0"
