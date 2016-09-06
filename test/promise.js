@@ -3,8 +3,10 @@
  * @file 测试src/Promise.js. 标准： Promises/A+ https://Promisesaplus.com/
  */
 
-define(['src/promise'], function(Promise) {
+define(['src/utils/promise'], function(Promise) {
     describe('Promise', function() {
+        this.timeout(5000);
+
         it('should throw when not called as a constructor', function() {
             function fn() {
                 Promise(function() {});
@@ -66,16 +68,51 @@ define(['src/promise'], function(Promise) {
                 });
             });
         });
-        it('should support .resolve()', function(done) {
-            Promise.resolve('foo').then(function(result) {
-                expect(result).to.equal('foo');
-                done();
+        describe('#finally()', function(done) {
+            it('should be called when resolved', function() {
+                var p = Promise.resolve('foo').finally(function(result) {
+                    expect(result).to.equal('foo');
+                    done();
+                });
+            });
+            it('should be called when rejected', function() {
+                var p = Promise.reject('foo').finally(function(result) {
+                    expect(result).to.equal('foo');
+                    done();
+                });
             });
         });
-        it('should support .reject()', function(done) {
-            Promise.reject('foo').catch(function(err) {
-                expect(err).to.equal('foo');
-                done();
+        describe('.resolve()', function() {
+            it('should support a single argument', function(done) {
+                Promise.resolve('foo').then(function(result) {
+                    expect(result).to.equal('foo');
+                    done();
+                }).catch(done);
+            });
+            it('should support multiple arguments', function(done) {
+                Promise.resolve('foo', false, 'bar').then(function(fo, fa, ba) {
+                    expect(fo).to.equal('foo');
+                    expect(fa).to.equal(false);
+                    expect(ba).to.equal('bar');
+                    done();
+                }).catch(done);
+            });
+        });
+        describe('.reject()', function() {
+            it('should support a single argumetn', function(done) {
+                Promise.reject('foo').catch(function(err) {
+                    expect(err).to.equal('foo');
+                    done();
+                })
+                .catch(done);
+            });
+            it('should support multiple arguments', function(done) {
+                Promise.reject('foo', false, 'bar').catch(function(fo, fa, ba) {
+                    expect(fo).to.equal('foo');
+                    expect(fa).to.equal(false);
+                    expect(ba).to.equal('bar');
+                    done();
+                }).catch(done);
             });
         });
         describe('.all()', function() {
