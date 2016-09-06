@@ -23,25 +23,6 @@ url配置属性：data-sf-href
 
 ```
 
-在阿拉丁模板中和superframe-card 中分别提供了两个Smarty方法生成调起链接，详情见下面
-
-### 阿拉丁模板中
-
-用 smarty 生成调起链接：
-```
-{%fe_fn_c_sflink_prefix url="http://m.baidu.com/sf?word=123" class="c-blocka"%}
-test
-{%fe_fn_c_sflink_suffix%}
-```
-
-### Superframe card中
-
-smarty 生成调起链接：
-```
-{%fe_fn_card_sflink_prefix url="http://m.baidu.com/sf?word={%$tplData.key|escape:url%}&pd=jingdian_comment&actname=act_poi_comments&title=" class='sfc-evaluate-a'%}
-test
-{%fe_fn_card_sflink_suffix%}
-```
 
 ## js调起
 
