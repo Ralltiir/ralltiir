@@ -13,11 +13,15 @@ define(function() {
         }
 
         this._handlers = [];
-        this._state = 'init'; // Enum: init, resolved, rejected
-        this._error = null;
-        this._result = undefined;
+        this._state = 'init'; // Enum: init, fulfilled, rejected
+        this._errors = [];
+        this._results = [];
 
-        // compliant to Node.js implementation
+        // 标准：Promises/A+ 2.2.4, see https://promisesaplus.com/ 
+        // In practice, this requirement ensures that 
+        //   onFulfilled and onRejected execute asynchronously, 
+        //   after the event loop turn in which then is called, 
+        //   and with a fresh stack.
         setTimeout(function() {
             cb(this._onFulfilled.bind(this), this._onRejected.bind(this));
         }.bind(this));
@@ -29,9 +33,9 @@ define(function() {
      */
     Promise.prototype.then = function(cb) {
         //console.log('calling then', this._state);
-        if (this._state === 'resolved') {
-            console.log(this._state);
-            this._callHandler(cb, this._result);
+        if (this._state === 'fulfilled') {
+            //console.log(this._state);
+            this._callHandler(cb, this._results);
         } else {
             this._handlers.push({
                 type: 'then',
@@ -46,7 +50,7 @@ define(function() {
      */
     Promise.prototype.catch = function(cb) {
         if (this._state === 'rejected') {
-            this._callHandler(cb, this._error);
+            this._callHandler(cb, this._errors);
         } else {
             this._handlers.push({
                 type: 'catch',
@@ -56,13 +60,30 @@ define(function() {
         return this;
     };
     /*
+     * 注册Promise最终的回调
+     * @param cb 回调函数
+     */
+    Promise.prototype.finally = function(cb) {
+        if (this._state === 'fulfilled') {
+            this._callHandler(cb, this._results);
+        } else if (this._state === 'rejected') {
+            this._callHandler(cb, this._errors);
+        } else {
+            this._handlers.push({
+                type: 'finally',
+                cb: cb
+            });
+        }
+    };
+    /*
      * 返回一个成功的Promise
      * @param obj 被解析的对象
      */
     Promise.resolve = function(obj) {
-        return _isThenable(obj) ?  obj :
+        var args = arguments;
+        return _isThenable(obj) ? obj :
             new Promise(function(resolve, reject) {
-                resolve(obj);
+                return resolve.apply(null, args);
             });
     };
     /*
@@ -70,8 +91,9 @@ define(function() {
      * @param obj 被解析的对象
      */
     Promise.reject = function(obj) {
+        var args = arguments;
         return new Promise(function(resolve, reject) {
-            reject(obj);
+            return reject.apply(null, args);
         });
     };
     /*
@@ -88,7 +110,7 @@ define(function() {
         return new Promise(function(res, rej) {
             function resolve() {
                 if (state !== 'pending') return;
-                state = 'resolved';
+                state = 'fulfilled';
                 res(results);
             }
 
@@ -113,28 +135,41 @@ define(function() {
 
     Promise.prototype._onFulfilled = function(obj) {
         //console.log('_onFulfilled', obj);
-        this._waiteThenable(obj, function(result) {
-            this._result = result;
-            var handler = this._getNextHandler('then');
-            return this._callHandler(handler, result);
-        }.bind(this));
-        this._state = 'resolved';
+        if (_isThenable(obj)) {
+            return obj
+                .then(this._onFulfilled.bind(this))
+                .catch(this._onRejected.bind(this));
+        }
+
+        this._results = arguments;
+        var handler = this._getNextHandler('then');
+        if (handler) {
+            return this._callHandler(handler, this._results);
+        }
+        handler = this._getNextHandler('finally');
+        if (handler) {
+            return this._callHandler(handler, this._results);
+        }
+        this._state = 'fulfilled';
     };
-    Promise.prototype._onRejected = function(obj) {
-        //console.log('_onRejected', obj);
-        this._waiteThenable(obj, function(err) {
-            this._error = err;
-            var handler = this._getNextHandler('catch');
-            return this._callHandler(handler, err);
-        }.bind(this));
+    Promise.prototype._onRejected = function(err) {
+        //console.log('_onRejected', err);
+        this._errors = arguments;
+        var handler = this._getNextHandler('catch');
+        if (handler) {
+            return this._callHandler(handler, this._errors);
+        }
+        handler = this._getNextHandler('finally');
+        if (handler) {
+            return this._callHandler(handler, this._errors);
+        }
         this._state = 'rejected';
     };
-    Promise.prototype._callHandler = function(handler, obj) {
-        //console.log('calling handler', handler, obj);
-        if (!handler) return;
+    Promise.prototype._callHandler = function(handler, args) {
+        //console.log('calling handler', handler, args);
         var result, err = null;
         try {
-            result = handler(obj);
+            result = handler.apply(null, args);
         } catch (e) {
             err = e;
         }
@@ -143,10 +178,6 @@ define(function() {
         } else {
             this._onFulfilled(result);
         }
-    };
-    Promise.prototype._waiteThenable = function(obj, cb) {
-        //console.log('_waiteThenable', obj, cb, _isThenable(obj));
-        return _isThenable(obj) ? obj.then(cb) : cb(obj);
     };
     Promise.prototype._getNextHandler = function(type) {
         var obj;
