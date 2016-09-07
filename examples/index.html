@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>superframe example</title>
+        <script src="../lib/zepto.js"></script>
+        <script type="text/javascript" src="../lib/zepto-callbacks.js"></script>
+        <script type="text/javascript" src="../lib/zepto-deferred.js"></script>
+        <script src="../lib/esl.js"></script>
+    </head>
+    <body>
+    </body>
+        <script src="../src/main.js"></script>
+        <script>
+            require(['router/router','action','service'], function(router, action, service) {
+                var _rootPath = location.pathname;
+                router.config({
+                    root: _rootPath
+                });
+
+                //create index service
+                var indexService = service.create();
+
+                indexService.prototype.create = function() {
+                    console.log('index create');
+                };
+
+                indexService.prototype.attach = function() {
+                    console.log('index attach');
+                };
+                
+                indexService.prototype.detach = function() {
+                    console.log('index detach');
+                };
+                
+                indexService.prototype.destroy = function() {
+                    console.log('index destroy');
+                };
+                
+                //create page service
+                var pageService = service.create();
+
+                pageService.prototype.create = function() {
+                    console.log('page create');
+                };
+
+                pageService.prototype.attach = function() {
+                    console.log('page attach');
+                };
+                
+                pageService.prototype.detach = function() {
+                    console.log('page detach');
+                };
+                
+                pageService.prototype.destroy = function() {
+                    console.log('page destroy');
+                };
+
+                action.regist('/page', new pageService());
+                action.regist('/', new indexService());
+
+                router.start();
+                action.start();
+
+                window.action = action;
+            });
+        </script>
+</html>
