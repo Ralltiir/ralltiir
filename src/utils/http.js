@@ -1,4 +1,4 @@
-define(['./promise', './lodash'], function(Promise, _) {
+define(['./promise', './underscore'], function(Promise, _) {
     var exports = {};
 
     /*
@@ -29,7 +29,7 @@ define(['./promise', './lodash'], function(Promise, _) {
             settings.contentType = 'application/json';
             settings.data = JSON.stringify(settings.data);
         }
-        return doAjax(settings);
+        return _doAjax(settings);
     };
 
     exports.get = function(url, data) {
@@ -47,27 +47,23 @@ define(['./promise', './lodash'], function(Promise, _) {
 
     exports.put = function(url, data) {
         return exports.ajax(url, {
-            method: 'POST',
-            data: _.defaults(data, {
-                _method: 'PUT'
-            })
+            method: 'PUT',
+            data: data
         });
     };
 
     exports.delete = function(url, data) {
         return exports.ajax(url, {
             method: 'DELETE',
-            data: _.defaults(data, {
-                _method: 'DELETE'
-            })
+            data: data
         });
     };
 
-    function doAjax(settings) {
-        //console.log('doAjax with', settings);
+    function _doAjax(settings) {
+        //console.log('_doAjax with', settings);
         var xhr;
         try {
-            xhr = createXHR();
+            xhr = _createXHR();
         } catch (e) {
             return Promise.reject(null, '', e);
         }
@@ -78,8 +74,9 @@ define(['./promise', './lodash'], function(Promise, _) {
             xhr.onreadystatechange = function() {
                 //console.log('onreadystatechange', xhr.readyState, xhr.status);
                 if (xhr.readyState == 4) {
+                    xhr = _resolveXHR(xhr);
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(xhr.responseText, xhr.status, xhr);
+                        resolve(xhr.responseBody, xhr.status, xhr);
                     } else {
                         reject(xhr, xhr.status, null);
                     }
@@ -89,7 +86,35 @@ define(['./promise', './lodash'], function(Promise, _) {
         });
     }
 
-    function createXHR() {
+    function _resolveXHR(xhr) {
+        /*
+         * parse response headers
+         */
+        var headers = xhr.getAllResponseHeaders()
+            // Spec: https://developer.mozilla.org/en-US/docs/Glossary/CRLF
+            .split('\r\n')
+            .filter(_.negate(_.isEmpty))
+            .map(function(str) {
+                return _.split(str, /\s*:\s*/);
+            });
+        xhr.responseHeaders = _.fromPairs(headers);
+
+        /*
+         * parse response body
+         */
+        xhr.responseBody = xhr.responseText;
+        if(xhr.responseHeaders['Content-Type'] === 'application/json'){
+            try{
+                xhr.responseBody = JSON.parse(xhr.responseText);
+            }
+            catch(e){
+                console.warn('Invalid JSON content with Content-Type: application/json');
+            }
+        }
+        return xhr;
+    }
+
+    function _createXHR() {
         //console.log('create xhr');
         var xhr = false;
 

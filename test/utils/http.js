@@ -1,6 +1,6 @@
 /*
  * @author yangjun14(yangjvn@126.com)
- * @file 测试src/http.js
+ * @file 测试src/utils/http.js
  */
 
 define(['src/utils/http'], function(http) {
@@ -15,6 +15,10 @@ define(['src/utils/http'], function(http) {
             };
         });
 
+        after(function(){
+            fake.restore();
+        });
+
         beforeEach(function() {
             timeout = setTimeout(function() {
                 if (!xhr) return;
@@ -26,11 +30,16 @@ define(['src/utils/http'], function(http) {
                     xhr.respond(400, {
                         'Content-Type': 'text/plain'
                     }, 'bad');
+                } else if (xhr.url === 'http://json.com') {
+                    xhr.respond(200, {
+                        'Content-Type': 'application/json',
+                        'cache-control': 'no-cache'
+                    }, '{"foo": "bar"}');
                 }
             }, 100);
         });
 
-        afterEach(function(){
+        afterEach(function() {
             clearTimeout(timeout);
         });
 
@@ -65,11 +74,29 @@ define(['src/utils/http'], function(http) {
                         done();
                     }).catch(done);
             });
+            it('should parse JSON for JSON MIME type', function(done) {
+                http.ajax('http://json.com')
+                    .then(function(content, status, xhr) {
+                        expect(content).to.deep.equal({
+                            foo: 'bar'
+                        });
+                        done();
+                    }).catch(done);
+            });
+            it('should parse response headers', function(done) {
+                http.ajax('http://json.com')
+                    .then(function(content, status, xhr) {
+                        var h = xhr.responseHeaders;
+                        expect(h['Content-Type']).to.equal('application/json');
+                        expect(h['cache-control']).to.equal('no-cache');
+                        done();
+                    }).catch(done);
+            });
         });
         describe('.get()', function() {
-            it('should perform GET', function(done){
+            it('should perform GET', function(done) {
                 http.get('http://harttle.com')
-                    .then(function(content, status, _xhr){
+                    .then(function(content, status, _xhr) {
                         expect(xhr.method).to.equal('GET');
                         expect(content).to.equal('okay');
                         done();
@@ -77,9 +104,9 @@ define(['src/utils/http'], function(http) {
             });
         });
         describe('.post()', function() {
-            it('should perform POST', function(done){
+            it('should perform POST', function(done) {
                 http.post('http://harttle.com')
-                    .then(function(content, status, _xhr){
+                    .then(function(content, status, _xhr) {
                         expect(xhr.method).to.equal('POST');
                         expect(content).to.equal('okay');
                         done();
@@ -87,22 +114,20 @@ define(['src/utils/http'], function(http) {
             });
         });
         describe('.put()', function() {
-            it('should perform PUT', function(done){
+            it('should perform PUT', function(done) {
                 http.put('http://harttle.com')
-                    .then(function(content, status, _xhr){
-                        expect(xhr.method).to.equal('POST');
-                        expect(xhr.requestBody).to.equal('{"_method":"PUT"}');
+                    .then(function(content, status, _xhr) {
+                        expect(xhr.method).to.equal('PUT');
                         expect(content).to.equal('okay');
                         done();
                     }).catch(done);
             });
         });
         describe('.delete()', function() {
-            it('should perform DELETE', function(done){
+            it('should perform DELETE', function(done) {
                 http.delete('http://harttle.com')
-                    .then(function(content, status, _xhr){
+                    .then(function(content, status, _xhr) {
                         expect(xhr.method).to.equal('DELETE');
-                        expect(xhr.requestBody).to.equal('{"_method":"DELETE"}');
                         expect(content).to.equal('okay');
                         done();
                     }).catch(done);
