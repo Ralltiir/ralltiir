@@ -12,7 +12,7 @@ var config = {
       '1_dev_card': '卡片开发',
       '2_dev_service': '应用服务开发',
       '3_dev_act':'JS模块开发',
-	  'sf_app':'通用情景页'
+			'4_sf_app':'通用情景页'
     }
 };
 var fs = require('fs'),
