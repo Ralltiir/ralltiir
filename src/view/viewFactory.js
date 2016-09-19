@@ -6,9 +6,9 @@ define(function(){
     
     var viewMap = {};
     
-    var View = require('./view.js');
+    var View = require('./view');
 
-    var Cache = require('./cache.js');
+    var Cache = require('./cache');
 
     Cache.create('View');
 

@@ -7,7 +7,7 @@
 
 define(function() {
 
-    var action = require('../action/action');
+    var action = require('../action');
 
     // 加载view公共css
     var $viewStyle = $('<style></style>');

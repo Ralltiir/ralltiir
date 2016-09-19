@@ -18,7 +18,7 @@ define(function(){
         return self;    
     };
 
-    var action = require('../action/action');
+    var action = require('../action');
     
     var Cache = require('./cache.js');
 

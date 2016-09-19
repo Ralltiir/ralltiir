@@ -3,7 +3,7 @@
  * @file 测试src/view/cache.js
  */
 
-define(['src/view/cache'], function(cache) {
+define(['../src/view/cache'], function(cache) {
     describe('view/cache', function() {
         beforeEach(function() {
             cache.clear('name');

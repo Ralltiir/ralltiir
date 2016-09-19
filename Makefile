@@ -32,7 +32,7 @@ run:
 
 build: 
 	-mkdir build 
-	fis3 release -d ./build/dist
+	fis3 release -d ./build
 
 clean:
 	rm -rf ./build/

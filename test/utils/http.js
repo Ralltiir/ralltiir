@@ -3,7 +3,7 @@
  * @file 测试src/utils/http.js
  */
 
-define(['src/utils/http'], function(http) {
+define(['../src/utils/http'], function(http) {
     describe('http', function() {
         this.timeout(5000);
 
