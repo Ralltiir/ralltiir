@@ -3,7 +3,7 @@
  * @file 测试src/view/viewFactory.js
  */
 
-define(['src/view/viewFactory', 'src/view/cache', 'src/view/view'], function(viewFactory, cache, view) {
+define(['../src/view/viewFactory', '../src/view/cache', '../src/view/view'], function(viewFactory, cache, view) {
     describe('view/viewFactory', function() {
         var instance = {};
         beforeEach(function() {

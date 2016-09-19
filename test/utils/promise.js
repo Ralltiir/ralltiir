@@ -3,7 +3,7 @@
  * @file 测试src/Promise.js. 标准： Promises/A+ https://Promisesaplus.com/
  */
 
-define(['src/utils/promise'], function(Promise) {
+define(['../src/utils/promise'], function(Promise) {
     describe('Promise', function() {
         this.timeout(5000);
 

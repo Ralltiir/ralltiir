@@ -9,7 +9,8 @@ fis.set('project.files', [
     'lib/**',
     'src/**',
     'examples/**',
-    'test/**'
+    'test/**',
+    'test-main.js'
 ]);
 
 fis.config.set("project.watch.usePolling", true);
@@ -29,7 +30,19 @@ fis.match('main.js', {
 });
 
 fis.match('/src/(**).js', {
-    moduleId: '$1'
+    release: true,
+    moduleId: '$1',
+    isMod: true
+});
+
+fis.match('/test/(**).js', {
+    release: true,
+    moduleId: 'test/$1',
+    isMod: true
+});
+
+fis.match('/test-main.js', {
+    release: true,
 });
 
 fis.match('/lib/(**).js', {
