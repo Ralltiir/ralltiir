@@ -68,10 +68,10 @@ module.exports = function(config) {
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['mocha'],
         htmlReporter: {
-            outputDir: 'build/test'
+            outputDir: 'build/test-reports/result'
         },
         coverageReporter: {
-            dir: '../coverage'  // relative to basePath
+            dir: 'test-reports/coverage'  // relative to basePath
         },
 
 

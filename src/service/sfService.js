@@ -33,7 +33,7 @@ define(function () {
         view.render();
         
         return view.create(current, prev);
-    });
+    };
 
     // activity start
     exports.prototype.attach = function (current, prev) {
@@ -48,10 +48,10 @@ define(function () {
         view && view.start(scope);
         
         return vmf.fetch(current.url + '&mod=1', current.path).then(function() {
-            vmf.render()
+            vmf.render();
             vmf.start(current, prev);
         });
-    });
+    };
 
     // activity stop
     exports.prototype.detach = function (current, prev) {
@@ -61,7 +61,7 @@ define(function () {
         var view = viewFactory.get(prev.url);
 
         return view && view.stop(current, prev);
-    });
+    };
 
     // activity destroy
     exports.prototype.destroy = function (current, prev) {
@@ -89,7 +89,7 @@ define(function () {
             }
         }
         return viewFactory.destroy(current, prev);
-    });
+    };
 
     //返回实例化对象
     return activity;

@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "test": "karma start"
+    "test": "make test",
+    "test-reports": "make test-reports",
+    "clean": "make clean"
   },
   "devDependencies": {
     "chai": "^3.5.0",

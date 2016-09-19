@@ -7,32 +7,29 @@ export KARMA_BIN=./node_modules/karma/bin/karma
 
 export TEST=$(KARMA_BIN) --port $(PORT)
 
-.PHONY: test coverage html reports watch clean build
+.PHONY: test test-reports test-watch test-run test-listen test-build clean dist-clean
 
-test: build
+test: test-build
 	$(TEST) start --reporters mocha
 
-coverage: build
-	$(TEST) start --reporters mocha,coverage
-
-html: build
-	$(TEST) start --reporters mocha,html
-
-reports: build
+test-reports: test-build
 	$(TEST) start --reporters mocha,html,coverage
 
-watch: build
+test-watch: test-build
 	$(TEST) start --auto-watch --no-single-run
 
-listen: build
+test-listen: test-build
 	$(TEST) start --browsers --no-single-run
 
-run:
+test-run:
 	$(TEST) run
 
-build: 
+test-build: 
 	[ -d ./build ] || mkdir ./build 
 	fis3 release -d ./build
 
 clean:
 	rm -rf ./build/
+
+dist-clean: clean
+	rm -rf ./dist/
