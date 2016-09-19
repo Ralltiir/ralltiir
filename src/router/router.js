@@ -263,7 +263,7 @@ define(function (require) {
      */
     exports.add = function (path, fn, thisArg) {
         if (indexOfHandler(path) >= 0) {
-            throw new Error('path has been existed');
+            throw new Error('path already exist');
         }
         addRule(path, fn, thisArg);
     };
@@ -279,6 +279,16 @@ define(function (require) {
         if (i >= 0) {
             rules.splice(i, 1);
         }
+    };
+
+    /**
+     * 测试路由规则存在性
+     *
+     * @public
+     * @param {string} path 路径
+     */
+    exports.exist = function (path) {
+        return indexOfHandler(path) >= 0;
     };
 
     /**
