@@ -198,7 +198,7 @@ define(['../src/action', '../router/router'], function(action, router) {
                 expect(router.reset).to.have.been.called;
             });
             it('should call action.update()', function() {
-                history.pushState({}, 'title', '/bar/foo');
+                history.replaceState({}, 'title', '/bar/foo');
                 var options = {
                     foo: 'bar'
                 };
@@ -230,3 +230,4 @@ define(['../src/action', '../router/router'], function(action, router) {
         });
     });
 });
+

@@ -3,11 +3,7 @@
  * @file 测试src/resource.js
  */
 
-console.log('before define test/resource');
-
 define(['../src/resource'], function(Resource) {
-    console.log('after define test/resource');
-
     describe('resource', function() {
         this.timeout(5000);
         var xhr, fake, timeout;

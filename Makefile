@@ -31,7 +31,7 @@ run:
 	$(TEST) run
 
 build: 
-	-mkdir build 
+	[ -d ./build ] || mkdir ./build 
 	fis3 release -d ./build
 
 clean:

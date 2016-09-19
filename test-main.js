@@ -21,7 +21,6 @@ require.config({
 //     此时esl尚未载入测试脚本。
 window.__karma__.loaded = function() {};
 var mods = TEST_FILES.map(getModuleId);
-console.log(mods, paths);
 require(mods, window.__karma__.start);
 
 
