@@ -20,11 +20,20 @@ npm install -g fis3
 npm install
 ```
 
+### 构建打包
+
+```bash
+# 打包
+make dist
+```
+
+打包的结果文件在`dist/`目录下。
+
 ### 运行测试
 
 本仓库使用Karma作为Test Runner。关于Karma测试环境，请移步<http://***REMOVED***/psfe/karma-testing>，运行一次测试：
 
-```make
+```bash
 make test
 # 或
 npm test

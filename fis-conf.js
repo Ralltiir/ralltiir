@@ -19,16 +19,6 @@ fis.match('*', {
     release: false
 });
 
-fis.match('main.js', {
-    useHash: true,
-    optimizer: fis.plugin('uglify-js', {
-        output : {
-            max_line_len : 500
-        }
-    }),
-    release: '/src/main.js'
-});
-
 fis.match('/src/(**).js', {
     release: true,
     moduleId: '$1',
@@ -52,6 +42,21 @@ fis.match('/lib/(**).js', {
 
 fis.match('/examples/(**)', {
     release: '/examples/$1'
+});
+
+fis.match('main.js', {
+    isMod: false,
+    release: '/src/main.js'
+});
+
+fis.match('main.min.js', {
+    isMod: false,
+    optimizer: fis.plugin('uglify-js', {
+        output : {
+            max_line_len : 500
+        }
+    }),
+    release: '/src/main.min.js'
 });
 
 fis.hook('amd', {
