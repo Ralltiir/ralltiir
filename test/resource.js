@@ -52,7 +52,7 @@ define(['../src/resource'], function(Resource) {
                 Cat.create(cat, query).then(function(cats, status, xhr) {
                     expect(xhr.url).to.equal('http://json.com/person/1/cat/');
                     expect(xhr.method).to.equal('POST');
-                    expect(xhr.requestBody).to.equal('{"name":"harttle"}');
+                    expect(xhr.requestBody).to.equal('name=harttle');
                     done();
                 }).catch(done);
             });
@@ -92,7 +92,7 @@ define(['../src/resource'], function(Resource) {
                 Cat.update(cat, query).then(function(cats, status, xhr) {
                     expect(xhr.url).to.equal('http://json.com/person/1/cat/2');
                     expect(xhr.method).to.equal('PUT');
-                    expect(xhr.requestBody).to.contain('"name":"harttle"');
+                    expect(xhr.requestBody).to.contain('name=harttle');
                     done();
                 }).catch(done);
             });

@@ -15,7 +15,7 @@ define(['../src/utils/http'], function(http) {
             };
         });
 
-        after(function(){
+        after(function() {
             fake.restore();
         });
 
@@ -92,6 +92,37 @@ define(['../src/utils/http'], function(http) {
                         done();
                     }).catch(done);
             });
+            it('should urlencode request body by default', function(done) {
+                http
+                    .ajax('http://json.com', {
+                        method: 'POST',
+                        data: {
+                            foo: 'bar'
+                        }
+                    })
+                    .then(function() {
+                        expect(xhr.requestBody).to.equal("foo=bar");
+                        done();
+                    })
+                    .catch(done);
+            });
+            it('should JSON encode when contentType set to application/json', function(done) {
+                http.ajax({
+                        method: 'POST',
+                        url: 'http://json.com',
+                        data: {
+                            foo: 'bar'
+                        },
+                        headers: {
+                            'content-type': 'application/json'
+                        }
+                    })
+                    .then(function(content) {
+                        expect(xhr.requestBody).to.equal('{"foo":"bar"}');
+                        done();
+                    })
+                    .catch(done);
+            });
         });
         describe('.get()', function() {
             it('should perform GET', function(done) {
@@ -112,10 +143,13 @@ define(['../src/utils/http'], function(http) {
                         done();
                     }).catch(done);
             });
-            it('should attach post data', function(done){
-                http.post('http://harttle.com', {foo: 'bar'})
-                    .then(function(content){
-                        expect(xhr.requestBody).to.equal('"{"foo":"bar"}"');
+            it('should attach post data', function(done) {
+                http.post('http://harttle.com', {
+                        foo: 'bar'
+                    })
+                    .then(function(content) {
+                        expect(xhr.requestBody).to.equal('foo=bar');
+                        done();
                     })
                     .catch(done);
             });

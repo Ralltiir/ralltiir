@@ -3,13 +3,19 @@
 
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>HTTP Demo</title>
+  <script src="../dist/sf.js"></script>
 </head>
 
 <body>
 
+  <h1>HTTP Demo</h1>
+
+  <p>Check out the console.</p>
+
   <script>
-    require(['http'], function(http) {
+    require(['utils/http'], function(http) {
+      // GET
       http
         .get('http://www.baidu.com')
         .then(function(content, status, xhr) {
@@ -29,14 +35,33 @@
           console.log(err);
         });
 
+      // PUT
       http
         .put('http://www.baidu.com')
         .then(function(content, status, xhr){
         });
 
+      // POST
       http.post('http://www.baidu.com');
 
+      // DELETE
       http.delete('http://www.baidu.com');
+
+      // AJAX
+      http.ajax({
+        url: 'http://www.baidu.com',
+        method: 'post',
+        headers: {
+          'content-type': 'application/json'
+        },
+        data: {
+          foo: 'bar'
+        }
+      }).then(function(content, status, xhr){
+        console.log(content);
+      }).catch(function(xhr, status, err){
+        console.log(err);
+      });
     });
   </script>
 </body>
