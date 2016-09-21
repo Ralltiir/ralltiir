@@ -27,6 +27,18 @@ __inline('router/uri/util/parse-query.js');
 __inline('router/uri/util/stringify-query.js');
 __inline('router/uri/util/uri-parser.js');
 
+/*utils*/
+__inline('utils/http.js');
+__inline('utils/dom.js');
+__inline('utils/underscore.js');
+__inline('utils/promise.js');
+
 /*action*/
 __inline('action.js');
 __inline('service.js');
+
+/*resource*/
+__inline('resource.js');
+
+/*view*/
+__inline('view.js');

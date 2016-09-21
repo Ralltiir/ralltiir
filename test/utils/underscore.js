@@ -19,6 +19,81 @@ define(['src/utils/underscore'], function(_) {
                 expect(_.keysIn(obj)).to.deep.equal(['foo', 'bar']);
             });
         });
+        describe('.defaults()', function() {
+            it('should handle null dst', function() {
+                expect(_.defaults(null, {
+                    foo: 'bar'
+                })).to.deep.equal({
+                    foo: 'bar'
+                });
+            });
+            it('should merge 2 objects', function() {
+                var src = {
+                    foo: 'foo',
+                    bar: 'bar'
+                };
+                var dst = {
+                    foo: 'bar',
+                    kaa: 'kaa'
+                };
+                expect(_.defaults(dst, src)).to.deep.equal({
+                    kaa: 'kaa',
+                    foo: 'bar',
+                    bar: 'bar'
+                });
+            });
+            it('should merge 3 objects', function() {
+                expect(_.defaults({
+                    foo: 'foo'
+                }, {
+                    bar: 'bar'
+                }, {
+                    car: 'car'
+                })).to.deep.equal({
+                    foo: 'foo',
+                    bar: 'bar',
+                    car: 'car'
+                });
+            });
+        });
+        describe('.defaultsDeep()', function() {
+            it('should handle null dst', function() {
+                expect(_.defaultsDeep(null, {
+                    foo: 'bar'
+                })).to.deep.equal({
+                    foo: 'bar'
+                });
+            });
+            it('should replace null value', function() {
+                expect(_.defaultsDeep({
+                    foo: {
+                        foo: 'foo'
+                    }
+                },{
+                    foo: null
+                })).to.deep.equal({
+                    foo: {
+                        foo: 'foo'
+                    }
+                });
+            });
+            it('should merge 2 objects', function() {
+                expect(_.defaultsDeep({
+                    foo: {
+                        foo: 'foo'
+                    }
+                }, {
+                    foo: {
+                        bar: 'bar'
+                    }
+                })).to.deep.equal({
+                    foo: {
+                        foo: 'foo',
+                        bar: 'bar'
+                    }
+                });
+            });
+        });
         describe('.isEmpty()', function() {
             it('should return true for empty array', function() {
                 expect(_.isEmpty([])).to.equal(true);
