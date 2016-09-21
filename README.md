@@ -49,7 +49,7 @@ make test-watch
 保持Karma处于运行状态，手动 Build 即可触发测试的执行：
  
 ```bash
-make test-build
+make build
 ```
 
 ### 测试报告
