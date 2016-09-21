@@ -43,70 +43,78 @@ define(['../src/action', '../router/router'], function(action, router) {
                 }
                 expect(fn).to.throw(/illegal action name/);
             });
-            it('should regist actions', function() {
-                action.regist('key', {});
+            it('should not regist illegal service', function() {
+                var service = {
+                    create: function() {},
+                    attach: function() {},
+                    detach: function() {},
+                    destroy: function() {},
+                    update: function() {}
+                };
+                action.regist('key', service);
                 expect(action.exist('key')).to.be.true;
             });
         });
-        describe('.run()', function() {
-            var option;
+        describe('.dispatch()', function() {
+            var fooService, barService, current, prev;
             beforeEach(function() {
-                option = {
-                    do: sinon.spy(),
-                    before: sinon.spy(),
-                    after: sinon.spy(),
-                    destroy: sinon.spy()
+                action.clear();
+                fooService = {
+                    create: sinon.spy(),
+                    attach: sinon.spy(),
+                    detach: sinon.spy(),
+                    destroy: sinon.spy(),
+                    update: sinon.spy()
                 };
-                action.regist('foo', option);
-            });
-            it('should call do with correct arguments', function() {
-                var current = {
-                        path: 'foo',
-                        url: '/foo'
-                    },
-                    prev = {};
-                action.run(current, prev);
-                expect(option.do).to.have.been.calledWith(current, prev);
-            });
-            it('should call before,do,after in a sequence', function() {
-                action.run({
+                barService = {
+                    create: sinon.spy(),
+                    attach: sinon.spy(),
+                    detach: sinon.spy(),
+                    destroy: sinon.spy(),
+                    update: sinon.spy()
+                };
+                action.regist('foo', fooService);
+                action.regist('bar', barService);
+                current = {
                     path: 'foo',
-                    url: '/foo'
-                }, {});
-                expect(option.before).to.have.been.called;
-                expect(option.do).to.have.been.calledAfter(option.before);
-                expect(option.after).to.have.been.calledAfter(option.do);
+                    url: '/foo',
+                    options: {}
+                };
+                prev = {
+                    path: 'bar',
+                    url: '/bar',
+                    options: {}
+                };
+            });
+            it('should call create,attach with correct arguments', function() {
+                action.dispatch(current, prev);
+                expect(fooService.create).to.have.been.calledWith(current, prev);
+                expect(fooService.attach).to.have.been.calledWith(current, prev);
+            });
+            it('should call detach,destroy with correct arguments', function() {
+                action.dispatch(current, prev);
+                expect(barService.detach).to.have.been.calledWith(current, prev);
+                expect(barService.destroy).to.have.been.calledWith(current, prev);
+            });
+            it('should call detach,create,destroy,attach in a sequence', function() {
+                action.dispatch(current, prev);
+                expect(barService.detach).to.have.been.called;
+                expect(fooService.create).to.have.been.calledAfter(barService.detach);
+                expect(barService.destroy).to.have.been.calledAfter(fooService.create);
+                expect(fooService.attach).to.have.been.calledAfter(barService.destroy);
             });
             it('should skip init when options.src === sync', function() {
-                action.run({
+                action.dispatch({
                     url: '/home',
                     options: {
                         src: 'sync'
                     }
                 }, {});
-                expect(option.do).to.not.have.been.called;
-            });
-            it('should use _indexAction when switched back', function() {
-                var indexOption = {
-                    do: sinon.spy()
-                };
-                action.regist('/index', indexOption);
-                action.run({
-                    url: '/home',
-                    path: '/not/index'
-                }, {});
-                expect(indexOption.do).to.have.been.called;
+                expect(fooService.create).to.not.have.been.called;
             });
             it('should destroy prev action', function() {
-                action.regist('bar', option);
-                action.run({
-                    path: 'bar',
-                    url: '/bar'
-                }, {
-                    path: 'foo',
-                    url: '/foo'
-                });
-                expect(option.destroy).to.have.been.called;
+                action.dispatch(current, prev);
+                expect(barService.destroy).to.have.been.called;
             });
         });
         describe('.remove()', function() {
@@ -133,7 +141,7 @@ define(['../src/action', '../router/router'], function(action, router) {
             it('should set _options.src', function() {
                 action.back({});
                 var current = {};
-                action.run(current, {});
+                action.dispatch(current, {});
                 expect(current.options.src).to.equal('back');
             });
         });
@@ -189,15 +197,20 @@ define(['../src/action', '../router/router'], function(action, router) {
             var option;
             beforeEach(function() {
                 option = {
+                    create: sinon.spy(),
+                    attach: sinon.spy(),
+                    detach: sinon.spy(),
+                    destroy: sinon.spy(),
                     update: sinon.spy()
                 };
+                action.clear();
                 action.regist('/foo', option);
             });
             it('should call router.reset()', function() {
                 action.update();
                 expect(router.reset).to.have.been.called;
             });
-            it('should call action.update()', function() {
+            it('should call serviceObject.update()', function() {
                 history.replaceState({}, 'title', '/bar/foo');
                 var options = {
                     foo: 'bar'

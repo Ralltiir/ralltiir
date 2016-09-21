@@ -70,7 +70,6 @@ define(function() {
             current.options.src = _options.src;
         }
 
-
         prevService && methodProxy.push(prevService.detach, prevService, current, prev);
         currentService && methodProxy.push(currentService.create, currentService, current, prev);
         //container will not be destroyed
@@ -142,6 +141,7 @@ define(function() {
      * */
     exports.clear = function(){
         serviceMap = {};
+        router.clear();
     };
 
     /**
@@ -234,7 +234,7 @@ define(function() {
 
         if(serviceMap.hasOwnProperty(name)) {
             var service = serviceMap[name];
-            serviceMap.update({
+            service.update({
                 path: name,
                 url: url,
                 prevUrl: prevUrl,
