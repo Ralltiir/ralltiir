@@ -53,7 +53,14 @@ define(function() {
         return _arrayProto.forEach.apply(arr || [], args);
     }
 
-    function map(arr) {
+    function map(arr, cb) {
+        if(isObject(arr)){
+            var ret = [];
+            forOwn(arr, function(v, k){
+                ret.push(cb.apply(null, arguments));
+            });
+            return ret;
+        }
         var args = _getArgs(arguments);
         return _arrayProto.map.apply(arr || [], args);
     }
@@ -79,7 +86,7 @@ define(function() {
         }, fmt);
     }
 
-    function defaults(dest) {
+    function defaults() {
         var ret = {};
         var srcs = slice(arguments, 0);
         forEach(srcs, function(src) {
@@ -88,6 +95,41 @@ define(function() {
                     ret[k] = v;
                 }
             });
+        });
+        return ret;
+    }
+
+    function isObject(obj){
+        return obj !== null && typeof obj === 'object';
+    }
+
+    function isString(obj){
+        return obj instanceof String || typeof obj === 'string';
+    }
+
+    function _assignBinaryDeep(dst, src){
+        if(!dst) return dst;
+        forOwn(src, function(v, k){
+            if(isObject(v) && isObject(dst[k])){
+                return _assignBinaryDeep(dst[k], v);
+            }
+            dst[k] = v;
+        });
+    }
+
+    function _assignBinary(dst, src){
+        if(!dst) return dst;
+        forOwn(src, function(v, k){
+            dst[k] = v;
+        });
+        return dst;
+    }
+
+    function defaultsDeep(){
+        var ret = {};
+        var srcs = slice(arguments, 0).reverse();
+        forEach(srcs, function(src) {
+            _assignBinaryDeep(ret, src);
         });
         return ret;
     }
@@ -143,6 +185,7 @@ define(function() {
     exports.keysIn = keysIn;
     exports.forOwn = forOwn;
     exports.defaults = defaults;
+    exports.defaultsDeep = defaultsDeep;
     exports.fromPairs = fromPairs;
 
     /*
@@ -165,6 +208,8 @@ define(function() {
      */
     exports.isArray = isArray;
     exports.isEmpty = isEmpty;
+    exports.isString = isString;
+    exports.isObject = isObject;
 
     /*
      * Function Related

@@ -3539,6 +3539,518 @@ var esl;
 })(this);
 ;
 
+/*utils*/
+define('utils/http', ['utils/promise', 'utils/underscore'], function(Promise, _) {
+    var exports = {};
+
+    /*
+     * @param url
+     * @param settings
+     * @return a promise.
+     *   .then(function( data, textStatus, xhr ) {});
+     *   .catch(function( xhr, textStatus, errorThrown ) {});
+     *   .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
+     */
+    exports.ajax = function(url, settings) {
+        //console.log('ajax with', url, settings);
+        if (typeof url === 'object') {
+            settings = url;
+            url = "";
+        }
+        settings = _.defaults(settings, {
+            url: url,
+            method: settings && settings.type || 'GET',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: null,
+            jsonp: false,
+            jsonpCallback: 'cb'
+        });
+        if (settings.data instanceof FormData) {
+            settings.contentType = 'multipart/form-data';
+        } else if (typeof settings.data === 'object') {
+            settings.contentType = 'application/json';
+            settings.data = JSON.stringify(settings.data);
+        }
+        return _doAjax(settings);
+    };
+
+    exports.get = function(url, data) {
+        return exports.ajax(url, {
+            data: data
+        });
+    };
+
+    exports.post = function(url, data) {
+        return exports.ajax(url, {
+            method: 'POST',
+            data: data
+        });
+    };
+
+    exports.put = function(url, data) {
+        return exports.ajax(url, {
+            method: 'PUT',
+            data: data
+        });
+    };
+
+    exports.delete = function(url, data) {
+        return exports.ajax(url, {
+            method: 'DELETE',
+            data: data
+        });
+    };
+
+    function _doAjax(settings) {
+        //console.log('_doAjax with', settings);
+        var xhr;
+        try {
+            xhr = _createXHR();
+        } catch (e) {
+            return Promise.reject(null, '', e);
+        }
+        //console.log('open xhr');
+        xhr.open(settings.method, settings.url, true);
+
+        return new Promise(function(resolve, reject) {
+            xhr.onreadystatechange = function() {
+                //console.log('onreadystatechange', xhr.readyState, xhr.status);
+                if (xhr.readyState == 4) {
+                    xhr = _resolveXHR(xhr);
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve(xhr.responseBody, xhr.status, xhr);
+                    } else {
+                        reject(xhr, xhr.status, null);
+                    }
+                }
+            };
+            xhr.send(settings.data);
+        });
+    }
+
+    function _resolveXHR(xhr) {
+        /*
+         * parse response headers
+         */
+        var headers = xhr.getAllResponseHeaders()
+            // Spec: https://developer.mozilla.org/en-US/docs/Glossary/CRLF
+            .split('\r\n')
+            .filter(_.negate(_.isEmpty))
+            .map(function(str) {
+                return _.split(str, /\s*:\s*/);
+            });
+        xhr.responseHeaders = _.fromPairs(headers);
+
+        /*
+         * parse response body
+         */
+        xhr.responseBody = xhr.responseText;
+        if(xhr.responseHeaders['Content-Type'] === 'application/json'){
+            try{
+                xhr.responseBody = JSON.parse(xhr.responseText);
+            }
+            catch(e){
+                console.warn('Invalid JSON content with Content-Type: application/json');
+            }
+        }
+        return xhr;
+    }
+
+    function _createXHR() {
+        //console.log('create xhr');
+        var xhr = false;
+
+        if (window.XMLHttpRequest) { // Mozilla, Safari,...
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) { // IE
+            try {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {}
+        }
+        if (!xhr) {
+            throw 'Cannot create an XHR instance';
+        }
+        return xhr;
+    }
+
+    return exports;
+});
+;
+/*
+ * @author yangjun14(yangjun14@baidu.com)
+ * @file 标准： Promises/A+ https://promisesaplus.com/
+ */
+
+define('utils/promise', ['require'], function(require) {
+    function Promise(cb) {
+        if (!(this instanceof Promise)) {
+            throw 'Promise must be called with new operator';
+        }
+        if (typeof cb !== 'function') {
+            throw 'callback not defined';
+        }
+
+        this._handlers = [];
+        this._state = 'init'; // Enum: init, fulfilled, rejected
+        this._errors = [];
+        this._results = [];
+
+        // 标准：Promises/A+ 2.2.4, see https://promisesaplus.com/ 
+        // In practice, this requirement ensures that 
+        //   onFulfilled and onRejected execute asynchronously, 
+        //   after the event loop turn in which then is called, 
+        //   and with a fresh stack.
+        setTimeout(function() {
+            cb(this._onFulfilled.bind(this), this._onRejected.bind(this));
+        }.bind(this));
+    }
+
+    /*
+     * 注册Promise成功的回调
+     * @param cb 回调函数
+     */
+    Promise.prototype.then = function(cb) {
+        //console.log('calling then', this._state);
+        if (this._state === 'fulfilled') {
+            //console.log(this._state);
+            this._callHandler(cb, this._results);
+        } else {
+            this._handlers.push({
+                type: 'then',
+                cb: cb
+            });
+        }
+        return this;
+    };
+    /*
+     * 注册Promise失败的回调
+     * @param cb 回调函数
+     */
+    Promise.prototype.catch = function(cb) {
+        if (this._state === 'rejected') {
+            this._callHandler(cb, this._errors);
+        } else {
+            this._handlers.push({
+                type: 'catch',
+                cb: cb
+            });
+        }
+        return this;
+    };
+    /*
+     * 注册Promise最终的回调
+     * @param cb 回调函数
+     */
+    Promise.prototype.finally = function(cb) {
+        if (this._state === 'fulfilled') {
+            this._callHandler(cb, this._results);
+        } else if (this._state === 'rejected') {
+            this._callHandler(cb, this._errors);
+        } else {
+            this._handlers.push({
+                type: 'finally',
+                cb: cb
+            });
+        }
+    };
+    /*
+     * 返回一个成功的Promise
+     * @param obj 被解析的对象
+     */
+    Promise.resolve = function(obj) {
+        var args = arguments;
+        return _isThenable(obj) ? obj :
+            new Promise(function(resolve, reject) {
+                return resolve.apply(null, args);
+            });
+    };
+    /*
+     * 返回一个失败的Promise
+     * @param obj 被解析的对象
+     */
+    Promise.reject = function(obj) {
+        var args = arguments;
+        return new Promise(function(resolve, reject) {
+            return reject.apply(null, args);
+        });
+    };
+    /*
+     * 返回一个Promise，当数组中所有Promise都成功时resolve，
+     * 数组中任何一个失败都reject。
+     * @param promises Thenable数组，可以包含Promise，也可以包含非Thenable
+     */
+    Promise.all = function(promises) {
+        var results = promises.map(function() {
+            return undefined;
+        });
+        var count = 0;
+        var state = 'pending';
+        return new Promise(function(res, rej) {
+            function resolve() {
+                if (state !== 'pending') return;
+                state = 'fulfilled';
+                res(results);
+            }
+
+            function reject() {
+                if (state !== 'pending') return;
+                state = 'rejected';
+                rej.apply(null, arguments);
+            }
+            promises
+                .map(Promise.resolve)
+                .forEach(function(promise, idx) {
+                    promise
+                        .then(function(result) {
+                            results[idx] = result;
+                            count++;
+                            if (count === promises.length) resolve();
+                        })
+                        .catch(reject);
+                });
+        });
+    };
+
+    Promise.prototype._onFulfilled = function(obj) {
+        //console.log('_onFulfilled', obj);
+        if (_isThenable(obj)) {
+            return obj
+                .then(this._onFulfilled.bind(this))
+                .catch(this._onRejected.bind(this));
+        }
+
+        this._results = arguments;
+        var handler = this._getNextHandler('then');
+        if (handler) {
+            return this._callHandler(handler, this._results);
+        }
+        handler = this._getNextHandler('finally');
+        if (handler) {
+            return this._callHandler(handler, this._results);
+        }
+        this._state = 'fulfilled';
+    };
+    Promise.prototype._onRejected = function(err) {
+        //console.log('_onRejected', err);
+        this._errors = arguments;
+        var handler = this._getNextHandler('catch');
+        if (handler) {
+            return this._callHandler(handler, this._errors);
+        }
+        handler = this._getNextHandler('finally');
+        if (handler) {
+            return this._callHandler(handler, this._errors);
+        }
+        this._state = 'rejected';
+    };
+    Promise.prototype._callHandler = function(handler, args) {
+        //console.log('calling handler', handler, args);
+        var result, err = null;
+        try {
+            result = handler.apply(null, args);
+        } catch (e) {
+            err = e;
+        }
+        if (err) {
+            this._onRejected(err);
+        } else {
+            this._onFulfilled(result);
+        }
+    };
+    Promise.prototype._getNextHandler = function(type) {
+        var obj;
+        while (obj = this._handlers.shift()) {
+            if (obj.type === type) break;
+        }
+        return obj ? obj.cb : null;
+    };
+
+    function _isThenable(obj) {
+        return obj && typeof obj.then === 'function';
+    }
+
+    return Promise;
+});
+;
+/*
+ * @author harttle(yangjvn@126.com)
+ * @file 通用工具：包括字符串工具、对象工具、函数工具、语言增强等。
+ *      设计原则：
+ *          1. 与 Lodash 重合的功能与其保持接口一致，
+ *             文档: https://github.com/exports/exports
+ *          2. Lodash 中不包含的部分，如有需要可联系 yangjvn14 (Hi)
+ *             文档：本文件中函数注释。
+ */
+
+define('utils/underscore', ['require'], function(require) {
+    /*
+     * 变量定义
+     */
+    var exports = {};
+    var _arrayProto = Array.prototype;
+    var _objectProto = Object.prototype;
+    var _stringProto = String.prototype;
+
+    /*
+     * 私有函数
+     */
+    function _getArgs(args) {
+        args = toArray(args);
+        args.shift();
+        return args;
+    }
+
+    /*
+     * 公有函数
+     */
+    function keysIn(obj) {
+        return Object.keys(obj);
+    }
+
+    function forOwn(obj, cb) {
+        obj = obj || {};
+        for (var k in obj) {
+            if (obj.hasOwnProperty(k)) {
+                cb(obj[k], k);
+            }
+        }
+        return obj;
+    }
+
+    function toArray(obj) {
+        if (!obj) return [];
+        return _arrayProto.slice.call(obj);
+    }
+
+    function forEach(arr) {
+        var args = _getArgs(arguments);
+        return _arrayProto.forEach.apply(arr || [], args);
+    }
+
+    function map(arr) {
+        var args = _getArgs(arguments);
+        return _arrayProto.map.apply(arr || [], args);
+    }
+
+    function slice(arr) {
+        var args = _getArgs(arguments);
+        return _arrayProto.slice.apply(arr || [], args);
+    }
+
+    function splice(arr) {
+        var args = _getArgs(arguments);
+        return _arrayProto.splice.apply(arr || [], args);
+    }
+
+    function split(str) {
+        var args = _getArgs(arguments);
+        return _stringProto.split.apply(str || '', args);
+    }
+
+    function format(fmt) {
+        return _getArgs(arguments).reduce(function(prev, cur) {
+            return prev.replace('%s', cur);
+        }, fmt);
+    }
+
+    function defaults(dest) {
+        var ret = {};
+        var srcs = slice(arguments, 0);
+        forEach(srcs, function(src) {
+            forOwn(src, function(v, k) {
+                if (!ret.hasOwnProperty(k)) {
+                    ret[k] = v;
+                }
+            });
+        });
+        return ret;
+    }
+
+    function fromPairs(propertyArr) {
+        var obj = {};
+        map(propertyArr, function(arr) {
+            var k = arr[0],
+                v = arr[1];
+            obj[k] = v;
+        });
+        return obj;
+    }
+
+    function isArray(obj) {
+        return obj instanceof Array;
+    }
+
+    function isEmpty(obj) {
+        return isArray(obj) ? obj.length === 0 : !obj;
+    }
+
+    function negate(func) {
+        return function() {
+            return !func.apply(null, arguments);
+        };
+    }
+
+    function partial(func) {
+        var placeholders = slice(arguments);
+        return function() {
+            var spliceArgs = [0, 0];
+            spliceArgs.push(placeholders);
+            var args = _arrayProto.splice.apply(arguments, spliceArgs);
+            return func.apply(null, args);
+        };
+    }
+
+    function partialRight(func) {
+        var placeholders = slice(arguments);
+        placeholders.shift();
+        return function() {
+            var args = slice(arguments);
+            var spliceArgs = [args, arguments.length, 0].concat(placeholders);
+            splice.apply(null, spliceArgs);
+            return func.apply(null, args);
+        };
+    }
+
+    /* 
+     * Object Related
+     */
+    exports.keysIn = keysIn;
+    exports.forOwn = forOwn;
+    exports.defaults = defaults;
+    exports.fromPairs = fromPairs;
+
+    /*
+     * Array Related
+     */
+    exports.slice = slice;
+    exports.splice = splice;
+    exports.forEach = forEach;
+    exports.map = map;
+    exports.toArray = toArray;
+
+    /*
+     * String Related
+     */
+    exports.split = split;
+    exports.format = format;
+
+    /*
+     * Lang Related
+     */
+    exports.isArray = isArray;
+    exports.isEmpty = isEmpty;
+
+    /*
+     * Function Related
+     */
+    exports.partial = partial;
+    exports.partialRight = partialRight;
+    exports.negate = negate;
+
+    return exports;
+});
+;
+
 /*router*/
 /**
  * saber-lang
@@ -5985,602 +6497,6 @@ define('router/uri/util/uri-parser', ['require', 'router/lang/extend'], function
 });
 ;
 
-/*utils*/
-define('utils/http', ['utils/promise', 'utils/underscore', 'utils/dom'], function(Promise, _, $) {
-    var exports = {};
-
-    /*
-     * @param url
-     * @param settings
-     * @return a promise.
-     *   .then(function( data, textStatus, xhr ) {});
-     *   .catch(function( xhr, textStatus, errorThrown ) {});
-     *   .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
-     */
-    exports.ajax = function(url, settings) {
-        //console.log('ajax with', url, settings);
-        if (typeof url === 'object') {
-            settings = url;
-            url = "";
-        }
-        // normalize settings
-        settings = _.defaultsDeep(settings, {
-            url: url,
-            method: settings && settings.type || 'GET',
-            headers: {},
-            data: null,
-            jsonp: false,
-            jsonpCallback: 'cb'
-        });
-        _.forOwn(settings.headers, function(v, k) {
-            settings.headers[k] = v.toLowerCase(v);
-        });
-
-        settings.headers['content-type'] = settings.headers['content-type'] ||
-            _guessContentType(settings.data);
-
-        //console.log('before parse data', settings);
-        if (/application\/json/.test(settings.headers['content-type'])) {
-            settings.data = JSON.stringify(settings.data);
-        } else if (/form-urlencoded/.test(settings.headers['content-type'])) {
-            settings.data = $.param(settings.data);
-        }
-        //console.log('after parse data', settings);
-        return _doAjax(settings);
-    };
-
-    function _guessContentType(data) {
-        if (data instanceof FormData) {
-            return 'multipart/form-data';
-        }
-        return 'application/x-www-form-urlencoded; charset=UTF-8';
-    }
-
-    exports.get = function(url, data) {
-        return exports.ajax(url, {
-            data: data
-        });
-    };
-
-    exports.post = function(url, data) {
-        return exports.ajax(url, {
-            method: 'POST',
-            data: data
-        });
-    };
-
-    exports.put = function(url, data) {
-        return exports.ajax(url, {
-            method: 'PUT',
-            data: data
-        });
-    };
-
-    exports.delete = function(url, data) {
-        return exports.ajax(url, {
-            method: 'DELETE',
-            data: data
-        });
-    };
-
-    function _doAjax(settings) {
-        //console.log('_doAjax with', settings);
-        var xhr;
-        try {
-            xhr = _createXHR();
-        } catch (e) {
-            return Promise.reject(null, '', e);
-        }
-        //console.log('open xhr');
-        xhr.open(settings.method, settings.url, true);
-
-        _.forOwn(settings.headers, function(v, k) {
-            xhr.setRequestHeader(k, v);
-        });
-
-        return new Promise(function(resolve, reject) {
-            xhr.onreadystatechange = function() {
-                //console.log('onreadystatechange', xhr.readyState, xhr.status);
-                if (xhr.readyState == 4) {
-                    xhr = _resolveXHR(xhr);
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(xhr.responseBody, xhr.status, xhr);
-                    } else {
-                        reject(xhr, xhr.status, null);
-                    }
-                }
-            };
-            //console.log('doajax sending:', settings.data);
-            xhr.send(settings.data);
-        });
-    }
-
-    function _resolveXHR(xhr) {
-        /*
-         * parse response headers
-         */
-        var headers = xhr.getAllResponseHeaders()
-            // Spec: https://developer.mozilla.org/en-US/docs/Glossary/CRLF
-            .split('\r\n')
-            .filter(_.negate(_.isEmpty))
-            .map(function(str) {
-                return _.split(str, /\s*:\s*/);
-            });
-        xhr.responseHeaders = _.fromPairs(headers);
-
-        /*
-         * parse response body
-         */
-        xhr.responseBody = xhr.responseText;
-        if (xhr.responseHeaders['Content-Type'] === 'application/json') {
-            try {
-                xhr.responseBody = JSON.parse(xhr.responseText);
-            } catch (e) {
-                console.warn('Invalid JSON content with Content-Type: application/json');
-            }
-        }
-        return xhr;
-    }
-
-    function _createXHR() {
-        //console.log('create xhr');
-        var xhr = false;
-
-        if (window.XMLHttpRequest) { // Mozilla, Safari,...
-            xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject) { // IE
-            try {
-                xhr = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {}
-        }
-        if (!xhr) {
-            throw 'Cannot create an XHR instance';
-        }
-        return xhr;
-    }
-
-    return exports;
-});
-;
-/*
- * @author harttle(yangjvn@126.com)
- * @file dom DOM, BOM工具集
- *      设计原则：
- *          1. 与jQuery兼容
- */
-define('utils/dom', ['utils/underscore'], function(_) {
-    function param(obj) {
-        if (!_.isObject(obj)) return obj;
-        return _.map(obj, function(v, k) {
-                return encodeURIComponent(k) + '=' + encodeURIComponent(v);
-            })
-            .join('&');
-    }
-    return {
-        param: param
-    };
-});
-;
-/*
- * @author harttle(yangjvn@126.com)
- * @file 通用工具：包括字符串工具、对象工具、函数工具、语言增强等。
- *      设计原则：
- *          1. 与 Lodash 重合的功能与其保持接口一致，
- *             文档: https://github.com/exports/exports
- *          2. Lodash 中不包含的部分，如有需要可联系 yangjvn14 (Hi)
- *             文档：本文件中函数注释。
- */
-
-define('utils/underscore', ['require'], function(require) {
-    /*
-     * 变量定义
-     */
-    var exports = {};
-    var _arrayProto = Array.prototype;
-    var _objectProto = Object.prototype;
-    var _stringProto = String.prototype;
-
-    /*
-     * 私有函数
-     */
-    function _getArgs(args) {
-        args = toArray(args);
-        args.shift();
-        return args;
-    }
-
-    /*
-     * 公有函数
-     */
-    function keysIn(obj) {
-        return Object.keys(obj);
-    }
-
-    function forOwn(obj, cb) {
-        obj = obj || {};
-        for (var k in obj) {
-            if (obj.hasOwnProperty(k)) {
-                cb(obj[k], k);
-            }
-        }
-        return obj;
-    }
-
-    function toArray(obj) {
-        if (!obj) return [];
-        return _arrayProto.slice.call(obj);
-    }
-
-    function forEach(arr) {
-        var args = _getArgs(arguments);
-        return _arrayProto.forEach.apply(arr || [], args);
-    }
-
-    function map(arr, cb) {
-        if(isObject(arr)){
-            var ret = [];
-            forOwn(arr, function(v, k){
-                ret.push(cb.apply(null, arguments));
-            });
-            return ret;
-        }
-        var args = _getArgs(arguments);
-        return _arrayProto.map.apply(arr || [], args);
-    }
-
-    function slice(arr) {
-        var args = _getArgs(arguments);
-        return _arrayProto.slice.apply(arr || [], args);
-    }
-
-    function splice(arr) {
-        var args = _getArgs(arguments);
-        return _arrayProto.splice.apply(arr || [], args);
-    }
-
-    function split(str) {
-        var args = _getArgs(arguments);
-        return _stringProto.split.apply(str || '', args);
-    }
-
-    function format(fmt) {
-        return _getArgs(arguments).reduce(function(prev, cur) {
-            return prev.replace('%s', cur);
-        }, fmt);
-    }
-
-    function defaults() {
-        var ret = {};
-        var srcs = slice(arguments, 0);
-        forEach(srcs, function(src) {
-            forOwn(src, function(v, k) {
-                if (!ret.hasOwnProperty(k)) {
-                    ret[k] = v;
-                }
-            });
-        });
-        return ret;
-    }
-
-    function isObject(obj){
-        return obj !== null && typeof obj === 'object';
-    }
-
-    function isString(obj){
-        return obj instanceof String || typeof obj === 'string';
-    }
-
-    function _assignBinaryDeep(dst, src){
-        if(!dst) return dst;
-        forOwn(src, function(v, k){
-            if(isObject(v) && isObject(dst[k])){
-                return _assignBinaryDeep(dst[k], v);
-            }
-            dst[k] = v;
-        });
-    }
-
-    function _assignBinary(dst, src){
-        if(!dst) return dst;
-        forOwn(src, function(v, k){
-            dst[k] = v;
-        });
-        return dst;
-    }
-
-    function defaultsDeep(){
-        var ret = {};
-        var srcs = slice(arguments, 0).reverse();
-        forEach(srcs, function(src) {
-            _assignBinaryDeep(ret, src);
-        });
-        return ret;
-    }
-
-    function fromPairs(propertyArr) {
-        var obj = {};
-        map(propertyArr, function(arr) {
-            var k = arr[0],
-                v = arr[1];
-            obj[k] = v;
-        });
-        return obj;
-    }
-
-    function isArray(obj) {
-        return obj instanceof Array;
-    }
-
-    function isEmpty(obj) {
-        return isArray(obj) ? obj.length === 0 : !obj;
-    }
-
-    function negate(func) {
-        return function() {
-            return !func.apply(null, arguments);
-        };
-    }
-
-    function partial(func) {
-        var placeholders = slice(arguments);
-        return function() {
-            var spliceArgs = [0, 0];
-            spliceArgs.push(placeholders);
-            var args = _arrayProto.splice.apply(arguments, spliceArgs);
-            return func.apply(null, args);
-        };
-    }
-
-    function partialRight(func) {
-        var placeholders = slice(arguments);
-        placeholders.shift();
-        return function() {
-            var args = slice(arguments);
-            var spliceArgs = [args, arguments.length, 0].concat(placeholders);
-            splice.apply(null, spliceArgs);
-            return func.apply(null, args);
-        };
-    }
-
-    /* 
-     * Object Related
-     */
-    exports.keysIn = keysIn;
-    exports.forOwn = forOwn;
-    exports.defaults = defaults;
-    exports.defaultsDeep = defaultsDeep;
-    exports.fromPairs = fromPairs;
-
-    /*
-     * Array Related
-     */
-    exports.slice = slice;
-    exports.splice = splice;
-    exports.forEach = forEach;
-    exports.map = map;
-    exports.toArray = toArray;
-
-    /*
-     * String Related
-     */
-    exports.split = split;
-    exports.format = format;
-
-    /*
-     * Lang Related
-     */
-    exports.isArray = isArray;
-    exports.isEmpty = isEmpty;
-    exports.isString = isString;
-    exports.isObject = isObject;
-
-    /*
-     * Function Related
-     */
-    exports.partial = partial;
-    exports.partialRight = partialRight;
-    exports.negate = negate;
-
-    return exports;
-});
-;
-/*
- * @author yangjun14(yangjun14@baidu.com)
- * @file 标准： Promises/A+ https://promisesaplus.com/
- */
-
-define('utils/promise', ['require'], function(require) {
-    function Promise(cb) {
-        if (!(this instanceof Promise)) {
-            throw 'Promise must be called with new operator';
-        }
-        if (typeof cb !== 'function') {
-            throw 'callback not defined';
-        }
-
-        this._handlers = [];
-        this._state = 'init'; // Enum: init, fulfilled, rejected
-        this._errors = [];
-        this._results = [];
-
-        // 标准：Promises/A+ 2.2.4, see https://promisesaplus.com/ 
-        // In practice, this requirement ensures that 
-        //   onFulfilled and onRejected execute asynchronously, 
-        //   after the event loop turn in which then is called, 
-        //   and with a fresh stack.
-        setTimeout(function() {
-            cb(this._onFulfilled.bind(this), this._onRejected.bind(this));
-        }.bind(this));
-    }
-
-    /*
-     * 注册Promise成功的回调
-     * @param cb 回调函数
-     */
-    Promise.prototype.then = function(cb) {
-        //console.log('calling then', this._state);
-        if (this._state === 'fulfilled') {
-            //console.log(this._state);
-            this._callHandler(cb, this._results);
-        } else {
-            this._handlers.push({
-                type: 'then',
-                cb: cb
-            });
-        }
-        return this;
-    };
-    /*
-     * 注册Promise失败的回调
-     * @param cb 回调函数
-     */
-    Promise.prototype.catch = function(cb) {
-        if (this._state === 'rejected') {
-            this._callHandler(cb, this._errors);
-        } else {
-            this._handlers.push({
-                type: 'catch',
-                cb: cb
-            });
-        }
-        return this;
-    };
-    /*
-     * 注册Promise最终的回调
-     * @param cb 回调函数
-     */
-    Promise.prototype.finally = function(cb) {
-        if (this._state === 'fulfilled') {
-            this._callHandler(cb, this._results);
-        } else if (this._state === 'rejected') {
-            this._callHandler(cb, this._errors);
-        } else {
-            this._handlers.push({
-                type: 'finally',
-                cb: cb
-            });
-        }
-    };
-    /*
-     * 返回一个成功的Promise
-     * @param obj 被解析的对象
-     */
-    Promise.resolve = function(obj) {
-        var args = arguments;
-        return _isThenable(obj) ? obj :
-            new Promise(function(resolve, reject) {
-                return resolve.apply(null, args);
-            });
-    };
-    /*
-     * 返回一个失败的Promise
-     * @param obj 被解析的对象
-     */
-    Promise.reject = function(obj) {
-        var args = arguments;
-        return new Promise(function(resolve, reject) {
-            return reject.apply(null, args);
-        });
-    };
-    /*
-     * 返回一个Promise，当数组中所有Promise都成功时resolve，
-     * 数组中任何一个失败都reject。
-     * @param promises Thenable数组，可以包含Promise，也可以包含非Thenable
-     */
-    Promise.all = function(promises) {
-        var results = promises.map(function() {
-            return undefined;
-        });
-        var count = 0;
-        var state = 'pending';
-        return new Promise(function(res, rej) {
-            function resolve() {
-                if (state !== 'pending') return;
-                state = 'fulfilled';
-                res(results);
-            }
-
-            function reject() {
-                if (state !== 'pending') return;
-                state = 'rejected';
-                rej.apply(null, arguments);
-            }
-            promises
-                .map(Promise.resolve)
-                .forEach(function(promise, idx) {
-                    promise
-                        .then(function(result) {
-                            results[idx] = result;
-                            count++;
-                            if (count === promises.length) resolve();
-                        })
-                        .catch(reject);
-                });
-        });
-    };
-
-    Promise.prototype._onFulfilled = function(obj) {
-        //console.log('_onFulfilled', obj);
-        if (_isThenable(obj)) {
-            return obj
-                .then(this._onFulfilled.bind(this))
-                .catch(this._onRejected.bind(this));
-        }
-
-        this._results = arguments;
-        var handler = this._getNextHandler('then');
-        if (handler) {
-            return this._callHandler(handler, this._results);
-        }
-        handler = this._getNextHandler('finally');
-        if (handler) {
-            return this._callHandler(handler, this._results);
-        }
-        this._state = 'fulfilled';
-    };
-    Promise.prototype._onRejected = function(err) {
-        //console.log('_onRejected', err);
-        this._errors = arguments;
-        var handler = this._getNextHandler('catch');
-        if (handler) {
-            return this._callHandler(handler, this._errors);
-        }
-        handler = this._getNextHandler('finally');
-        if (handler) {
-            return this._callHandler(handler, this._errors);
-        }
-        this._state = 'rejected';
-    };
-    Promise.prototype._callHandler = function(handler, args) {
-        //console.log('calling handler', handler, args);
-        var result, err = null;
-        try {
-            result = handler.apply(null, args);
-        } catch (e) {
-            err = e;
-        }
-        if (err) {
-            this._onRejected(err);
-        } else {
-            this._onFulfilled(result);
-        }
-    };
-    Promise.prototype._getNextHandler = function(type) {
-        var obj;
-        while (obj = this._handlers.shift()) {
-            if (obj.type === type) break;
-        }
-        return obj ? obj.cb : null;
-    };
-
-    function _isThenable(obj) {
-        return obj && typeof obj.then === 'function';
-    }
-
-    return Promise;
-});
-;
-
 /*action*/
 define('action', ['require', 'router/router'], function(require) {
 
@@ -6873,8 +6789,6 @@ define('service', ['require'], function(require) {
 
 });
 ;
-
-/*resource*/
 define('resource', ['utils/http', 'utils/underscore'], function(http, _) {
     function Resource(url) {
         this.url = url;
@@ -6910,3 +6824,57 @@ define('resource', ['utils/http', 'utils/underscore'], function(http, _) {
     return Resource;
 });
 ;
+define('view', ['require'], function(require) {
+
+    var View = function (opt) {
+        this._init();
+    };
+
+    View.prototype = {
+
+        _init: function() {},
+
+        /**
+         * 设置view初始参数的方法, 只能在render之前调用
+         * */
+        set: function() {
+
+        },
+
+        get: function() {},
+
+        create: function() {},
+
+        /**
+         *  DOM 渲染，核心 override 方法
+         *  options.container 
+         * */
+        render: function() {},
+
+        /**
+         *  更新view并重新渲染，必须在 render 后调用
+         * */
+        update : function() {},
+
+        attach: function() {},
+
+        detach : function() {},
+
+        /**
+         * 销毁 View，解绑所有事件，移除 View DOM
+         * */
+        destroy: function() {},
+
+        /**
+         * 事件绑定
+         * */
+        on: function(name, callback) {},
+
+        /**
+         * 事件解绑
+         * */
+        off: function(name, callback) {}
+    };
+
+    return View;
+});;

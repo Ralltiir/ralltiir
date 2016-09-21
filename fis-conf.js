@@ -8,7 +8,6 @@ fis.set('project.ignore', [
 fis.set('project.files', [
     'lib/**',
     'src/**',
-    'examples/**',
     'test/**',
     'test-main.js'
 ]);

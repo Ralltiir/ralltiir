@@ -1,4 +1,4 @@
-define(['./promise', './underscore'], function(Promise, _) {
+define(['./promise', './underscore', './dom'], function(Promise, _, $) {
     var exports = {};
 
     /*
@@ -15,22 +15,38 @@ define(['./promise', './underscore'], function(Promise, _) {
             settings = url;
             url = "";
         }
-        settings = _.defaults(settings, {
+        // normalize settings
+        settings = _.defaultsDeep(settings, {
             url: url,
             method: settings && settings.type || 'GET',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            headers: {},
             data: null,
             jsonp: false,
             jsonpCallback: 'cb'
         });
-        if (settings.data instanceof FormData) {
-            settings.contentType = 'multipart/form-data';
-        } else if (typeof settings.data === 'object') {
-            settings.contentType = 'application/json';
+        _.forOwn(settings.headers, function(v, k) {
+            settings.headers[k] = v.toLowerCase(v);
+        });
+
+        settings.headers['content-type'] = settings.headers['content-type'] ||
+            _guessContentType(settings.data);
+
+        //console.log('before parse data', settings);
+        if (/application\/json/.test(settings.headers['content-type'])) {
             settings.data = JSON.stringify(settings.data);
+        } else if (/form-urlencoded/.test(settings.headers['content-type'])) {
+            settings.data = $.param(settings.data);
         }
+        //console.log('after parse data', settings);
         return _doAjax(settings);
     };
+
+    function _guessContentType(data) {
+        if (data instanceof FormData) {
+            return 'multipart/form-data';
+        }
+        return 'application/x-www-form-urlencoded; charset=UTF-8';
+    }
 
     exports.get = function(url, data) {
         return exports.ajax(url, {
@@ -70,6 +86,10 @@ define(['./promise', './underscore'], function(Promise, _) {
         //console.log('open xhr');
         xhr.open(settings.method, settings.url, true);
 
+        _.forOwn(settings.headers, function(v, k) {
+            xhr.setRequestHeader(k, v);
+        });
+
         return new Promise(function(resolve, reject) {
             xhr.onreadystatechange = function() {
                 //console.log('onreadystatechange', xhr.readyState, xhr.status);
@@ -82,6 +102,7 @@ define(['./promise', './underscore'], function(Promise, _) {
                     }
                 }
             };
+            //console.log('doajax sending:', settings.data);
             xhr.send(settings.data);
         });
     }
@@ -103,11 +124,10 @@ define(['./promise', './underscore'], function(Promise, _) {
          * parse response body
          */
         xhr.responseBody = xhr.responseText;
-        if(xhr.responseHeaders['Content-Type'] === 'application/json'){
-            try{
+        if (xhr.responseHeaders['Content-Type'] === 'application/json') {
+            try {
                 xhr.responseBody = JSON.parse(xhr.responseText);
-            }
-            catch(e){
+            } catch (e) {
                 console.warn('Invalid JSON content with Content-Type: application/json');
             }
         }
