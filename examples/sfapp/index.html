@@ -13,7 +13,10 @@
         </div>
     </body>
     <script src="../../dist/sf.js"></script>
-    <script type="text/javascript" src="globalT.js?__inline"></script>
+    <script type="text/javascript" src="./view/sfView.js"></script>
+    <script type="text/javascript" src="./resource/sfResource.js"></script>
+    <script type="text/javascript" src="./service/sfService.js"></script>
+    <script type="text/javascript" src="./service/indexService.js"></script>
     <script>
         require(['router/router','action','service/indexService','service/sfService'], function(router, action, indexService, sfService) {
             var _rootPath = location.pathname;
