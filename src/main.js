@@ -39,3 +39,6 @@ __inline('service.js');
 
 /*resource*/
 __inline('resource.js');
+
+/*view*/
+__inline('view.js');
