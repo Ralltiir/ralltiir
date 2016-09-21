@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+
+<body>
+
+  <script>
+    require(['http'], function(http) {
+      http
+        .get('http://www.baidu.com')
+        .then(function(content, status, xhr) {
+          // response content
+          console.log(content);
+          // 200, 400, ...
+          console.log(status);
+          // BOM XMLHttpRequest Object
+          console.log(xhr);
+        })
+        .catch(function(xhr, status, err) {
+          // BOM XMLHttpRequest Object
+          console.log(xhr);
+          // Status code
+          console.log(status);
+          // Error throwed
+          console.log(err);
+        });
+
+      http
+        .put('http://www.baidu.com')
+        .then(function(content, status, xhr){
+        });
+
+      http.post('http://www.baidu.com');
+
+      http.delete('http://www.baidu.com');
+    });
+  </script>
+</body>
+
+</html>

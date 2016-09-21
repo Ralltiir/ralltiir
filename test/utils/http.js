@@ -112,6 +112,13 @@ define(['../src/utils/http'], function(http) {
                         done();
                     }).catch(done);
             });
+            it('should attach post data', function(done){
+                http.post('http://harttle.com', {foo: 'bar'})
+                    .then(function(content){
+                        expect(xhr.requestBody).to.equal('"{"foo":"bar"}"');
+                    })
+                    .catch(done);
+            });
         });
         describe('.put()', function() {
             it('should perform PUT', function(done) {
