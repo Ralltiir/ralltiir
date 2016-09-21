@@ -30,3 +30,5 @@ __inline('router/uri/util/uri-parser.js');
 /*action*/
 __inline('action.js');
 __inline('service.js');
+__inline('resource.js');
+__inline('view.js');
