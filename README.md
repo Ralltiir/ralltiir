@@ -7,7 +7,7 @@
 
 ### 环境准备
 
-安装Make, fis3：
+安装Node.js(版本>=4), Make, fis3:
 
 ```bash
 brew install make
