@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>View Demo</title>
+  <script src="../dist/sf.js"></script>
+</head>
+
+<body>
+
+  <h1>View Demo</h1>
+
+  <p>Check out the console.</p>
+
+  <ul>
+    <li><a href="#" class="create">create</a></li>
+    <li><a href="#" class="render">render</a></li>
+    <li><a href="#" class="attach">attach</a></li>
+    <li><a href="#" class="detach">detach</a></li>
+    <li><a href="#" class="destroy">destroy</a></li>
+  </ul>
+
+  <script>
+    require(['view'], function(View) {
+      var view = new View();
+
+      // create
+      view.create = function() {
+        this.$el = $('#page');
+
+        if (!this.$el.length) {
+            this.$el = $('<div id="page"></div>');
+            $('body').append(this.$el);
+        }
+        console.log('#create(), create your view container');
+      }   
+
+      // render 
+      view.render = function(data) {
+        if(this.$view && this.$view.length > 0) {
+            return;
+        }
+        var viewHtml = [
+          '<div class="result">' + data + '</div>',
+          '<div class="update"><span>update</span></div>'
+        ].join('');
+
+        this.$view = $(viewHtml);
+        this.$el.append(this.$view);
+        console.log('#render(), the core override function, fetch data and render view');
+      }
+
+      // attach
+      view.attach = function() {
+        // bind events
+        this.$el.find('.update').on('click', function(e) {
+          view.update("Hi, Baidu");
+          e.preventDefault();
+        });
+        console.log('#attach(), view attach animation, bind events and recover states')
+        console.log('you can click update span, use view update');
+      }
+
+      // update
+      view.update = function(data) {
+        if (!this.$view) {
+          return;
+        }
+        this.$el.find('.result').text(data);
+        console.log('#update(), view update');
+      }
+
+      // detach
+      view.detach = function() {
+        // unbind events
+        this.$el.find('.update').off('click');
+        console.log('#detach(), view detach animation, unbind events and record states')
+      }
+
+      // destroy
+      view.destroy = function() {
+        this.$el.remove();
+        console.log('#destroy(), view destroy');
+      }
+
+
+      /*
+       * you can control view by service modules
+       */
+      $('.create').on('click', function() {
+        view.create();
+      })
+
+      $('.render').on('click', function() {
+        view.render("Hello, World");
+      })
+
+      $('.attach').on('click', function() {
+        view.attach();
+      })
+
+      $('.detach').on('click', function() {
+        view.detach();
+      })
+
+      $('.destroy').on('click', function() {
+        view.destroy();
+      })
+    });
+  </script>
+</body>
+
+</html>
