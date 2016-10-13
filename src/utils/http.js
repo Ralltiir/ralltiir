@@ -2,12 +2,15 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
     var exports = {};
 
     /*
-     * @param url
-     * @param settings
-     * @return a promise.
-     *   .then(function( data, textStatus, xhr ) {});
-     *   .catch(function( xhr, textStatus, errorThrown ) {});
-     *   .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
+     * Perform an asynchronous HTTP (Ajax) request.
+     * @param {String} url A string containing the URL to which the request is sent.
+     * @param {Object} settings A set of key/value pairs that configure the Ajax request. All settings are optional.
+     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @example
+     *      ajax('/foo')
+     *          .then(function( data, textStatus, xhr ) {});
+     *          .catch(function( xhr, textStatus, errorThrown ) {});
+     *          .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
      */
     exports.ajax = function(url, settings) {
         //console.log('ajax with', url, settings);
@@ -41,6 +44,9 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
         return _doAjax(settings);
     };
 
+    /*
+     * Try guess the content-type of given data.
+     */
     function _guessContentType(data) {
         if (data instanceof FormData) {
             return 'multipart/form-data';
@@ -48,12 +54,24 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
         return 'application/x-www-form-urlencoded; charset=UTF-8';
     }
 
+    /*
+     * Load data from the server using a HTTP GET request.
+     * @param {String} url A string containing the URL to which the request is sent.
+     * @param {Object} data A plain object or string that is sent to the server with the request.
+     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     */
     exports.get = function(url, data) {
         return exports.ajax(url, {
             data: data
         });
     };
 
+    /*
+     * Load data from the server using a HTTP POST request.
+     * @param {String} url A string containing the URL to which the request is sent.
+     * @param {Object} data A plain object or string that is sent to the server with the request.
+     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     */
     exports.post = function(url, data) {
         return exports.ajax(url, {
             method: 'POST',
@@ -61,6 +79,12 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
         });
     };
 
+    /*
+     * Load data from the server using a HTTP PUT request.
+     * @param {String} url A string containing the URL to which the request is sent.
+     * @param {Object} data A plain object or string that is sent to the server with the request.
+     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     */
     exports.put = function(url, data) {
         return exports.ajax(url, {
             method: 'PUT',
@@ -68,6 +92,12 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
         });
     };
 
+    /*
+     * Load data from the server using a HTTP DELETE request.
+     * @param {String} url A string containing the URL to which the request is sent.
+     * @param {Object} data A plain object or string that is sent to the server with the request.
+     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     */
     exports.delete = function(url, data) {
         return exports.ajax(url, {
             method: 'DELETE',
