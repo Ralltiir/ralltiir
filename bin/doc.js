@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+/*
+ * Usage:
+ * node bin/doc.js src/utils/promise.js
+ */
+
 var path = require('path');
 var fs = require('fs');
 var file = process.argv[2];
