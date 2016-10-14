@@ -7,10 +7,10 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
      * @param {Object} settings A set of key/value pairs that configure the Ajax request. All settings are optional.
      * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
      * @example
-     *      ajax('/foo')
-     *          .then(function( data, textStatus, xhr ) {});
-     *          .catch(function( xhr, textStatus, errorThrown ) {});
-     *          .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
+     * ajax('/foo')
+     *     .then(function( data, textStatus, xhr ) {});
+     *     .catch(function( xhr, textStatus, errorThrown ) {});
+     *     .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
      */
     exports.ajax = function(url, settings) {
         //console.log('ajax with', url, settings);
