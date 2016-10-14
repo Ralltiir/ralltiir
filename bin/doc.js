@@ -10,7 +10,20 @@ var moduleName = path.basename(file, '.js');
 moduleName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1)
 console.log('#', moduleName, 'API');
 
+/*
+ * parsers for each tag
+ */
 var tagParsers = {
+    /*
+     * Parse the return descriptor from comment string
+     * @param {String} comment The comment string
+     * @return {Object} The return descriptor
+     * @example
+     * {
+     *     type: 'Promise',
+     *     description: 'A thenable.'
+     * }
+     */
     'return': function(comment) {
         var match = /^{(\w+)}?\s*((?:.|\n)*)$/.exec(comment);
         if (!match) return {};
@@ -21,6 +34,17 @@ var tagParsers = {
     },
     'static': c => true,
     'constructor': c => true,
+    /*
+     * Parse the param descriptor from comment string
+     * @param {String} comment The comment string
+     * @return {Object}
+     * @example 
+     * {
+     *     type: 'Function',
+     *     name: 'cb',
+     *     description: 'The callback to be called'
+     * }
+     */
     param: function(comment) {
         var match = /{([^}]+)}?\s*(\w+)\s+((?:.|\n)*?)$/.exec(comment);
         if (!match) return {};
@@ -38,6 +62,9 @@ var tagParsers = {
     }
 };
 
+/*
+ * call parse and render GFM
+ */
 parseBlocks(src)
     .forEach(function(o) {
         if (o.hasOwnProperty('static')) {
@@ -112,6 +139,22 @@ function parseBlocks(src) {
     return blocks;
 }
 
+/*
+ * Parse comment string into a set of tags.
+ * @param {String} comment The comment string.
+ * @return {Object} The set of tags.
+ * @example
+ * {
+ *     name: 'return',
+ *     signature: 'then(cb)',
+ *     static: true,
+ *     params: [{
+ *         type: 'Function',
+ *         name: 'cb',
+ *         description: 'The callback to be called'
+ *     }]
+ * }
+ */
 function parseComment(comment) {
     var match, tags = [{
         name: 'description',
