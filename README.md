@@ -151,4 +151,14 @@ npm run test-reports
 # ./build/test-reports/coverage
 ```
 
+### 生成API文档
+
+将你的源码和文档文件映射添加到Makefile中，然后执行：
+
+```bash
+make doc
+```
+
+> `make doc`使用`bin/doc.js`来完成文档生成工作，你可以继续增强它。
+
 [web]: http://superframe.baidu.com/
