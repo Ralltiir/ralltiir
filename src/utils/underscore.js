@@ -29,63 +29,126 @@ define(function() {
     /*
      * 公有函数
      */
-    function keysIn(obj) {
-        return Object.keys(obj);
+
+    /*
+     * Creates an array of the own and inherited enumerable property names of object.
+     * @param {Object} object The object to query.
+     * @return {Array} Returns the array of property names.
+     */
+    function keysIn(object) {
+        return Object.keys(object);
     }
 
-    function forOwn(obj, cb) {
-        obj = obj || {};
-        for (var k in obj) {
-            if (obj.hasOwnProperty(k)) {
-                cb(obj[k], k);
+    /*
+     * Iterates over own enumerable string keyed properties of an object and invokes iteratee for each property. 
+     * The iteratee is invoked with three arguments: (value, key, object). 
+     * Iteratee functions may exit iteration early by explicitly returning false.
+     * @param {Object} object The object to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @return {Object} Returs object.
+     */
+    function forOwn(object, iteratee) {
+        object = object || {};
+        for (var k in object) {
+            if (object.hasOwnProperty(k)) {
+                if (iteratee(object[k], k, object) === false) break;
             }
         }
-        return obj;
+        return object;
     }
 
-    function toArray(obj) {
-        if (!obj) return [];
-        return _arrayProto.slice.call(obj);
+    /*
+     * Converts value to an array.
+     * @param {any} value The value to convert.
+     * @return {Array} Returns the converted array.
+     */
+    function toArray(value) {
+        if (!value) return [];
+        return _arrayProto.slice.call(value);
     }
 
-    function forEach(arr) {
+    /*
+     * Iterates over elements of collection and invokes iteratee for each element.
+     * The iteratee is invoked with three arguments: (value, index|key, collection).
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @return {undefined} Just like Array.prototype.forEach
+     */
+    function forEach(collection, iteratee) {
         var args = _getArgs(arguments);
-        return _arrayProto.forEach.apply(arr || [], args);
+        return _arrayProto.forEach.apply(collection || [], args);
     }
 
-    function map(arr, cb) {
-        if(isObject(arr)){
+    /*
+     * Creates an array of values by running each element in collection thru iteratee.
+     * The iteratee is invoked with three arguments: (value, index|key, collection).
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @return {Array} Returns the new mapped array.
+     */
+    function map(collection, iteratee) {
+        if (isObject(collection)) {
             var ret = [];
-            forOwn(arr, function(v, k){
-                ret.push(cb.apply(null, arguments));
+            forOwn(collection, function(v, k) {
+                ret.push(iteratee.apply(null, arguments));
             });
             return ret;
         }
         var args = _getArgs(arguments);
-        return _arrayProto.map.apply(arr || [], args);
+        return _arrayProto.map.apply(collection || [], args);
     }
 
-    function slice(arr) {
+    /*
+     * Creates a slice of array from start up to, but not including, end.
+     * @param {Array} collection The array to slice.
+     * @param {Number} start The start position.
+     * @param {Number} end The end position.
+     * @return {Array} Returns the slice of array.
+     */
+    function slice(collection, start, end) {
         var args = _getArgs(arguments);
-        return _arrayProto.slice.apply(arr || [], args);
+        return _arrayProto.slice.apply(collection || [], args);
     }
 
-    function splice(arr) {
+    /*
+     * This method is based on JavaScript Array.prototype.splice
+     */
+    function splice(collection) {
         var args = _getArgs(arguments);
-        return _arrayProto.splice.apply(arr || [], args);
+        return _arrayProto.splice.apply(collection || [], args);
     }
 
+    /*
+     * This method is based on JavaScript String.prototype.split
+     * @return {Array} Returns the string segments.
+     */
     function split(str) {
         var args = _getArgs(arguments);
         return _stringProto.split.apply(str || '', args);
     }
 
+    /*
+     * The missing string formatting function for JavaScript.
+     * @param {String} fmt The format string (can only contain "%s")
+     * @return {String} The result string.
+     * @example
+     * format("foo%sfoo", "bar");   // returns "foobarfoo"
+     */
     function format(fmt) {
         return _getArgs(arguments).reduce(function(prev, cur) {
             return prev.replace('%s', cur);
         }, fmt);
     }
 
+    /*
+     * Assigns own and inherited enumerable string keyed properties of source objects to 
+     * the destination object for all destination properties that resolve to undefined. 
+     * Source objects are applied from left to right. 
+     * Once a property is set, additional values of the same property are ignored.
+     * @param {Object} object The destination object.
+     * @param {...Object} sources The source objects.
+     * @return {Object} Returns object.
+     */
     function defaults() {
         var ret = {};
         var srcs = slice(arguments, 0);
@@ -99,33 +162,50 @@ define(function() {
         return ret;
     }
 
-    function isObject(obj){
-        return obj !== null && typeof obj === 'object';
+    /*
+     * Checks if value is the language type of Object. 
+     * (e.g. arrays, functions, objects, regexes, new Number(0), and new String(''))
+     * @param {any} value The value to check.
+     * @return {Boolean} Returns true if value is an object, else false.
+     */
+    function isObject(value) {
+        return value !== null && typeof value === 'object';
     }
 
-    function isString(obj){
-        return obj instanceof String || typeof obj === 'string';
+    /*
+     * Checks if value is classified as a String primitive or object.
+     * @param {any} value The value to check.
+     * @return {Boolean} Returns true if value is a string, else false.
+     */
+    function isString(value) {
+        return value instanceof String || typeof value === 'string';
     }
 
-    function _assignBinaryDeep(dst, src){
-        if(!dst) return dst;
-        forOwn(src, function(v, k){
-            if(isObject(v) && isObject(dst[k])){
+    function _assignBinaryDeep(dst, src) {
+        if (!dst) return dst;
+        forOwn(src, function(v, k) {
+            if (isObject(v) && isObject(dst[k])) {
                 return _assignBinaryDeep(dst[k], v);
             }
             dst[k] = v;
         });
     }
 
-    function _assignBinary(dst, src){
-        if(!dst) return dst;
-        forOwn(src, function(v, k){
+    function _assignBinary(dst, src) {
+        if (!dst) return dst;
+        forOwn(src, function(v, k) {
             dst[k] = v;
         });
         return dst;
     }
 
-    function defaultsDeep(){
+    /*
+     * This method is like `_.defaults` except that it recursively assigns default properties.
+     * @param {Object} object The destination object.
+     * @param {...Object} sources The source objects.
+     * @return {Object} Returns object.
+     */
+    function defaultsDeep() {
         var ret = {};
         var srcs = slice(arguments, 0).reverse();
         forEach(srcs, function(src) {
@@ -134,30 +214,59 @@ define(function() {
         return ret;
     }
 
-    function fromPairs(propertyArr) {
-        var obj = {};
-        map(propertyArr, function(arr) {
+    /*
+     * The inverse of `_.toPairs`; this method returns an object composed from key-value pairs.
+     * @param {Array} pairs The key-value pairs.
+     * @return {Object} Returns the new object.
+     */
+    function fromPairs(pairs) {
+        var object = {};
+        map(pairs, function(arr) {
             var k = arr[0],
                 v = arr[1];
-            obj[k] = v;
+            object[k] = v;
         });
-        return obj;
+        return object;
     }
 
-    function isArray(obj) {
-        return obj instanceof Array;
+    /*
+     * Checks if value is classified as an Array object.
+     * @param {any} value The value to check.
+     * @return {Boolean} Returns true if value is an array, else false.
+     */
+    function isArray(value) {
+        return value instanceof Array;
     }
 
-    function isEmpty(obj) {
-        return isArray(obj) ? obj.length === 0 : !obj;
+    /*
+     * Checks if value is an empty object, collection, map, or set.  
+     * Objects are considered empty if they have no own enumerable string keyed properties.
+     * @param {any} value The value to check.
+     * @return {Boolean} Returns true if value is an array, else false.
+     */
+    function isEmpty(value) {
+        return isArray(value) ? value.length === 0 : !value;
     }
 
-    function negate(func) {
+    /*
+     * Creates a function that negates the result of the predicate func.
+     * The func predicate is invoked with the this binding and arguments of the created function.
+     * @param {Function} predicate The predicate to negate.
+     * @return {Function} Returns the new negated function.
+     */
+    function negate(predicate) {
         return function() {
-            return !func.apply(null, arguments);
+            return !predicate.apply(null, arguments);
         };
     }
 
+    /*
+     * Creates a function that invokes func with partials prepended to the arguments it receives.
+     * This method is like `_.bind` except it does not alter the this binding.
+     * @param {Function} func  The function to partially apply arguments to.
+     * @param {...any} partials The arguments to be partially applied.
+     * @return {Function} Returns the new partially applied function.
+     */
     function partial(func) {
         var placeholders = slice(arguments);
         return function() {
@@ -168,6 +277,12 @@ define(function() {
         };
     }
 
+    /*
+     * This method is like `_.partial` except that partially applied arguments are appended to the arguments it receives.
+     * @param {Function} func  The function to partially apply arguments to.
+     * @param {...any} partials The arguments to be partially applied.
+     * @return {Function} Returns the new partially applied function.
+     */
     function partialRight(func) {
         var placeholders = slice(arguments);
         placeholders.shift();
@@ -180,7 +295,7 @@ define(function() {
     }
 
     /* 
-     * Object Related
+     * objectect Related
      */
     exports.keysIn = keysIn;
     exports.forOwn = forOwn;
