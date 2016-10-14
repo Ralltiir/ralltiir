@@ -13,7 +13,7 @@ var src = fs.readFileSync(file, 'utf8');
 
 var moduleName = path.basename(file, '.js');
 moduleName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1)
-console.log('#', moduleName, 'API');
+console.log('#', moduleName, 'API\n');
 
 /*
  * parsers for each tag
@@ -37,6 +37,7 @@ var tagParsers = {
             description: trimComment(match[2]),
         };
     },
+    'private': c => true,
     'static': c => true,
     'constructor': c => true,
     /*
@@ -72,6 +73,8 @@ var tagParsers = {
  */
 parseBlocks(src)
     .forEach(function(o) {
+        if (o.hasOwnProperty('private')) return;
+
         if (o.hasOwnProperty('static')) {
             console.log(`## ${moduleName}.${o.signature}\n`);
         } else if (o.hasOwnProperty('constructor')) {
@@ -82,7 +85,7 @@ parseBlocks(src)
 
         console.log(`${o.description}\n`);
         if (o.params.length) {
-            console.log(`**Parameters**:\n`);
+            console.log(`**Parameters**\n`);
             console.log('Name | Type | Description');
             console.log('---  | ---  | ---');
             o.params.forEach(function(param) {
@@ -115,6 +118,9 @@ function parseSignature(code) {
     if (!match) return "";
 
     var name = match[1] || match[3] || '';
+    // private
+    if(name[0] === '_') return '';
+
     var params = match[2] || match[4] || '';
     return name.trim() + '(' + params + ')';
 }
