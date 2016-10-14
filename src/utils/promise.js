@@ -1,9 +1,21 @@
-/*
- * @author yangjun14(yangjun14@baidu.com)
- * @file 标准： Promises/A+ https://promisesaplus.com/
- */
-
 define(function() {
+    /*
+     * Create a new promise. 
+     * The passed in function will receive functions resolve and reject as its arguments 
+     * which can be called to seal the fate of the created promise.
+     * 
+     * The returned promise will be resolved when resolve is called, and rejected when reject called or any exception occurred.
+     * If you pass a promise object to the resolve function, the created promise will follow the state of that promise.
+     *
+     * > This implementation conforms to Promise/A+ spec. see: https://promisesaplus.com/
+     * @param {Function(function resolve, function reject)} cb The resolver callback.
+     * @return {Promise} A thenable. 
+     * @constructor
+     * @example
+     * var p = new Promise(function(resolve, reject){
+     *     true ? resolve('foo') : reject('bar');
+     * });
+     */
     function Promise(cb) {
         if (!(this instanceof Promise)) {
             throw 'Promise must be called with new operator';
@@ -28,8 +40,9 @@ define(function() {
     }
 
     /*
-     * 注册Promise成功的回调
-     * @param cb 回调函数
+     * The Promise/A+ .then, register a callback on resolve. See: https://promisesaplus.com/
+     * @param {Function} cb The callback to be registered.
+     * @return {Promise} A thenable.
      */
     Promise.prototype.then = function(cb) {
         //console.log('calling then', this._state);
@@ -45,8 +58,9 @@ define(function() {
         return this;
     };
     /*
-     * 注册Promise失败的回调
-     * @param cb 回调函数
+     * The Promise/A+ .catch, retister a callback on reject. See: https://promisesaplus.com/
+     * @param {Function} cb The callback to be registered.
+     * @return {Promise} A thenable.
      */
     Promise.prototype.catch = function(cb) {
         if (this._state === 'rejected') {
@@ -60,8 +74,10 @@ define(function() {
         return this;
     };
     /*
-     * 注册Promise最终的回调
-     * @param cb 回调函数
+     * 
+     * The Promise/A+ .catch, register a callback on either resolve or reject. See: https://promisesaplus.com/
+     * @param {Function} cb The callback to be registered.
+     * @return {Promise} A thenable.
      */
     Promise.prototype.finally = function(cb) {
         if (this._state === 'fulfilled') {
@@ -76,30 +92,44 @@ define(function() {
         }
     };
     /*
-     * 返回一个成功的Promise
-     * @param obj 被解析的对象
+     * Create a promise that is resolved with the given value. 
+     * If value is already a thenable, it is returned as is. 
+     * If value is not a thenable, a fulfilled Promise is returned with value as its fulfillment value.
+     * @param {Promise<any>|any value} obj The value to be resolved.
+     * @return {Promise} A thenable which resolves the given `obj`
+     * @static
      */
     Promise.resolve = function(obj) {
         var args = arguments;
         return _isThenable(obj) ? obj :
-            new Promise(function(resolve, reject) {
+            new Promise(function(resolve) {
                 return resolve.apply(null, args);
             });
     };
     /*
-     * 返回一个失败的Promise
-     * @param obj 被解析的对象
+     * Create a promise that is rejected with the given error.
+     * @param {Error} error The error to reject with.
+     * @return {Promise} A thenable which is rejected with the given `error`
+     * @static
      */
-    Promise.reject = function(obj) {
+    Promise.reject = function() {
         var args = arguments;
         return new Promise(function(resolve, reject) {
             return reject.apply(null, args);
         });
     };
     /*
-     * 返回一个Promise，当数组中所有Promise都成功时resolve，
-     * 数组中任何一个失败都reject。
-     * @param promises Thenable数组，可以包含Promise，也可以包含非Thenable
+     * This method is useful for when you want to wait for more than one promise to complete.
+     *
+     * Given an Iterable(arrays are Iterable), or a promise of an Iterable, 
+     * which produces promises (or a mix of promises and values), 
+     * iterate over all the values in the Iterable into an array and return a promise that is fulfilled when 
+     * all the items in the array are fulfilled. 
+     * The promise's fulfillment value is an array with fulfillment values at respective positions to the original array. 
+     * If any promise in the array rejects, the returned promise is rejected with the rejection reason.
+     * @param {Iterable<any>|Promise<Iterable<any>>} promises The promises to wait for.
+     * @return {Promise} A thenable.
+     * @static
      */
     Promise.all = function(promises) {
         var results = promises.map(function() {
@@ -152,7 +182,7 @@ define(function() {
         }
         this._state = 'fulfilled';
     };
-    Promise.prototype._onRejected = function(err) {
+    Promise.prototype._onRejected = function() {
         //console.log('_onRejected', err);
         this._errors = arguments;
         var handler = this._getNextHandler('catch');

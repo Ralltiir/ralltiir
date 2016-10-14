@@ -3,30 +3,61 @@ define(['utils/http', 'utils/underscore'], function(http, _) {
         this.url = url;
     }
     Resource.prototype = {
-        getUrl: function(opt){
+        /*
+         * Get the URL for the given optionsions
+         * @param {Object} options A set of key/value pairs to configure the URL query.
+         * @return {String} A string of URL.
+         */
+        getUrl: function(options){
             var url = this.url;
             // replace slugs with properties
-            _.forOwn(opt, function(v, k) {
+            _.forOwn(options, function(v, k) {
                 url = url.replace(':' + k, v);
             });
             // remove remaining slugs
             url = url.replace(/:\w+/g, '');
             return url;
         },
-        create: function(obj, opt) {
-            var url = this.getUrl(opt);
+        /*
+         * Create an Object from `obj` with the given `options`.
+         * @param {Object} obj A plain Object to be created on the server.
+         * @param {Object} options A set of key/value pairs to configure the URL query.
+         * @return {Promise} A promise resolves when `obj` is created successful, 
+         * and rejects whenever there is an error.
+         */
+        create: function(obj, options) {
+            var url = this.getUrl(options);
             return http.post(url, obj);
         },
-        query: function(opt) {
-            var url = this.getUrl(opt);
+        /*
+         * Query Objects with the given `options`.
+         * @param {Object} options A set of key/value pairs to configure the URL query.
+         * @return {Promise} A promise resolves when `obj` is created successful, 
+         * and rejects whenever there is an error.
+         */
+        query: function(options) {
+            var url = this.getUrl(options);
             return http.get(url);
         },
-        update: function(obj, opt) {
-            var url = this.getUrl(opt);
+        /*
+         * Update the object specified by `obj` with the given `options`.
+         * @param {Object} obj A plain object to update with.
+         * @param {Object} options A set of key/value pairs to configure the URL query.
+         * @return {Promise} A promise resolves when `obj` is created successful, 
+         * and rejects whenever there is an error.
+         */
+        update: function(obj, options) {
+            var url = this.getUrl(options);
             return http.put(url, obj);
         },
-        delete: function(opt) {
-            var url = this.getUrl(opt);
+        /*
+         * Delete objects with the given `options`.
+         * @param {Object} options A set of key/value pairs to configure the URL query.
+         * @return {Promise} A promise resolves when `obj` is created successful, 
+         * and rejects whenever there is an error.
+         */
+        delete: function(options) {
+            var url = this.getUrl(options);
             return http.delete(url);
         },
     };
