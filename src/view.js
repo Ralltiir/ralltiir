@@ -1,6 +1,10 @@
 define(function() {
 
-    var View = function (opt) {
+    /*
+     * Create a new view instance
+     * @constructor
+     */
+    var View = function () {
         this._init();
     };
 
@@ -9,42 +13,57 @@ define(function() {
         _init: function() {},
 
         /**
-         * 设置 view 初始参数
+         * Initialize properties
          * */
         set: function() {},
-
+        
+        /*
+         * Get properties
+         */
         get: function() {},
 
+        /*
+         * Called when view created
+         */
         create: function() {},
 
         /**
-         *  DOM 渲染，核心 override 方法
+         *  Render the DOM, called when render requested. Override this to render your HTML
          * */
         render: function() {},
 
         /**
-         *  更新 View 并重新渲染
+         *  Update the view, called when update requested. Override this to update or re-render your HTML.
          * */
         update : function() {},
 
+        /*
+         * Callback when view attached to DOM
+         */
         attach: function() {},
 
+        /*
+         * Callback when view detached from DOM
+         */
         detach : function() {},
 
         /**
-         * 销毁 View
+         * Destroy the view, called when destroy requested.
          * */
         destroy: function() {},
 
         /**
-         * 事件绑定
+         * Bind an event to the view.
+         * @param {String} name The name of the event
+         * @param {Function} callback The callback when the event triggered
          * */
-        on: function() {},
+        on: function(name, callback) {},
 
         /**
-         * 事件解绑
+         * Unbind the given event
+         * @param {String} name The event name to unbind
          * */
-        off: function() {}
+        off: function(name) {}
     };
 
     return View;
