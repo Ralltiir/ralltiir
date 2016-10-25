@@ -28,6 +28,11 @@ doc:
 	$(DOC) src/utils/underscore.js > docs/underscore.md
 	$(DOC) src/utils/http.js > docs/http.md
 	$(DOC) src/resource.js > docs/resource.md
+	$(DOC) src/action.js > docs/action.md
+	$(DOC) src/router/router.js > docs/router.md
+	$(DOC) src/utils/dom.js > docs/dom.md
+	$(DOC) src/service.js > docs/service.md
+	$(DOC) src/view.js > docs/view.md
 
 clean:
 	rm -rf ./build/

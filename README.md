@@ -159,8 +159,140 @@ npm run test-reports
 make doc
 ```
 
-如何正确编写注释请参考：[docs/comment-style.md](docs/comment-style.md)
+如何正确编写注释见下文。
 
 > `make doc`使用`bin/doc.js`来完成文档生成工作，你可以继续增强它。
+
+
+## 注释指南
+
+Superframe API 文档采取自动生成的方式，这依赖于正确的代码注释。
+这些注释将会被`bin/doc.js`解析并生成GFM文档，本文介绍了如何正确地编写`doc.js`可以识别的注释。
+
+### 函数说明
+
+最简单的注释就是函数说明：
+
+```javascript
+/*
+ * This is an awesome function created by Harttle!
+ */
+function hello(){
+    console.log('Hello Superframe!');
+}
+```
+
+在所有注释标记之前的文字将被解析为函数说明，即：
+
+```
+This is an awesome function created by Harttle!
+```
+
+### 函数签名
+
+doc.js可以自动解析函数签名，括以下几种函数定义都可以被正确解析：
+
+```javascript
+// file: sample.js
+function foo(bar, coo){
+    // ...
+}
+var foo = function(foo, bar){
+    // ...
+}
+```
+
+解析后的函数签名为：
+
+```javascript
+Sample#foo(bar, coo)
+Sample#foo(foo, bar)
+```
+
+> 默认情况下函数被解析为实例方法（instance method）
+
+### 静态函数
+
+静态函数（static method）必须添加`@static`注释，例如文件`Promise`中的`all`方法：
+
+```javascript
+/*
+ * @static
+ */
+function all(){}
+```
+
+解析后的函数签名为：
+
+```
+Promise.all()
+```
+
+### 私有函数
+
+私有函数不生成任何文档，可以由一下任何一种方式来声明：
+
+#### 添加private注释
+
+```javascript
+/*
+ * @private
+ */
+function foo(){}
+```
+
+#### 函数名下划线前缀
+
+```javascript
+function _foo(){}
+```
+
+### 函数参数
+
+函数参数文档需要在注释中通过`@param`标记给出，例如：
+
+```javascript
+/*
+ * Create a slice of string within the region [start, ).
+ * @param {String} str The string to be sliced.
+ * @param {Number} start The start index.
+ * @param {Number} end The end index.
+ */
+function slice(str, start, end){}
+```
+
+大括号中声明类型，可以是任何字符串；紧接着是参数名；后续字符串为参数描述。
+
+### 返回值
+
+函数返回值通过`@param return`来标记，例如：
+
+```javascript
+/*
+ * Create a slice of string within the region [start, ).
+ * @return {String} The result string.
+ */
+function slice(str, start, end){}
+```
+
+返回值注释方式与参数一样，除了不需要声明参数名称。
+
+### 示例代码
+
+示例代码可通过`@example`标记来声明，例如：
+
+```javascript
+/*
+ * An empty function.
+ * @example
+ * foo('harttle');     // logs: harttle hello
+ * foo('harttle', 'how are you');     // logs: harttle how are you
+ */
+function greeting(name, greet){
+    console.log(name, greet || 'hello');
+}
+```
+
+示例代码将被解析为GFM代码块。
 
 [web]: http://superframe.baidu.com/

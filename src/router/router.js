@@ -88,8 +88,8 @@ define(function (require) {
      *
      * @inner
      * @param {URL} url url对象
-     * @param {Object=} options 参数
-     * @param {string=} options.title 页面标题
+     * @param {Object} options 参数
+     * @param {String} options.title 页面标题
      */
     function apply(url, options) {
         options = options || {};
@@ -222,10 +222,10 @@ define(function (require) {
      * 重置当前的URL
      *
      * @public
-     * @param {string} url 路径
-     * @param {Object=} query 查询条件
-     * @param {Object=} options 选项
-     * @param {boolean=} options.silent 是否静默重置，静默重置只重置URL，不加载action
+     * @param {String} url 路径
+     * @param {Object} query 查询条件
+     * @param {Object} options 选项
+     * @param {Boolean} options.silent 是否静默重置，静默重置只重置URL，不加载action
      */
     exports.reset = function (url, query, options) {
         controller.reset(url, query, options);
@@ -236,9 +236,9 @@ define(function (require) {
      *
      * @public
      * @param {Object} options 配置信息
-     * @param {string=} options.path 默认路径
-     * @param {string=} options.index index文件名称
-     * @param {string=} options.mode 路由模式，可选async、page，默认为async
+     * @param {String} options.path 默认路径
+     * @param {String} options.index index文件名称
+     * @param {String} options.mode 路由模式，可选async、page，默认为async
      */
     exports.config = function (options) {
         options = options || {};
@@ -257,9 +257,9 @@ define(function (require) {
      * 添加路由规则
      *
      * @public
-     * @param {string|RegExp=} path 路径
+     * @param {string|RegExp} path 路径
      * @param {function(path, query)} fn 路由处理函数
-     * @param {Object=} thisArg 路由处理函数的this指针
+     * @param {Object} thisArg 路由处理函数的this指针
      */
     exports.add = function (path, fn, thisArg) {
         if (indexOfHandler(path) >= 0) {
@@ -306,10 +306,10 @@ define(function (require) {
      * @public
      * @param {string} url 路径
      * @param {?Object} query 查询条件
-     * @param {Object=} options 跳转参数
-     * @param {string=} options.title 跳转后页面的title
-     * @param {boolean=} options.force 是否强制跳转
-     * @param {boolean=} options.silent 是否静默跳转（不改变URL）
+     * @param {Object} options 跳转参数
+     * @param {String} options.title 跳转后页面的title
+     * @param {Boolean} options.force 是否强制跳转
+     * @param {Boolean} options.silent 是否静默跳转（不改变URL）
      */
     exports.redirect = function (url, query, options) {
         controller.redirect(url, query, options);

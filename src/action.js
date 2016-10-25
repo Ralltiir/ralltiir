@@ -7,9 +7,13 @@ define(function() {
     var indexUrl;
 
     /**
-     *  regist service,a service will work when it is registed
-     *  @params name, service
-     *  @return null
+     *  Register a service instance to action
+     *  @static
+     *  @param {String} name The path of the service
+     *  @param {Object} service The service object to be registered
+     *  @return undefined
+     *  @example
+     *  action.regist('/foo', new Service());
      * */
     exports.regist = function(name, service) {
         if(!name){
@@ -26,30 +30,31 @@ define(function() {
     };
 
     /**
-     *  judge service
-     *  @params service
-     *  @return boolean
+     *  Check if value is a valid service instance
+     *  @param {any} value The value to check.
+     *  @return {Boolean} Returns true if value is a service, else false.
      * */
-    function isService(service) {
-        //todo check service api
-        if(typeof service === 'object' 
-                && service.create 
-                && service.attach 
-                && service.detach 
-                && service.destroy 
-                && service.update) {
+    function isService(value) {
+        // duck test...
+        if(typeof value === 'object' 
+                && value.create 
+                && value.attach 
+                && value.detach 
+                && value.destroy 
+                && value.update) {
             return true;
         } else {
             return false;
         }
-
     }
 
     /**
-     *  dispatch service
-     *  if current and prev is the same service,prev service will not excute destroy function.
-     *  @params current scope,prev scope
-     *  @return null
+     *  Dispatch service
+     *  If current and prev is the same service,prev service will not excute destroy function.
+     *  @static
+     *  @param {Object} current The current scope
+     *  @param {Object} prev The previous scope
+     *  @return undefined
      * */
     exports.dispatch = function(current, prev) {
         var proxyList = [];
@@ -87,8 +92,9 @@ define(function() {
     };
 
     /**
-     *  proxy deferred function,return a deferred object if function no a deferred 
-     *  @return object{push,excute}
+     *  Proxy deferred function,return a deferred object if function no a deferred 
+     *  @static
+     *  @return {object} Returns an object containing two methods: `{push,excute}`
      * */
     function _MethodProxy() {
         var list = [];
@@ -120,8 +126,9 @@ define(function() {
     }
 
     /**
-     *  remove service
-     *  @params name
+     *  Remove a registered service
+     *  @static
+     *  @param {String} name The path of the service
      * */
     exports.remove = function(name) {
         if(serviceMap.hasOwnProperty(name)) {
@@ -130,14 +137,18 @@ define(function() {
     };
 
     /**
-     *  is service regist
+     *  Check if the specified service has been registered
+     *  @static
+     *  @param {String} name The path of the service
+     *  @return {Boolean} Returns true if it has been registered, else false.
      * */
     exports.exist = function(name) {
         return serviceMap.hasOwnProperty(name);
     };
 
     /**
-     *  clear all service
+     *  Clear all registered service
+     *  @static
      * */
     exports.clear = function(){
         serviceMap = {};
@@ -145,18 +156,20 @@ define(function() {
     };
 
     /**
-     *  redirect page to another, change to next state
-     *  @params url,query,options
-     *  @return null
+     *  Redirect to another page, and change to next state
+     *  @static
+     *  @param {String} url The URL to redirect
+     *  @param {String} query The query string to redirect
+     *  @param {Object} options The router options to redirect
      * */
     exports.redirect = function(url, query, options) {
         router.redirect(url, query, options);
     };
 
     /**
-     *  back to last state
-     *  @params url,query,options
-     *  @return null
+     *  Back to last state
+     *  @static
+     *  @param {Object} options The router options to redirect
      * */
     exports.back = function(options) {
         _options.src = 'back';
@@ -164,9 +177,11 @@ define(function() {
     };
 
     /**
-     *  reset/replace now state
-     *  @params url,query,options
-     *  @return null
+     *  Reset/replace current state
+     *  @static
+     *  @param {String} url The URL to reset
+     *  @param {String} query The query string to reset
+     *  @param {Object} options The router options to reset
      * */
     exports.reset = function(url, query, options) {
         router.reset(url, query, options);
@@ -174,8 +189,8 @@ define(function() {
 
     /**
      *  hijack global link href
-     *  @inner
-     *  @params {Event} 
+     *  @private
+     *  @param {Event} e The click event object
      * */
     function _delegateClick(e) {
         
@@ -202,14 +217,18 @@ define(function() {
     }
 
     /**
-     *  action init
+     *  Action init, call this to start the action
+     *  @static 
      * */
     exports.start = function() {
         $(document).delegate('a', 'click', _delegateClick);
     } ;
 
     /**
-     *  config action options
+     *  Configure the action.
+     *  @static
+     *  @param {Object} options The options to config with
+     *  @return {Object} The normalized option object
      * */
     exports.config = function(options) {
         $.extend(_options, options);
@@ -217,7 +236,12 @@ define(function() {
     };
 
     /**
-     *  update page, reset/replace now state
+     *  Update page, reset or replace current state accordingly
+     *  @static
+     *  @param {String} url The URL to update
+     *  @param {String} query The query string to update
+     *  @param {Object} options The router options to update
+     *  @param {Object} extend The extended data to update, contains a `container` and `view`
      * */
     exports.update = function(url, query, options, extend) {
         

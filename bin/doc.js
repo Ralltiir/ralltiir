@@ -38,6 +38,7 @@ var tagParsers = {
         };
     },
     'private': c => true,
+    'inner': c => true,
     'static': c => true,
     'constructor': c => true,
     /*
@@ -52,7 +53,7 @@ var tagParsers = {
      * }
      */
     param: function(comment) {
-        var match = /{([^}]+)}?\s*(\w+)\s+((?:.|\n)*?)$/.exec(comment);
+        var match = /{([^}]+)}?\s*([\.\w]+)\s+((?:.|\n)*?)$/.exec(comment);
         if (!match) return {};
         return {
             type: inlineCode(match[1]),
@@ -73,7 +74,7 @@ var tagParsers = {
  */
 parseBlocks(src)
     .forEach(function(o) {
-        if (o.hasOwnProperty('private')) return;
+        if (o.hasOwnProperty('private') || (o.hasOwnProperty('inner'))) return;
 
         if (o.hasOwnProperty('static')) {
             console.log(`## ${moduleName}.${o.signature}\n`);
@@ -111,9 +112,17 @@ parseBlocks(src)
  * parseSignature('function foo(bar){}');   // returns foo(bar)
  */
 function parseSignature(code) {
+    var firstChar = code.match(/\S/);
+    // there's no source code
+    if(!firstChar) return '';
+
+    var blankPrefix = code.substr(0, firstChar.index);
+    // more than one \n before actual source code
+    if(blankPrefix.split('\n').length > 2) return '';
+
     // function foo(bar){}
     // foo = function(bar){}
-    var functionRegExp = /(?:function\s+(\w+)\s*\(((?:.|\n)*?)\)|(\w+)\s*(?:=|:)\s*function\(((?:.|\n)*?)\))/;
+    var functionRegExp = /(?:function\s+(\w+)\s*\(((?:.|\n)*?)\)|(\w+)\s*(?:=|:)\s*function\s*\(((?:.|\n)*?)\))/;
     var match = functionRegExp.exec(code);
     if (!match) return "";
 
@@ -189,6 +198,7 @@ function parseComment(comment) {
     }
     tags[tags.length - 1].content += comment;
 
+    // parse params as array, and others as direct property
     var ret = {
         params: []
     };
