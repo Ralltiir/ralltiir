@@ -163,6 +163,7 @@ make doc
 
 > `make doc`使用`bin/doc.js`来完成文档生成工作，你可以继续增强它。
 
+【注意】`docs/`目录是排除在Git之外的，每次Push代码时API文档会持续更新。访问链接：<http://superframe.baidu.com/frame/api/promise.md>
 
 ## 注释指南
 
