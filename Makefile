@@ -1,38 +1,60 @@
-# @file: Karma 测试构建配置文件
+# @file: Build & Test 
 # @author: yangjun14(yangjun14@baidu.com)
 
+
+# Variables
+
 export PORT=9877
-
 export KARMA_BIN=./node_modules/karma/bin/karma
-
 export TEST=$(KARMA_BIN) --port $(PORT)
+export DOC=node ./bin/doc.js
 
-.PHONY: test coverage html reports watch clean build
+.PHONY: test test-reports test-watch test-run test-listen build dist clean dist-clean doc
+
+
+# Build Related
+
+build: 
+	[ -d ./build ] || mkdir ./build 
+	fis3 release -d ./build
+
+dist: build 
+	[ -d ./dist ] || mkdir ./dist
+	cp ./build/src/main.js ./dist/sf.js
+	cp ./build/src/main.min.js ./dist/sf.min.js
+
+doc:
+	-mkdir docs
+	$(DOC) src/utils/promise.js > docs/promise.md
+	$(DOC) src/utils/underscore.js > docs/underscore.md
+	$(DOC) src/utils/http.js > docs/http.md
+	$(DOC) src/resource.js > docs/resource.md
+	$(DOC) src/action.js > docs/action.md
+	$(DOC) src/router/router.js > docs/router.md
+	$(DOC) src/utils/dom.js > docs/dom.md
+	$(DOC) src/service.js > docs/service.md
+	$(DOC) src/view.js > docs/view.md
+
+clean:
+	rm -rf ./build/
+
+dist-clean: clean
+	rm -rf ./dist/
+
+
+# Test Related
 
 test: build
 	$(TEST) start --reporters mocha
 
-coverage: build
-	$(TEST) start --reporters mocha,coverage
-
-html: build
-	$(TEST) start --reporters mocha,html
-
-reports: build
+test-reports: build
 	$(TEST) start --reporters mocha,html,coverage
 
-watch: build
+test-watch: build
 	$(TEST) start --auto-watch --no-single-run
 
-listen: build
+test-listen: build
 	$(TEST) start --browsers --no-single-run
 
-run:
+test-run:
 	$(TEST) run
-
-build: 
-	-mkdir build 
-	fis3 release -d ./build/dist
-
-clean:
-	rm -rf ./build/
