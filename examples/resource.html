@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTTP Demo</title>
+  <script src="../dist/sf.js"></script>
+</head>
+
+<body>
+
+  <h1>Resource Demo</h1>
+
+  <p>Check out the console.</p>
+
+  <script>
+    require(['resource'], function(Resource) {
+      // Declare a Resource
+      var Cat = new Resource('http://www.baidu.com/person/:pid/cat/:cid');
+
+      // Create
+      var cat = {
+          name: 'harttle'
+      };
+      var query = {
+          pid: 1
+      };
+      Cat.create(cat, query)
+        .then(function(cats, status, xhr) {
+          // POST http://www.baidu.com/person/1/cat/
+          // RequestBody: name=harttle
+        })
+        .catch(function(xhr, status, err){
+          console.log('create failed');
+        });
+
+
+      // Retrieve
+      query = {
+          pid: 1,
+          cid: 2
+      };
+      Cat.query(cat).then(function(cat, status, xhr) {
+          // GET http://www.baidu.com/person/1/cat/2
+      });
+      query = {
+          pid: 1
+      };
+      Cat.query(cat).then(function(cats, status, xhr) {
+          // GET http://www.baidu.com/person/1/cat
+      });
+
+
+      // Update
+      cat = {
+        name: 'harttle'
+      };
+      query = {
+        pid: 1,
+        cid: 2
+      };
+      Cat.update(cat, query).then(function(cats, status, xhr) {
+        // PUT http://www.baidu.com/person/1/cat/2
+      });
+
+      
+      // Delete
+      var query = {
+        pid: 1,
+        cid: 2
+      };
+      Cat.delete(query).then(function(){
+        // DELETE http://www.baidu.com/person/1/cat/2
+        console.log('delete success');
+      }).catch(function(){
+        console.error('delete failed');
+      });
+    });
+  </script>
+</body>
+
+</html>

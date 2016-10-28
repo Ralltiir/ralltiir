@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+        <title>sfapp example</title>
+    </head>
+    <body>
+        <div id="sfa-page">
+		  <a href="" class="redirect" data-sf-href="/sf">redirect</a>
+          <a href="" class=""></a>
+        </div>
+    </body>
+    <script src="../../dist/sf.js"></script>
+    <script type="text/javascript" src="./view/sfView.js"></script>
+    <script type="text/javascript" src="./resource/sfResource.js"></script>
+    <script type="text/javascript" src="./service/sfService.js"></script>
+    <script type="text/javascript" src="./service/indexService.js"></script>
+    <script>
+        require(['router/router','action','service/indexService','service/sfService'], function(router, action, indexService, sfService) {
+            var _rootPath = location.pathname;
+
+            router.config({
+                root: _rootPath
+            });
+
+            action.regist('/sf', new sfService());
+            action.regist('/', new indexService());
+
+            router.start();
+            action.start();
+
+            window.action = action;
+        });
+    </script>
+    <script>
+    </script>
+</html>

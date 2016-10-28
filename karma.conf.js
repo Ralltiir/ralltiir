@@ -7,7 +7,7 @@ module.exports = function(config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: 'build/dist/',
+        basePath: 'build/',
 
         // Important: 所有插件必须在此声明
         plugins: [
@@ -39,7 +39,7 @@ module.exports = function(config) {
             'lib/zepto-deferred.js', 
             'lib/zepto-callbacks.js', 
             'lib/esl.js',
-            'test/index.js', {
+            'test-main.js', {
                 pattern: 'src/**/*.js',
                 included: false
             }, {
@@ -68,10 +68,10 @@ module.exports = function(config) {
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['mocha'],
         htmlReporter: {
-            outputDir: 'build/test'
+            outputDir: 'build/test-reports/result'
         },
         coverageReporter: {
-            dir: '../coverage'  // relative to basePath
+            dir: 'test-reports/coverage'  // relative to basePath
         },
 
 
