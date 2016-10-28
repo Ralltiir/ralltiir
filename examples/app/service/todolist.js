@@ -1,36 +1,36 @@
 define(function () {
-    var service = require('service');
-    var sfView = require('view/sfView');
-    var sfResource = require('resource/sfResource');
+    var service = require('sfr/service');
+    var view = require('view/todolist');
+    var Todo = require('resource/todo');
 
   	//create sf service
     var sfService = service.create();
 
     sfService.prototype.create = function(current, prev) {
+        console.log('[todolist] page create');
         // init view
-        sfView.create();
-        console.log('page create');
+        view.create();
     };
 
     sfService.prototype.attach = function(current, prev) {
         // fetch data and render view
-        var data = sfResource.query();
+        var todolist = Todo.query();
         var opt = {};
-        sfView.render(data, opt);
+        view.render(todolist, opt);
         // attach view
-        sfView.attach();
-        console.log('page attach');
+        view.attach();
+        console.log('[todolist] attach');
     };
     
     sfService.prototype.detach = function() {
-        console.log('page detach');
+        console.log('[todolist] detach');
     };
     
     sfService.prototype.destroy = function() {
         // destroy view
-        sfView.destroy();
-        console.log('page destroy');
+        view.destroy();
+        console.log('[todolist] destroy');
     };
     
     return sfService;
-})
+});

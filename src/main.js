@@ -1,9 +1,3 @@
-/*prerequisites*/
-__inline("../lib/zepto.js");
-__inline("../lib/zepto-callbacks.js");
-__inline("../lib/zepto-deferred.js");
-__inline("../lib/esl.js");
-
 /*router*/
 __inline('router/lang/extend.js');
 __inline('router/lang/inherits.js');
