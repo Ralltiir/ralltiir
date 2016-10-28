@@ -14,9 +14,13 @@
     <li> <a href="./resource.html">Resource</a> </li>
     <li> <a href="./view.html">View</a></li>
   </ul>
-  <script src="../dist/sf.js"></script>
+  <script src="../lib/zepto.js"></script>
+  <script src="../lib/zepto-callbacks.js"></script>
+  <script src="../lib/zepto-deferred.js"></script>
+  <script src="../lib/esl.js"></script>
+  <script src="../dist/sf-2.5.js"></script>
   <script>
-    require(['router/router', 'action', 'service'], function(router, action, service) {
+    require(['sfr/router/router', 'sfr/action', 'sfr/service'], function(router, action, service) {
       var _rootPath = location.pathname;
       router.config({
         root: _rootPath

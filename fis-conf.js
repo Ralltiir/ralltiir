@@ -24,6 +24,12 @@ fis.match('/src/(**).js', {
     isMod: true
 });
 
+fis.media('prod').match('/src/(**).js', {
+    release: true,
+    moduleId: 'sfr/$1',
+    isMod: true
+});
+
 fis.match('/test/(**).js', {
     release: true,
     moduleId: 'test/$1',

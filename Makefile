@@ -8,6 +8,7 @@ export PORT=9877
 export KARMA_BIN=./node_modules/karma/bin/karma
 export TEST=$(KARMA_BIN) --port $(PORT)
 export DOC=node ./bin/doc.js
+export VERSION=2.5
 
 .PHONY: test test-reports test-watch test-run test-listen build dist clean dist-clean doc
 
@@ -15,13 +16,16 @@ export DOC=node ./bin/doc.js
 # Build Related
 
 build: 
-	[ -d ./build ] || mkdir ./build 
+	rm -rf ./build
+	mkdir ./build 
 	fis3 release -d ./build
 
-dist: build 
-	[ -d ./dist ] || mkdir ./dist
-	cp ./build/src/main.js ./dist/sf.js
-	cp ./build/src/main.min.js ./dist/sf.min.js
+dist: 
+	rm -rf ./build
+	mkdir ./build 
+	fis3 release prod -d ./build
+	cp ./build/src/main.js ./dist/sf-$(VERSION).js
+	cp ./build/src/main.min.js ./dist/sf-$(VERSION).min.js
 
 doc:
 	-mkdir docs

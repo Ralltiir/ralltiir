@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>HTTP Demo</title>
-  <script src="../dist/sf.js"></script>
+  <script src="../dist/sf-2.5.js"></script>
 </head>
 
 <body>
@@ -14,7 +14,7 @@
   <p>Check out the console.</p>
 
   <script>
-    require(['resource'], function(Resource) {
+    require(['sfr/resource'], function(Resource) {
       // Declare a Resource
       var Cat = new Resource('http://www.baidu.com/person/:pid/cat/:cid');
 
