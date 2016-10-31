@@ -1,6 +1,7 @@
 define(function() {
 
     var router = require('router/router');
+    var Promise = require('utils/promise');
     var exports = {};
     var serviceMap = {};
     var _options = {};
@@ -49,12 +50,22 @@ define(function() {
     }
 
     /**
-     *  Dispatch service
-     *  If current and prev is the same service,prev service will not excute destroy function.
+     *  Switch from the previous service to the current one.
+     *  Call prev.detach, prev.destroy, current.create, current.attach in serial.
+     *
+     *  If any of these callbacks returns a `Thenable`, it'll be await.
+     *  If the promise is rejected, the latter callbacks will **NOT** be called.
+     *
+     *  Returns a promise that 
+     *  resolves if all callbacks executed without throw (or reject),
+     *  rejects if any of the callbacks throwed or rejected.
+     *
+     *  Note: If current and prev is the same service,
+     *  the `prev.destroy` will **NOT** be called.
      *  @static
      *  @param {Object} current The current scope
      *  @param {Object} prev The previous scope
-     *  @return undefined
+     *  @return {Promise}
      * */
     exports.dispatch = function(current, prev) {
         var proxyList = [];
@@ -67,7 +78,7 @@ define(function() {
         //container init,nothing to do
         if(current.options.src === 'sync') {
             indexUrl = current.url;
-            return;
+            return Promise.resolve();
         }
         
         //set src to current scope
@@ -100,16 +111,15 @@ define(function() {
         var list = [];
 
         function excute() {
-            deferred = $.Deferred();
-            deferred.resolve();
+            var p = Promise.resolve();
             $.each(list, function() {
                 var callback = this;
-                deferred = deferred.then(function() {
+                p = p.then(function() {
                     return callback();
                 });
             });
             list = [];
-            return deferred;
+            return p;
         }
 
         function push(fn, context) {
