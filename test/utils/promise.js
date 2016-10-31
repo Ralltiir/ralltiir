@@ -2,7 +2,6 @@
  * @author yangjun14(yangjun14@baidu.com)
  * @file 测试src/Promise.js. 标准： Promises/A+ https://Promisesaplus.com/
  */
-
 define(['../src/utils/promise'], function(Promise) {
     describe('Promise', function() {
         this.timeout(5000);
@@ -83,36 +82,20 @@ define(['../src/utils/promise'], function(Promise) {
             });
         });
         describe('.resolve()', function() {
-            it('should support a single argument', function(done) {
+            it('should resolve "foo" when given "foo"', function(done) {
                 Promise.resolve('foo').then(function(result) {
                     expect(result).to.equal('foo');
                     done();
                 }).catch(done);
             });
-            it('should support multiple arguments', function(done) {
-                Promise.resolve('foo', false, 'bar').then(function(fo, fa, ba) {
-                    expect(fo).to.equal('foo');
-                    expect(fa).to.equal(false);
-                    expect(ba).to.equal('bar');
-                    done();
-                }).catch(done);
-            });
         });
         describe('.reject()', function() {
-            it('should support a single argumetn', function(done) {
+            it('should reject "foo" when given "foo"', function(done) {
                 Promise.reject('foo').catch(function(err) {
                     expect(err).to.equal('foo');
                     done();
                 })
                 .catch(done);
-            });
-            it('should support multiple arguments', function(done) {
-                Promise.reject('foo', false, 'bar').catch(function(fo, fa, ba) {
-                    expect(fo).to.equal('foo');
-                    expect(fa).to.equal(false);
-                    expect(ba).to.equal('bar');
-                    done();
-                }).catch(done);
             });
         });
         describe('.all()', function() {
@@ -123,11 +106,11 @@ define(['../src/utils/promise'], function(Promise) {
                         done();
                     });
             });
-            it('should reject when one rejected', function(done) {
-                Promise.all([Promise.resolve('foo'), Promise.reject('bar')])
+            it('should reject when one rejected', function() {
+                return Promise
+                    .all([Promise.resolve('foo'), Promise.reject('bar')])
                     .catch(function(err) {
-                        expect(err).to.equal('bar');
-                        done();
+                        return expect(err).to.equal('bar');
                     });
             });
             it('should support non-thenable', function(done) {

@@ -1,4 +1,7 @@
 define(function() {
+    var PENDING = 0;
+    var FULFILLED = 1;
+    var REJECTED = 2;
     /*
      * Create a new promise. 
      * The passed in function will receive functions resolve and reject as its arguments 
@@ -24,55 +27,120 @@ define(function() {
             throw 'callback not defined';
         }
 
-        this._handlers = [];
-        this._state = 'init'; // Enum: init, fulfilled, rejected
-        this._errors = [];
-        this._results = [];
+        this._state = PENDING;
+        this._result;
+        this._fulfilledCbs = [];
+        this._rejectedCbs = [];
 
         // 标准：Promises/A+ 2.2.4, see https://promisesaplus.com/ 
         // In practice, this requirement ensures that 
         //   onFulfilled and onRejected execute asynchronously, 
         //   after the event loop turn in which then is called, 
         //   and with a fresh stack.
+        var self = this;
         setTimeout(function() {
-            cb(this._onFulfilled.bind(this), this._onRejected.bind(this));
-        }.bind(this));
+            _doResolve(cb,
+                self._resolve.bind(self),
+                self._reject.bind(self));
+        });
     }
+
+    Promise.prototype._fulfill = function(result) {
+        this._result = result;
+        this._state = FULFILLED;
+        this._flush();
+    };
+
+    Promise.prototype._reject = function(err) {
+        this._result = err;
+        this._state = REJECTED;
+        this._flush();
+    };
+
+    Promise.prototype._resolve = function(result) {
+        if (_isThenable(result)) {
+            // result.then is un-trusted
+            _doResolve(result.then.bind(result),
+                this._resolve.bind(this),
+                this.reject.bind(this));
+        } else {
+            this._fulfill(result);
+        }
+    };
+
+    Promise.prototype._flush = function() {
+        if (this._state === PENDING) {
+            return;
+        }
+        var cbs = this._state === REJECTED ? this._rejectedCbs : this._fulfilledCbs;
+        var self = this;
+        cbs.forEach(function(callback) {
+            if (typeof callback === 'function') {
+                callback(self._result);
+            }
+        });
+        this._rejectedCbs = [];
+        this._fulfilledCbs = [];
+    };
+
+    /*
+     * Register a callback on fulfilled or rejected.
+     * @param {Function} onFulfilled the callback on fulfilled
+     * @param {Function} onRejected the callback on rejected
+     * @return {undefined}
+     */
+    Promise.prototype._done = function(onFulfilled, onRejected) {
+        this._fulfilledCbs.push(onFulfilled);
+        this._rejectedCbs.push(onRejected);
+        this._flush();
+    };
 
     /*
      * The Promise/A+ .then, register a callback on resolve. See: https://promisesaplus.com/
      * @param {Function} cb The callback to be registered.
      * @return {Promise} A thenable.
      */
-    Promise.prototype.then = function(cb) {
-        //console.log('calling then', this._state);
-        if (this._state === 'fulfilled') {
-            //console.log(this._state);
-            this._callHandler(cb, this._results);
-        } else {
-            this._handlers.push({
-                type: 'then',
-                cb: cb
+    Promise.prototype.then = function(onFulfilled, onRejected) {
+        var _this = this,
+            ret;
+        return new Promise(function(resolve, reject) {
+            _this._done(function(result) {
+                if (typeof onFulfilled === 'function') {
+                    try {
+                        ret = onFulfilled(result);
+                    } catch (e) {
+                        return reject(e);
+                    }
+                    resolve(ret);
+                } else {
+                    resolve(result);
+                }
+            }, function(err) {
+                if (typeof onRejected === 'function') {
+                    try {
+                        ret = onRejected(err);
+                    } catch (e) {
+                        return reject(e);
+                    }
+                    resolve(ret);
+                } else {
+                    reject(err);
+                }
             });
-        }
-        return this;
+        });
     };
+
     /*
      * The Promise/A+ .catch, retister a callback on reject. See: https://promisesaplus.com/
      * @param {Function} cb The callback to be registered.
      * @return {Promise} A thenable.
      */
     Promise.prototype.catch = function(cb) {
-        if (this._state === 'rejected') {
-            this._callHandler(cb, this._errors);
-        } else {
-            this._handlers.push({
-                type: 'catch',
-                cb: cb
-            });
-        }
-        return this;
+        return this.then(function(result) {
+            return result;
+        }, cb);
     };
+
     /*
      * 
      * The Promise/A+ .catch, register a callback on either resolve or reject. See: https://promisesaplus.com/
@@ -80,17 +148,9 @@ define(function() {
      * @return {Promise} A thenable.
      */
     Promise.prototype.finally = function(cb) {
-        if (this._state === 'fulfilled') {
-            this._callHandler(cb, this._results);
-        } else if (this._state === 'rejected') {
-            this._callHandler(cb, this._errors);
-        } else {
-            this._handlers.push({
-                type: 'finally',
-                cb: cb
-            });
-        }
+        return this.then(cb, cb);
     };
+
     /*
      * Create a promise that is resolved with the given value. 
      * If value is already a thenable, it is returned as is. 
@@ -100,10 +160,9 @@ define(function() {
      * @static
      */
     Promise.resolve = function(obj) {
-        var args = arguments;
         return _isThenable(obj) ? obj :
             new Promise(function(resolve) {
-                return resolve.apply(null, args);
+                return resolve(obj);
             });
     };
     /*
@@ -112,10 +171,9 @@ define(function() {
      * @return {Promise} A thenable which is rejected with the given `error`
      * @static
      */
-    Promise.reject = function() {
-        var args = arguments;
+    Promise.reject = function(err) {
         return new Promise(function(resolve, reject) {
-            return reject.apply(null, args);
+            reject(err);
         });
     };
     /*
@@ -136,18 +194,18 @@ define(function() {
             return undefined;
         });
         var count = 0;
-        var state = 'pending';
+        var state = PENDING;
         return new Promise(function(res, rej) {
             function resolve() {
-                if (state !== 'pending') return;
-                state = 'fulfilled';
+                if (state !== PENDING) return;
+                state = FULFILLED;
                 res(results);
             }
 
-            function reject() {
-                if (state !== 'pending') return;
-                state = 'rejected';
-                rej.apply(null, arguments);
+            function reject(err) {
+                if (state !== PENDING) return;
+                state = REJECTED;
+                rej(err);
             }
             promises
                 .map(Promise.resolve)
@@ -156,70 +214,41 @@ define(function() {
                         .then(function(result) {
                             results[idx] = result;
                             count++;
-                            if (count === promises.length) resolve();
+                            if (count === promises.length) {
+                                resolve();
+                            }
                         })
                         .catch(reject);
                 });
         });
     };
 
-    Promise.prototype._onFulfilled = function(obj) {
-        //console.log('_onFulfilled', obj);
-        if (_isThenable(obj)) {
-            return obj
-                .then(this._onFulfilled.bind(this))
-                .catch(this._onRejected.bind(this));
-        }
-
-        this._results = arguments;
-        var handler = this._getNextHandler('then');
-        if (handler) {
-            return this._callHandler(handler, this._results);
-        }
-        handler = this._getNextHandler('finally');
-        if (handler) {
-            return this._callHandler(handler, this._results);
-        }
-        this._state = 'fulfilled';
-    };
-    Promise.prototype._onRejected = function() {
-        //console.log('_onRejected', err);
-        this._errors = arguments;
-        var handler = this._getNextHandler('catch');
-        if (handler) {
-            return this._callHandler(handler, this._errors);
-        }
-        handler = this._getNextHandler('finally');
-        if (handler) {
-            return this._callHandler(handler, this._errors);
-        }
-        this._state = 'rejected';
-    };
-    Promise.prototype._callHandler = function(handler, args) {
-        //console.log('calling handler', handler, args);
-        var result, err = null;
-        try {
-            result = handler.apply(null, args);
-        } catch (e) {
-            err = e;
-        }
-        if (err) {
-            this._onRejected(err);
-        } else {
-            this._onFulfilled(result);
-        }
-    };
-    Promise.prototype._getNextHandler = function(type) {
-        var obj;
-        while (obj = this._handlers.shift()) {
-            if (obj.type === type) break;
-        }
-        return obj ? obj.cb : null;
-    };
-
     function _isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
+
+    /*
+     * Resolve the un-trusted promise definition function: fn
+     */
+    function _doResolve(fn, onFulfilled, onRejected) {
+        // ensure resolve/reject called once
+        var called = false;
+        try {
+            fn(function(result) {
+                if (called) return;
+                called = true;
+                onFulfilled(result);
+            }, function(err) {
+                if (called) return;
+                called = true;
+                onRejected(err);
+            });
+        } catch (e) {
+            if (called) return;
+            called = true;
+            onRejected(e);
+        }
+    };
 
     return Promise;
 });

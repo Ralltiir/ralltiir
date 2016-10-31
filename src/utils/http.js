@@ -5,10 +5,16 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
      * Perform an asynchronous HTTP (Ajax) request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} settings A set of key/value pairs that configure the Ajax request. All settings are optional.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      * @example
      * ajax('/foo')
-     *     .then(function( data, textStatus, xhr ) {});
+     *     .then(function(xhr) {
+     *         xhr.status == 200;
+     *         xhr.responseHeaders['Content-Type'] == 'application/json';
+     *         xhr.responseText == '{"foo": "bar"}';
+     *         // xhr.data is parsed from responseText according to Content-Type
+     *         xhr.data === {foo: 'bar'};
+     *     });
      *     .catch(function( xhr, textStatus, errorThrown ) {});
      *     .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
      */
@@ -58,7 +64,7 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
      * Load data from the server using a HTTP GET request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.get = function(url, data) {
         return exports.ajax(url, {
@@ -70,7 +76,7 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
      * Load data from the server using a HTTP POST request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.post = function(url, data) {
         return exports.ajax(url, {
@@ -83,7 +89,7 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
      * Load data from the server using a HTTP PUT request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.put = function(url, data) {
         return exports.ajax(url, {
@@ -96,7 +102,7 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
      * Load data from the server using a HTTP DELETE request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.delete = function(url, data) {
         return exports.ajax(url, {
@@ -111,7 +117,7 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
         try {
             xhr = _createXHR();
         } catch (e) {
-            return Promise.reject(null, '', e);
+            return Promise.reject(e);
         }
         //console.log('open xhr');
         xhr.open(settings.method, settings.url, true);
@@ -126,9 +132,9 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
                 if (xhr.readyState == 4) {
                     xhr = _resolveXHR(xhr);
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(xhr.responseBody, xhr.status, xhr);
+                        resolve(xhr);
                     } else {
-                        reject(xhr, xhr.status, null);
+                        reject(xhr);
                     }
                 }
             };
@@ -153,10 +159,10 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
         /*
          * parse response body
          */
-        xhr.responseBody = xhr.responseText;
+        xhr.data = xhr.responseText;
         if (xhr.responseHeaders['Content-Type'] === 'application/json') {
             try {
-                xhr.responseBody = JSON.parse(xhr.responseText);
+                xhr.data = JSON.parse(xhr.responseText);
             } catch (e) {
                 console.warn('Invalid JSON content with Content-Type: application/json');
             }

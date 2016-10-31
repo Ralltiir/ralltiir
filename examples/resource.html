@@ -26,11 +26,13 @@
           pid: 1
       };
       Cat.create(cat, query)
-        .then(function(cats, status, xhr) {
+        .then(function(xhr) {
           // POST http://www.baidu.com/person/1/cat/
           // RequestBody: name=harttle
+          var createdCat = xhr.data;
+          console.log(createdCat);
         })
-        .catch(function(xhr, status, err){
+        .catch(function(xhr){
           console.log('create failed');
         });
 
@@ -40,13 +42,13 @@
           pid: 1,
           cid: 2
       };
-      Cat.query(cat).then(function(cat, status, xhr) {
+      Cat.query(cat).then(function(xhr) {
           // GET http://www.baidu.com/person/1/cat/2
       });
       query = {
           pid: 1
       };
-      Cat.query(cat).then(function(cats, status, xhr) {
+      Cat.query(cat).then(function(xhr) {
           // GET http://www.baidu.com/person/1/cat
       });
 
@@ -59,7 +61,7 @@
         pid: 1,
         cid: 2
       };
-      Cat.update(cat, query).then(function(cats, status, xhr) {
+      Cat.update(cat, query).then(function(xhr) {
         // PUT http://www.baidu.com/person/1/cat/2
       });
 

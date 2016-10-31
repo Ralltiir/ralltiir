@@ -58,42 +58,38 @@ define(['../src/utils/http'], function(http) {
             });
             it('should resolve when 200', function(done) {
                 http.ajax('http://harttle.com')
-                    .then(function(content, status, xhr) {
-                        expect(content).to.equal('okay');
-                        expect(status).to.equal(200);
+                    .then(function(xhr) {
+                        expect(xhr.status).to.equal(200);
                         expect(xhr.responseText).to.equal('okay');
+                        expect(xhr.data).to.equal('okay');
                         done();
                     }).catch(done);
             });
-            it('should reject when 400', function(done) {
-                http.ajax('http://baidu.com')
-                    .catch(function(xhr, status, err) {
+            it('should reject when 400', function() {
+                return http.ajax('http://baidu.com')
+                    .catch(function(xhr) {
                         expect(xhr.responseText).to.equal('bad');
-                        expect(status).to.equal(400);
-                        expect(err).to.be.null;
-                        done();
-                    }).catch(done);
+                        expect(xhr.status).to.equal(400);
+                    });
             });
-            it('should parse JSON for JSON MIME type', function(done) {
-                http.ajax('http://json.com')
-                    .then(function(content, status, xhr) {
-                        expect(content).to.deep.equal({
+            it('should parse JSON for JSON MIME type', function() {
+                return http.ajax('http://json.com')
+                    .then(function(xhr) {
+                        expect(xhr.data).to.deep.equal({
                             foo: 'bar'
                         });
-                        done();
-                    }).catch(done);
+                    });
             });
-            it('should parse response headers', function(done) {
-                http.ajax('http://json.com')
-                    .then(function(content, status, xhr) {
+            it('should parse response headers', function() {
+                return http.ajax('http://json.com')
+                    .then(function(xhr) {
                         var h = xhr.responseHeaders;
                         expect(h['Content-Type']).to.equal('application/json');
                         expect(h['cache-control']).to.equal('no-cache');
-                        done();
-                    }).catch(done);
+                    });
             });
-            it('should urlencode request body by default', function(done) {
-                http
+            it('should urlencode request body by default', function() {
+                return http
                     .ajax('http://json.com', {
                         method: 'POST',
                         data: {
@@ -102,12 +98,10 @@ define(['../src/utils/http'], function(http) {
                     })
                     .then(function() {
                         expect(xhr.requestBody).to.equal("foo=bar");
-                        done();
-                    })
-                    .catch(done);
+                    });
             });
-            it('should JSON encode when contentType set to application/json', function(done) {
-                http.ajax({
+            it('should JSON encode when contentType set to application/json', function() {
+                return http.ajax({
                         method: 'POST',
                         url: 'http://json.com',
                         data: {
@@ -117,61 +111,53 @@ define(['../src/utils/http'], function(http) {
                             'content-type': 'application/json'
                         }
                     })
-                    .then(function(content) {
+                    .then(function() {
                         expect(xhr.requestBody).to.equal('{"foo":"bar"}');
-                        done();
-                    })
-                    .catch(done);
+                    });
             });
         });
         describe('.get()', function() {
-            it('should perform GET', function(done) {
-                http.get('http://harttle.com')
-                    .then(function(content, status, _xhr) {
+            it('should perform GET', function() {
+                return http.get('http://harttle.com')
+                    .then(function(_xhr) {
                         expect(xhr.method).to.equal('GET');
-                        expect(content).to.equal('okay');
-                        done();
-                    }).catch(done);
+                        expect(_xhr.data).to.equal('okay');
+                    });
             });
         });
         describe('.post()', function() {
-            it('should perform POST', function(done) {
-                http.post('http://harttle.com')
-                    .then(function(content, status, _xhr) {
+            it('should perform POST', function() {
+                return http.post('http://harttle.com')
+                    .then(function(_xhr) {
                         expect(xhr.method).to.equal('POST');
-                        expect(content).to.equal('okay');
-                        done();
-                    }).catch(done);
+                        expect(_xhr.data).to.equal('okay');
+                    });
             });
-            it('should attach post data', function(done) {
-                http.post('http://harttle.com', {
+            it('should attach post data', function() {
+                return http.post('http://harttle.com', {
                         foo: 'bar'
                     })
-                    .then(function(content) {
+                    .then(function() {
                         expect(xhr.requestBody).to.equal('foo=bar');
-                        done();
-                    })
-                    .catch(done);
+                    });
             });
         });
         describe('.put()', function() {
-            it('should perform PUT', function(done) {
-                http.put('http://harttle.com')
-                    .then(function(content, status, _xhr) {
+            it('should perform PUT', function() {
+                return http.put('http://harttle.com')
+                    .then(function(_xhr) {
                         expect(xhr.method).to.equal('PUT');
-                        expect(content).to.equal('okay');
-                        done();
-                    }).catch(done);
+                        expect(_xhr.data).to.equal('okay');
+                    });
             });
         });
         describe('.delete()', function() {
-            it('should perform DELETE', function(done) {
-                http.delete('http://harttle.com')
-                    .then(function(content, status, _xhr) {
+            it('should perform DELETE', function() {
+                return http.delete('http://harttle.com')
+                    .then(function(_xhr) {
                         expect(xhr.method).to.equal('DELETE');
-                        expect(content).to.equal('okay');
-                        done();
-                    }).catch(done);
+                        expect(_xhr.data).to.equal('okay');
+                    });
             });
         });
     });
