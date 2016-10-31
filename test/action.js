@@ -86,35 +86,58 @@ define(['../src/action', '../router/router'], function(action, router) {
                     options: {}
                 };
             });
-            it('should call create,attach with correct arguments', function() {
-                action.dispatch(current, prev);
-                expect(fooService.create).to.have.been.calledWith(current, prev);
-                expect(fooService.attach).to.have.been.calledWith(current, prev);
+            it('should call create with correct arguments', function() {
+                return action.dispatch(current, prev).then(function(){
+                    return expect(fooService.create).to
+                        .have.been.calledWith(current, prev);
+                });
             });
-            it('should call detach,destroy with correct arguments', function() {
-                action.dispatch(current, prev);
-                expect(barService.detach).to.have.been.calledWith(current, prev);
-                expect(barService.destroy).to.have.been.calledWith(current, prev);
+            it('should call attach with correct arguments', function() {
+                return action.dispatch(current, prev).then(function(){
+                    return expect(fooService.attach).to
+                        .have.been.calledWith(current, prev);
+                });
+            });
+            it('should call detach with correct arguments', function() {
+                return action.dispatch(current, prev).then(function(){
+                    return expect(barService.detach).to
+                        .have.been.calledWith(current, prev);
+                });
+            });
+            it('should call destroy with correct arguments', function() {
+                return action.dispatch(current, prev).then(function(){
+                    return expect(barService.destroy).to
+                        .have.been.calledWith(current, prev);
+                });
             });
             it('should call detach,create,destroy,attach in a sequence', function() {
-                action.dispatch(current, prev);
-                expect(barService.detach).to.have.been.called;
-                expect(fooService.create).to.have.been.calledAfter(barService.detach);
-                expect(barService.destroy).to.have.been.calledAfter(fooService.create);
-                expect(fooService.attach).to.have.been.calledAfter(barService.destroy);
+                return action.dispatch(current, prev).then(function(){
+                    return expect(barService.detach).to.have.been.called;
+                }).then(function(){
+                    return expect(fooService.create).to
+                        .have.been.calledAfter(barService.detach);
+                }).then(function(){
+                    return expect(barService.destroy).to
+                        .have.been.calledAfter(fooService.create);
+                }).then(function(){
+                    return expect(fooService.attach).to
+                        .have.been.calledAfter(barService.destroy);
+                });
             });
             it('should skip init when options.src === sync', function() {
-                action.dispatch({
+                return action.dispatch({
                     url: '/home',
                     options: {
                         src: 'sync'
                     }
-                }, {});
-                expect(fooService.create).to.not.have.been.called;
+                }, {}).then(function(){
+                    return expect(fooService.create).to.not.have.been.called;
+                });
             });
             it('should destroy prev action', function() {
-                action.dispatch(current, prev);
-                expect(barService.destroy).to.have.been.called;
+                action.dispatch(current, prev).then(function(){
+                    return expect(barService.destroy).to.have.been.called;
+                });
             });
         });
         describe('.remove()', function() {
