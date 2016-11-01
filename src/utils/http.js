@@ -15,8 +15,8 @@ define(['./promise', './underscore', './url'], function(Promise, _, Url) {
      *         // xhr.data is parsed from responseText according to Content-Type
      *         xhr.data === {foo: 'bar'};
      *     });
-     *     .catch(function( xhr, textStatus, errorThrown ) {});
-     *     .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
+     *     .catch(function(xhr|errorThrown ) {});
+     *     .finally(function(xhr|errorThrown ) { });
      */
     exports.ajax = function(url, settings) {
         //console.log('ajax with', url, settings);
