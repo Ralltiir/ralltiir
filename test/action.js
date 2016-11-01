@@ -3,7 +3,7 @@
  * @file 测试src/action.js
  */
 
-define(['../src/action', '../router/router'], function(action, router) {
+define(['../src/action', '../router/router', '../src/utils/promise.js'], function(action, router) {
     describe('action/action', function() {
         /*
          * Stub 外部对象
@@ -86,42 +86,56 @@ define(['../src/action', '../router/router'], function(action, router) {
                     options: {}
                 };
             });
-            it('should call create with correct arguments', function() {
+            it('should call create/attach/detach/destroy with correct arguments', function() {
                 return action.dispatch(current, prev).then(function(){
-                    return expect(fooService.create).to
-                        .have.been.calledWith(current, prev);
-                });
-            });
-            it('should call attach with correct arguments', function() {
-                return action.dispatch(current, prev).then(function(){
-                    return expect(fooService.attach).to
-                        .have.been.calledWith(current, prev);
-                });
-            });
-            it('should call detach with correct arguments', function() {
-                return action.dispatch(current, prev).then(function(){
-                    return expect(barService.detach).to
-                        .have.been.calledWith(current, prev);
-                });
-            });
-            it('should call destroy with correct arguments', function() {
-                return action.dispatch(current, prev).then(function(){
-                    return expect(barService.destroy).to
-                        .have.been.calledWith(current, prev);
+                    expect(fooService.create).to.have.been.calledWith(current, prev);
+                    expect(fooService.attach).to.have.been.calledWith(current, prev);
+                    expect(barService.detach).to.have.been.calledWith(current, prev);
+                    expect(barService.destroy).to.have.been.calledWith(current, prev);
                 });
             });
             it('should call detach,create,destroy,attach in a sequence', function() {
                 return action.dispatch(current, prev).then(function(){
-                    return expect(barService.detach).to.have.been.called;
+                    expect(barService.detach).to.have.been.called;
+                    expect(fooService.create).to.have.been.calledAfter(barService.detach);
+                    expect(barService.destroy).to.have.been.calledAfter(fooService.create);
+                    expect(fooService.attach).to.have.been.calledAfter(barService.destroy);
+                });
+            });
+            it('should await when create returns a promise', function(){
+                var createdSpy = sinon.spy();
+                fooService.create = function(){
+                    return new Promise(function(resolve, reject){
+                        setTimeout(function(){
+                            createdSpy();
+                            resolve('created');
+                        }, 100);
+                    });
+                };
+                return action.dispatch(current, prev).then(function(){
+                    expect(barService.destroy).to.have.been.calledAfter(createdSpy);
+                });
+            });
+            it('should abort when create throws', function(){
+                var createdSpy = sinon.spy();
+                fooService.create = function(){
+                    throw 'foo';
+                };
+                return action.dispatch(current, prev).catch(function(e){
+                    expect(e).to.equal('foo');
                 }).then(function(){
-                    return expect(fooService.create).to
-                        .have.been.calledAfter(barService.detach);
+                    expect(barService.destroy).to.not.have.been.called;
+                });
+            });
+            it('should abort when create returns a rejected promise', function(){
+                var createdSpy = sinon.spy();
+                fooService.create = function(){
+                    return Promise.reject('foo')
+                };
+                return action.dispatch(current, prev).catch(function(e){
+                    expect(e).to.equal('foo');
                 }).then(function(){
-                    return expect(barService.destroy).to
-                        .have.been.calledAfter(fooService.create);
-                }).then(function(){
-                    return expect(fooService.attach).to
-                        .have.been.calledAfter(barService.destroy);
+                    expect(barService.destroy).to.not.have.been.called;
                 });
             });
             it('should skip init when options.src === sync', function() {
@@ -178,28 +192,28 @@ define(['../src/action', '../router/router'], function(action, router) {
             });
         });
         describe('.start()', function() {
-            var $a;
+            var a;
             beforeEach(function() {
                 var link = '/foo',
                     options = {
                         foo: 'bar'
                     };
-                $a = $('<a>')
-                    .data('sf-href', 'foo')
-                    .data('sf-options', JSON.stringify(options))
-                    .appendTo('body');
+                a = document.createElement('a');
+                a.setAttribute('data-sf-href', 'foo');
+                a.setAttribute('data-sf-options', JSON.stringify(options));
+                document.body.append(a);
             });
             afterEach(function() {
-                $a.remove();
+                a.remove();
             });
             it('should support redirect via data-sf-href', function() {
                 action.start();
-                $a.click();
+                a.click();
                 expect(router.redirect).to.have.been.calledWith('foo', null);
             });
             it('should support redirect options via data-sf-options', function() {
                 action.start();
-                $a.click();
+                a.click();
                 var options = {
                     foo: 'bar',
                     src: 'hijack'
@@ -208,9 +222,9 @@ define(['../src/action', '../router/router'], function(action, router) {
                 calledWith('foo', null, options);
             });
             it('should use empty options when data-sf-options illegal', function() {
-                $a.data('sf-options', '{fdafda}');
+                a.setAttribute('data-sf-options', '{fdafda}');
                 action.start();
-                $a.click();
+                a.click();
                 expect(router.redirect).to.have.been.calledWith('foo', null, {
                     src: 'hijack'
                 });

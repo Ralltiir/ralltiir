@@ -1,4 +1,4 @@
-define(['./promise', './underscore', './dom'], function(Promise, _, $) {
+define(['./promise', './underscore', './url'], function(Promise, _, Url) {
     var exports = {};
 
     /*
@@ -44,7 +44,7 @@ define(['./promise', './underscore', './dom'], function(Promise, _, $) {
         if (/application\/json/.test(settings.headers['content-type'])) {
             settings.data = JSON.stringify(settings.data);
         } else if (/form-urlencoded/.test(settings.headers['content-type'])) {
-            settings.data = $.param(settings.data);
+            settings.data = Url.param(settings.data);
         }
         //console.log('after parse data', settings);
         return _doAjax(settings);

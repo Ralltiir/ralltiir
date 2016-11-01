@@ -35,7 +35,7 @@ doc:
 	$(DOC) src/resource.js > docs/resource.md
 	$(DOC) src/action.js > docs/action.md
 	$(DOC) src/router/router.js > docs/router.md
-	$(DOC) src/utils/dom.js > docs/dom.md
+	$(DOC) src/utils/url.js > docs/url.md
 	$(DOC) src/service.js > docs/service.md
 	$(DOC) src/view.js > docs/view.md
 

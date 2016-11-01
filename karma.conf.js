@@ -35,9 +35,6 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'lib/zepto.js', 
-            'lib/zepto-deferred.js', 
-            'lib/zepto-callbacks.js', 
             'lib/esl.js',
             'test-main.js', {
                 pattern: 'src/**/*.js',

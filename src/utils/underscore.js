@@ -150,16 +150,7 @@ define(function() {
      * @return {Object} Returns object.
      */
     function defaults() {
-        var ret = {};
-        var srcs = slice(arguments, 0);
-        forEach(srcs, function(src) {
-            forOwn(src, function(v, k) {
-                if (!ret.hasOwnProperty(k)) {
-                    ret[k] = v;
-                }
-            });
-        });
-        return ret;
+        return assign.apply(null, slice(arguments, 0).reverse());
     }
 
     /*
@@ -179,6 +170,26 @@ define(function() {
      */
     function isString(value) {
         return value instanceof String || typeof value === 'string';
+    }
+
+    /*
+     * Assigns own enumerable string keyed properties of source objects to the destination object. 
+     * Source objects are applied from left to right. 
+     * Subsequent sources overwrite property assignments of previous sources.  
+     *
+     * Note: This method mutates object and is loosely based on Object.assign.
+     *
+     * @param {Object} object The destination object.
+     * @param {...Object} sources The source objects.
+     * @return {Object} Returns object.
+     */
+    function assign(object, source) {
+        object = object == null ? {} : object;
+        var srcs = slice(arguments, 1);
+        forEach(srcs, function(src) {
+            _assignBinary(object, src);
+        });
+        return object;
     }
 
     function _assignBinaryDeep(dst, src) {
@@ -299,6 +310,9 @@ define(function() {
      */
     exports.keysIn = keysIn;
     exports.forOwn = forOwn;
+    exports.assign = assign;
+    exports.merge = assign;
+    exports.extend = assign;
     exports.defaults = defaults;
     exports.defaultsDeep = defaultsDeep;
     exports.fromPairs = fromPairs;

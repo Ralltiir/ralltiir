@@ -1,9 +1,3 @@
-/*
- * @author harttle(yangjvn@126.com)
- * @file dom DOM, BOM工具集
- *      设计原则：
- *          1. 与jQuery兼容
- */
 define(['./underscore'], function(_) {
     /*
      * Format a plain object into query string.

@@ -19,6 +19,43 @@ define(['src/utils/underscore'], function(_) {
                 expect(_.keysIn(obj)).to.deep.equal(['foo', 'bar']);
             });
         });
+        describe('.assign', function() {
+            it('should handle null dst', function() {
+                expect(_.assign(null, {
+                    foo: 'bar'
+                })).to.deep.equal({
+                    foo: 'bar'
+                });
+            });
+            it('should assign 2 objects', function() {
+                var src = {
+                    foo: 'foo',
+                    bar: 'bar'
+                };
+                var dst = {
+                    foo: 'bar',
+                    kaa: 'kaa'
+                };
+                expect(_.assign(dst, src)).to.deep.equal({
+                    foo: 'foo',
+                    bar: 'bar',
+                    kaa: 'kaa'
+                });
+            });
+            it('should assign 3 objects', function() {
+                expect(_.assign({
+                    foo: 'foo'
+                }, {
+                    bar: 'bar'
+                }, {
+                    car: 'car'
+                })).to.deep.equal({
+                    foo: 'foo',
+                    bar: 'bar',
+                    car: 'car'
+                });
+            });
+        });
         describe('.defaults()', function() {
             it('should handle null dst', function() {
                 expect(_.defaults(null, {
@@ -69,7 +106,7 @@ define(['src/utils/underscore'], function(_) {
                     foo: {
                         foo: 'foo'
                     }
-                },{
+                }, {
                     foo: null
                 })).to.deep.equal({
                     foo: {
