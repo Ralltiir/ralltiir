@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>View Demo</title>
+  <script src="../lib/esl.js"></script>
   <script src="../dist/sf-2.5.js"></script>
 </head>
 
@@ -27,84 +28,83 @@
 
       // create
       view.create = function() {
-        this.$el = $('#page');
+        this.rootEl = document.querySelector('#page');
 
-        if (!this.$el.length) {
-            this.$el = $('<div id="page"></div>');
-            $('body').append(this.$el);
+        if (!this.rootEl) {
+          this.rootEl = document.createElement('div');
+          this.rootEl.setAttribute('id', "page");
+          document.body.append(this.rootEl);
         }
         console.log('#create(), create your view container');
-      }   
+      }
 
       // render 
       view.render = function(data) {
-        if(this.$view && this.$view.length > 0) {
-            return;
-        }
         var viewHtml = [
           '<div class="result">' + data + '</div>',
           '<div class="update"><span>update</span></div>'
         ].join('');
 
-        this.$view = $(viewHtml);
-        this.$el.append(this.$view);
+        this.rootEl.innerHTML = viewHtml;
+        this.updateEl = this.rootEl.querySelector('.update');
+        this.resultEl = this.rootEl.querySelector('.result');
+
         console.log('#render(), the core override function, fetch data and render view');
       }
 
       // attach
       view.attach = function() {
         // bind events
-        this.$el.find('.update').on('click', function(e) {
-          view.update("Hi, Baidu");
-          e.preventDefault();
-        });
+        this.updateEl.addEventListener('click', onUpdateBtnClick);
         console.log('#attach(), view attach animation, bind events and recover states')
         console.log('you can click update span, use view update');
       }
 
       // update
       view.update = function(data) {
-        if (!this.$view) {
-          return;
-        }
-        this.$el.find('.result').text(data);
+        this.resultEl.textContent = data;
         console.log('#update(), view update');
       }
 
       // detach
       view.detach = function() {
         // unbind events
-        this.$el.find('.update').off('click');
+        this.updateEl.removeEventListener('click', onUpdateBtnClick);
         console.log('#detach(), view detach animation, unbind events and record states')
       }
 
       // destroy
       view.destroy = function() {
-        this.$el.remove();
+        this.rootEl.remove();
         console.log('#destroy(), view destroy');
+      }
+
+      function onUpdateBtnClick(e) {
+        view.update("Hi, Baidu. Updated at " + new Date());
+        e.preventDefault();
       }
 
 
       /*
        * you can control view by service modules
        */
-      $('.create').on('click', function() {
+      document.querySelector('.create').addEventListener('click', function() {
         view.create();
       })
 
-      $('.render').on('click', function() {
+      document.querySelector('.render').addEventListener('click', function() {
         view.render("Hello, World");
       })
 
-      $('.attach').on('click', function() {
+      document.querySelector('.attach').addEventListener('click', function() {
         view.attach();
       })
 
-      $('.detach').on('click', function() {
+      document.querySelector('.detach').addEventListener('click', function() {
         view.detach();
       })
 
-      $('.destroy').on('click', function() {
+      document.querySelector('.destroy').addEventListener('click', function() {
         view.destroy();
       })
     });

@@ -3,23 +3,23 @@ define(function() {
 
     //create index service
     var indexService = service.create();
-    var $page;
+    var pageEl;
 
     indexService.prototype.create = function() {
         console.log('[index] create');
-        $page = $('#page-index');
+        pageEl = document.querySelector('#page-index');
     };
 
     indexService.prototype.attach = function() {
         console.log('[index] attach');
-        $page.show();
+        pageEl.style.display = 'block';
     };
 
     indexService.prototype.detach = function() {
         console.log('[index] detach');
-        // 首页同步渲染，不会调用 create
-        $page = $('#page-index');
-        $page.hide();
+        // 首页同步渲染时不会调用 create，再次初始化
+        pageEl = document.querySelector('#page-index');
+        pageEl.style.display = 'none';
     };
 
     indexService.prototype.destroy = function() {
