@@ -2,6 +2,7 @@ define(function() {
 
     var router = require('router/router');
     var Promise = require('utils/promise');
+    var _ = require('utils/underscore');
     var exports = {};
     var serviceMap = {};
     var _options = {};
@@ -69,7 +70,6 @@ define(function() {
      * */
     exports.dispatch = function(current, prev) {
         var proxyList = [];
-        var methodProxy = new _MethodProxy();
         var currentService = serviceMap[current.path];
         var prevService = serviceMap[prev.path];
 
@@ -85,55 +85,21 @@ define(function() {
         if(_options.src) {
             current.options.src = _options.src;
         }
-
-        prevService && methodProxy.push(prevService.detach, prevService, current, prev);
-        currentService && methodProxy.push(currentService.create, currentService, current, prev);
-        //container will not be destroyed
-        if(!(prev.url === indexUrl)) {
-            prevService && methodProxy.push(prevService.destroy, prevService, current, prev);
-        }
-        currentService && methodProxy.push(currentService.attach, currentService, current, prev);
         
-        //clean options.src
-        methodProxy.push(function() {
-            _options.src = undefined;
+        return Promise.mapSeries([
+            prevService && prevService.detach.bind(prevService),
+            currentService && currentService.create.bind(currentService),
+            //container will not be destroyed
+            prev.url !== indexUrl && prevService && prevService.destroy.bind(prevService),
+            currentService && currentService.attach.bind(currentService)
+        ], function(cb){
+            if(typeof cb !== 'function') return;
+            return cb(current, prev);
+        }).then(function(){
+            //clean options.src 
+            _options.src = undefined;   // WHAT'S THIS? @qingqian
         });
-
-        return methodProxy.excute();
     };
-
-    /**
-     *  Proxy deferred function,return a deferred object if function no a deferred 
-     *  @static
-     *  @return {object} Returns an object containing two methods: `{push,excute}`
-     * */
-    function _MethodProxy() {
-        var list = [];
-
-        function excute() {
-            var p = Promise.resolve();
-            $.each(list, function() {
-                var callback = this;
-                p = p.then(function() {
-                    return callback();
-                });
-            });
-            list = [];
-            return p;
-        }
-
-        function push(fn, context) {
-            var args = (2 in arguments) && (Array.prototype.slice.call(arguments, 2));
-            if(typeof fn === 'function') {
-                list.push(function() {return fn.apply(context, args ? args : []) });
-            }
-        }
-
-        return {
-            push : push,
-            excute : excute
-        };
-    }
 
     /**
      *  Remove a registered service
@@ -202,27 +168,39 @@ define(function() {
      *  @private
      *  @param {Event} e The click event object
      * */
-    function _delegateClick(e) {
-        
-        var $target = $(this);
-
-        var link = $target.attr('data-sf-href');
+    function _onAnchorClick(e, target) {
+        //link href only support url like pathname,e.g:/sf?params=
+        var link = target.getAttribute('data-sf-href');
+        var options = target.getAttribute('data-sf-options');
 
         if(link) {
-            //link href only support url like pathname,e.g:/sf?params=
-            var options = $target.attr('data-sf-options');
-
             try {
-                options = $.parseJSON(options) ? $.parseJSON(options) : {};
+                options = JSON.parse(options);
             } catch(err) {
                 options = {};
             }
-
-            options = $.extend(options, {"src": "hijack"});
-
+            options.src = "hijack";
             exports.redirect(link, null, options);
 
             e.preventDefault();
+        }
+    }
+
+    function _delegateAnchorClick(cb){
+        document.documentElement.addEventListener("click", function(event){
+            event = event || window.event;
+            var targetEl = _closest(event.target || event.srcElement, "A");
+            if (targetEl) {
+                cb(event, targetEl);
+            }
+        }, false);
+
+        function _closest(element, tagName) {
+            var parent = element;
+            while (parent !== null && parent.tagName !== tagName.toUpperCase()) {
+                parent = parent.parentNode;
+            }
+            return parent;
         }
     }
 
@@ -231,7 +209,7 @@ define(function() {
      *  @static 
      * */
     exports.start = function() {
-        $(document).delegate('a', 'click', _delegateClick);
+        _delegateAnchorClick(_onAnchorClick);
     } ;
 
     /**
@@ -241,8 +219,7 @@ define(function() {
      *  @return {Object} The normalized option object
      * */
     exports.config = function(options) {
-        $.extend(_options, options);
-        return _options;
+        return _.extend(_options, options);
     };
 
     /**

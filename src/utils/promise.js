@@ -39,32 +39,56 @@ define(function() {
         //   and with a fresh stack.
         var self = this;
         setTimeout(function() {
-            _doResolve(cb,
-                self._resolve.bind(self),
-                self._reject.bind(self));
+            self._doResolve(cb);
         });
     }
 
     Promise.prototype._fulfill = function(result) {
+        //console.log('_fulfill', result);
         this._result = result;
         this._state = FULFILLED;
         this._flush();
     };
 
     Promise.prototype._reject = function(err) {
+        //console.log('_reject', err);
         this._result = err;
         this._state = REJECTED;
         this._flush();
     };
 
     Promise.prototype._resolve = function(result) {
+        //console.log('_resolve', result);
         if (_isThenable(result)) {
             // result.then is un-trusted
-            _doResolve(result.then.bind(result),
-                this._resolve.bind(this),
-                this.reject.bind(this));
+            this._doResolve(result.then.bind(result));
         } else {
             this._fulfill(result);
+        }
+    };
+
+    /*
+     * Resolve the un-trusted promise definition function: fn
+     * which has exactly the same signature as the .then function
+     */
+    Promise.prototype._doResolve = function(fn) {
+        // ensure resolve/reject called once
+        var called = false;
+        var self = this;
+        try {
+            fn(function(result) {
+                if (called) return;
+                called = true;
+                self._resolve(result);
+            }, function(err) {
+                if (called) return;
+                called = true;
+                self._reject(err);
+            });
+        } catch (err) {
+            if (called) return;
+            called = true;
+            self._reject(err);
         }
     };
 
@@ -190,65 +214,45 @@ define(function() {
      * @static
      */
     Promise.all = function(promises) {
-        var results = promises.map(function() {
-            return undefined;
-        });
-        var count = 0;
-        var state = PENDING;
-        return new Promise(function(res, rej) {
-            function resolve() {
-                if (state !== PENDING) return;
-                state = FULFILLED;
-                res(results);
-            }
-
-            function reject(err) {
-                if (state !== PENDING) return;
-                state = REJECTED;
-                rej(err);
-            }
+        return new Promise(function(resolve, reject) {
+            var results = promises.map(function() {
+                return undefined;
+            });
+            var count = 0;
             promises
                 .map(Promise.resolve)
                 .forEach(function(promise, idx) {
-                    promise
-                        .then(function(result) {
-                            results[idx] = result;
-                            count++;
-                            if (count === promises.length) {
-                                resolve();
-                            }
-                        })
-                        .catch(reject);
+                    promise.then(function(result) {
+                        results[idx] = result;
+                        count++;
+                        if (count === promises.length) {
+                            resolve(results);
+                        }
+                    }, reject);
                 });
         });
     };
 
+    /*
+     * Call functions in serial until someone rejected.
+     * @param {Array} iterable the array to iterate with.
+     * @param {Array} iteratee returns a new promise.
+     * The iteratee is invoked with three arguments: (value, index, iterable). 
+     */
+    Promise.mapSeries = function(iterable, iteratee) {
+        var ret = Promise.resolve('init');
+        var result = [];
+        iterable.forEach(function(item, idx) {
+            ret = ret
+                .then(() => iteratee(item, idx, iterable))
+                .then(x => result.push(x));
+        });
+        return ret.then(() => result);
+    }
+
     function _isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
-
-    /*
-     * Resolve the un-trusted promise definition function: fn
-     */
-    function _doResolve(fn, onFulfilled, onRejected) {
-        // ensure resolve/reject called once
-        var called = false;
-        try {
-            fn(function(result) {
-                if (called) return;
-                called = true;
-                onFulfilled(result);
-            }, function(err) {
-                if (called) return;
-                called = true;
-                onRejected(err);
-            });
-        } catch (e) {
-            if (called) return;
-            called = true;
-            onRejected(e);
-        }
-    };
 
     return Promise;
 });

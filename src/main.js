@@ -23,7 +23,7 @@ __inline('router/uri/util/uri-parser.js');
 
 /*utils*/
 __inline('utils/http.js');
-__inline('utils/dom.js');
+__inline('utils/url.js');
 __inline('utils/underscore.js');
 __inline('utils/promise.js');
 
