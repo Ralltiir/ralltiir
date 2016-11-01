@@ -2445,17 +2445,23 @@ define('sfr/router/uri/util/uri-parser', ['require', 'sfr/router/lang/extend'], 
 ;
 
 /*utils*/
-define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/utils/dom'], function(Promise, _, $) {
+define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/utils/url'], function(Promise, _, Url) {
     var exports = {};
 
     /*
      * Perform an asynchronous HTTP (Ajax) request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} settings A set of key/value pairs that configure the Ajax request. All settings are optional.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      * @example
      * ajax('/foo')
-     *     .then(function( data, textStatus, xhr ) {});
+     *     .then(function(xhr) {
+     *         xhr.status == 200;
+     *         xhr.responseHeaders['Content-Type'] == 'application/json';
+     *         xhr.responseText == '{"foo": "bar"}';
+     *         // xhr.data is parsed from responseText according to Content-Type
+     *         xhr.data === {foo: 'bar'};
+     *     });
      *     .catch(function( xhr, textStatus, errorThrown ) {});
      *     .finally(function( data|xhr, textStatus, xhr|errorThrown ) { });
      */
@@ -2485,7 +2491,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
         if (/application\/json/.test(settings.headers['content-type'])) {
             settings.data = JSON.stringify(settings.data);
         } else if (/form-urlencoded/.test(settings.headers['content-type'])) {
-            settings.data = $.param(settings.data);
+            settings.data = Url.param(settings.data);
         }
         //console.log('after parse data', settings);
         return _doAjax(settings);
@@ -2505,7 +2511,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
      * Load data from the server using a HTTP GET request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.get = function(url, data) {
         return exports.ajax(url, {
@@ -2517,7 +2523,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
      * Load data from the server using a HTTP POST request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.post = function(url, data) {
         return exports.ajax(url, {
@@ -2530,7 +2536,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
      * Load data from the server using a HTTP PUT request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.put = function(url, data) {
         return exports.ajax(url, {
@@ -2543,7 +2549,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
      * Load data from the server using a HTTP DELETE request.
      * @param {String} url A string containing the URL to which the request is sent.
      * @param {Object} data A plain object or string that is sent to the server with the request.
-     * @return {Promise} A promise resolves with the requested HTTP body, or rejects with the xhr.
+     * @return {Promise} A promise resolves/rejects with the xhr
      */
     exports.delete = function(url, data) {
         return exports.ajax(url, {
@@ -2558,7 +2564,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
         try {
             xhr = _createXHR();
         } catch (e) {
-            return Promise.reject(null, '', e);
+            return Promise.reject(e);
         }
         //console.log('open xhr');
         xhr.open(settings.method, settings.url, true);
@@ -2573,9 +2579,9 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
                 if (xhr.readyState == 4) {
                     xhr = _resolveXHR(xhr);
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(xhr.responseBody, xhr.status, xhr);
+                        resolve(xhr);
                     } else {
-                        reject(xhr, xhr.status, null);
+                        reject(xhr);
                     }
                 }
             };
@@ -2600,10 +2606,10 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
         /*
          * parse response body
          */
-        xhr.responseBody = xhr.responseText;
+        xhr.data = xhr.responseText;
         if (xhr.responseHeaders['Content-Type'] === 'application/json') {
             try {
-                xhr.responseBody = JSON.parse(xhr.responseText);
+                xhr.data = JSON.parse(xhr.responseText);
             } catch (e) {
                 console.warn('Invalid JSON content with Content-Type: application/json');
             }
@@ -2631,13 +2637,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
     return exports;
 });
 ;
-/*
- * @author harttle(yangjvn@126.com)
- * @file dom DOM, BOM工具集
- *      设计原则：
- *          1. 与jQuery兼容
- */
-define('sfr/utils/dom', ['sfr/utils/underscore'], function(_) {
+define('sfr/utils/url', ['sfr/utils/underscore'], function(_) {
     /*
      * Format a plain object into query string.
      * @static
@@ -2810,16 +2810,7 @@ define('sfr/utils/underscore', ['require'], function(require) {
      * @return {Object} Returns object.
      */
     function defaults() {
-        var ret = {};
-        var srcs = slice(arguments, 0);
-        forEach(srcs, function(src) {
-            forOwn(src, function(v, k) {
-                if (!ret.hasOwnProperty(k)) {
-                    ret[k] = v;
-                }
-            });
-        });
-        return ret;
+        return assign.apply(null, slice(arguments, 0).reverse());
     }
 
     /*
@@ -2839,6 +2830,26 @@ define('sfr/utils/underscore', ['require'], function(require) {
      */
     function isString(value) {
         return value instanceof String || typeof value === 'string';
+    }
+
+    /*
+     * Assigns own enumerable string keyed properties of source objects to the destination object. 
+     * Source objects are applied from left to right. 
+     * Subsequent sources overwrite property assignments of previous sources.  
+     *
+     * Note: This method mutates object and is loosely based on Object.assign.
+     *
+     * @param {Object} object The destination object.
+     * @param {...Object} sources The source objects.
+     * @return {Object} Returns object.
+     */
+    function assign(object, source) {
+        object = object == null ? {} : object;
+        var srcs = slice(arguments, 1);
+        forEach(srcs, function(src) {
+            _assignBinary(object, src);
+        });
+        return object;
     }
 
     function _assignBinaryDeep(dst, src) {
@@ -2959,6 +2970,9 @@ define('sfr/utils/underscore', ['require'], function(require) {
      */
     exports.keysIn = keysIn;
     exports.forOwn = forOwn;
+    exports.assign = assign;
+    exports.merge = assign;
+    exports.extend = assign;
     exports.defaults = defaults;
     exports.defaultsDeep = defaultsDeep;
     exports.fromPairs = fromPairs;
@@ -2997,6 +3011,9 @@ define('sfr/utils/underscore', ['require'], function(require) {
 });
 ;
 define('sfr/utils/promise', ['require'], function(require) {
+    var PENDING = 0;
+    var FULFILLED = 1;
+    var REJECTED = 2;
     /*
      * Create a new promise. 
      * The passed in function will receive functions resolve and reject as its arguments 
@@ -3022,55 +3039,144 @@ define('sfr/utils/promise', ['require'], function(require) {
             throw 'callback not defined';
         }
 
-        this._handlers = [];
-        this._state = 'init'; // Enum: init, fulfilled, rejected
-        this._errors = [];
-        this._results = [];
+        this._state = PENDING;
+        this._result;
+        this._fulfilledCbs = [];
+        this._rejectedCbs = [];
 
         // 标准：Promises/A+ 2.2.4, see https://promisesaplus.com/ 
         // In practice, this requirement ensures that 
         //   onFulfilled and onRejected execute asynchronously, 
         //   after the event loop turn in which then is called, 
         //   and with a fresh stack.
+        var self = this;
         setTimeout(function() {
-            cb(this._onFulfilled.bind(this), this._onRejected.bind(this));
-        }.bind(this));
+            self._doResolve(cb);
+        });
     }
+
+    Promise.prototype._fulfill = function(result) {
+        //console.log('_fulfill', result);
+        this._result = result;
+        this._state = FULFILLED;
+        this._flush();
+    };
+
+    Promise.prototype._reject = function(err) {
+        //console.log('_reject', err);
+        this._result = err;
+        this._state = REJECTED;
+        this._flush();
+    };
+
+    Promise.prototype._resolve = function(result) {
+        //console.log('_resolve', result);
+        if (_isThenable(result)) {
+            // result.then is un-trusted
+            this._doResolve(result.then.bind(result));
+        } else {
+            this._fulfill(result);
+        }
+    };
+
+    /*
+     * Resolve the un-trusted promise definition function: fn
+     * which has exactly the same signature as the .then function
+     */
+    Promise.prototype._doResolve = function(fn) {
+        // ensure resolve/reject called once
+        var called = false;
+        var self = this;
+        try {
+            fn(function(result) {
+                if (called) return;
+                called = true;
+                self._resolve(result);
+            }, function(err) {
+                if (called) return;
+                called = true;
+                self._reject(err);
+            });
+        } catch (err) {
+            if (called) return;
+            called = true;
+            self._reject(err);
+        }
+    };
+
+    Promise.prototype._flush = function() {
+        if (this._state === PENDING) {
+            return;
+        }
+        var cbs = this._state === REJECTED ? this._rejectedCbs : this._fulfilledCbs;
+        var self = this;
+        cbs.forEach(function(callback) {
+            if (typeof callback === 'function') {
+                callback(self._result);
+            }
+        });
+        this._rejectedCbs = [];
+        this._fulfilledCbs = [];
+    };
+
+    /*
+     * Register a callback on fulfilled or rejected.
+     * @param {Function} onFulfilled the callback on fulfilled
+     * @param {Function} onRejected the callback on rejected
+     * @return {undefined}
+     */
+    Promise.prototype._done = function(onFulfilled, onRejected) {
+        this._fulfilledCbs.push(onFulfilled);
+        this._rejectedCbs.push(onRejected);
+        this._flush();
+    };
 
     /*
      * The Promise/A+ .then, register a callback on resolve. See: https://promisesaplus.com/
      * @param {Function} cb The callback to be registered.
      * @return {Promise} A thenable.
      */
-    Promise.prototype.then = function(cb) {
-        //console.log('calling then', this._state);
-        if (this._state === 'fulfilled') {
-            //console.log(this._state);
-            this._callHandler(cb, this._results);
-        } else {
-            this._handlers.push({
-                type: 'then',
-                cb: cb
+    Promise.prototype.then = function(onFulfilled, onRejected) {
+        var _this = this,
+            ret;
+        return new Promise(function(resolve, reject) {
+            _this._done(function(result) {
+                if (typeof onFulfilled === 'function') {
+                    try {
+                        ret = onFulfilled(result);
+                    } catch (e) {
+                        return reject(e);
+                    }
+                    resolve(ret);
+                } else {
+                    resolve(result);
+                }
+            }, function(err) {
+                if (typeof onRejected === 'function') {
+                    try {
+                        ret = onRejected(err);
+                    } catch (e) {
+                        return reject(e);
+                    }
+                    resolve(ret);
+                } else {
+                    reject(err);
+                }
             });
-        }
-        return this;
+        });
     };
+
     /*
      * The Promise/A+ .catch, retister a callback on reject. See: https://promisesaplus.com/
      * @param {Function} cb The callback to be registered.
      * @return {Promise} A thenable.
      */
     Promise.prototype.catch = function(cb) {
-        if (this._state === 'rejected') {
-            this._callHandler(cb, this._errors);
-        } else {
-            this._handlers.push({
-                type: 'catch',
-                cb: cb
-            });
-        }
-        return this;
+        return this.then(function(result) {
+            return result;
+        }, cb);
     };
+
     /*
      * 
      * The Promise/A+ .catch, register a callback on either resolve or reject. See: https://promisesaplus.com/
@@ -3078,17 +3184,9 @@ define('sfr/utils/promise', ['require'], function(require) {
      * @return {Promise} A thenable.
      */
     Promise.prototype.finally = function(cb) {
-        if (this._state === 'fulfilled') {
-            this._callHandler(cb, this._results);
-        } else if (this._state === 'rejected') {
-            this._callHandler(cb, this._errors);
-        } else {
-            this._handlers.push({
-                type: 'finally',
-                cb: cb
-            });
-        }
+        return this.then(cb, cb);
     };
+
     /*
      * Create a promise that is resolved with the given value. 
      * If value is already a thenable, it is returned as is. 
@@ -3098,10 +3196,9 @@ define('sfr/utils/promise', ['require'], function(require) {
      * @static
      */
     Promise.resolve = function(obj) {
-        var args = arguments;
         return _isThenable(obj) ? obj :
             new Promise(function(resolve) {
-                return resolve.apply(null, args);
+                return resolve(obj);
             });
     };
     /*
@@ -3110,10 +3207,9 @@ define('sfr/utils/promise', ['require'], function(require) {
      * @return {Promise} A thenable which is rejected with the given `error`
      * @static
      */
-    Promise.reject = function() {
-        var args = arguments;
+    Promise.reject = function(err) {
         return new Promise(function(resolve, reject) {
-            return reject.apply(null, args);
+            reject(err);
         });
     };
     /*
@@ -3130,90 +3226,41 @@ define('sfr/utils/promise', ['require'], function(require) {
      * @static
      */
     Promise.all = function(promises) {
-        var results = promises.map(function() {
-            return undefined;
-        });
-        var count = 0;
-        var state = 'pending';
-        return new Promise(function(res, rej) {
-            function resolve() {
-                if (state !== 'pending') return;
-                state = 'fulfilled';
-                res(results);
-            }
-
-            function reject() {
-                if (state !== 'pending') return;
-                state = 'rejected';
-                rej.apply(null, arguments);
-            }
+        return new Promise(function(resolve, reject) {
+            var results = promises.map(function() {
+                return undefined;
+            });
+            var count = 0;
             promises
                 .map(Promise.resolve)
                 .forEach(function(promise, idx) {
-                    promise
-                        .then(function(result) {
-                            results[idx] = result;
-                            count++;
-                            if (count === promises.length) resolve();
-                        })
-                        .catch(reject);
+                    promise.then(function(result) {
+                        results[idx] = result;
+                        count++;
+                        if (count === promises.length) {
+                            resolve(results);
+                        }
+                    }, reject);
                 });
         });
     };
 
-    Promise.prototype._onFulfilled = function(obj) {
-        //console.log('_onFulfilled', obj);
-        if (_isThenable(obj)) {
-            return obj
-                .then(this._onFulfilled.bind(this))
-                .catch(this._onRejected.bind(this));
-        }
-
-        this._results = arguments;
-        var handler = this._getNextHandler('then');
-        if (handler) {
-            return this._callHandler(handler, this._results);
-        }
-        handler = this._getNextHandler('finally');
-        if (handler) {
-            return this._callHandler(handler, this._results);
-        }
-        this._state = 'fulfilled';
-    };
-    Promise.prototype._onRejected = function() {
-        //console.log('_onRejected', err);
-        this._errors = arguments;
-        var handler = this._getNextHandler('catch');
-        if (handler) {
-            return this._callHandler(handler, this._errors);
-        }
-        handler = this._getNextHandler('finally');
-        if (handler) {
-            return this._callHandler(handler, this._errors);
-        }
-        this._state = 'rejected';
-    };
-    Promise.prototype._callHandler = function(handler, args) {
-        //console.log('calling handler', handler, args);
-        var result, err = null;
-        try {
-            result = handler.apply(null, args);
-        } catch (e) {
-            err = e;
-        }
-        if (err) {
-            this._onRejected(err);
-        } else {
-            this._onFulfilled(result);
-        }
-    };
-    Promise.prototype._getNextHandler = function(type) {
-        var obj;
-        while (obj = this._handlers.shift()) {
-            if (obj.type === type) break;
-        }
-        return obj ? obj.cb : null;
-    };
+    /*
+     * Call functions in serial until someone rejected.
+     * @param {Array} iterable the array to iterate with.
+     * @param {Array} iteratee returns a new promise.
+     * The iteratee is invoked with three arguments: (value, index, iterable). 
+     */
+    Promise.mapSeries = function(iterable, iteratee) {
+        var ret = Promise.resolve('init');
+        var result = [];
+        iterable.forEach(function(item, idx) {
+            ret = ret
+                .then(() => iteratee(item, idx, iterable))
+                .then(x => result.push(x));
+        });
+        return ret.then(() => result);
+    }
 
     function _isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -3224,9 +3271,11 @@ define('sfr/utils/promise', ['require'], function(require) {
 ;
 
 /*action*/
-define('sfr/action', ['require', 'sfr/router/router'], function(require) {
+define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/utils/underscore'], function(require) {
 
     var router = require('sfr/router/router');
+    var Promise = require('sfr/utils/promise');
+    var _ = require('sfr/utils/underscore');
     var exports = {};
     var serviceMap = {};
     var _options = {};
@@ -3275,16 +3324,25 @@ define('sfr/action', ['require', 'sfr/router/router'], function(require) {
     }
 
     /**
-     *  Dispatch service
-     *  If current and prev is the same service,prev service will not excute destroy function.
+     *  Switch from the previous service to the current one.
+     *  Call prev.detach, prev.destroy, current.create, current.attach in serial.
+     *
+     *  If any of these callbacks returns a `Thenable`, it'll be await.
+     *  If the promise is rejected, the latter callbacks will **NOT** be called.
+     *
+     *  Returns a promise that 
+     *  resolves if all callbacks executed without throw (or reject),
+     *  rejects if any of the callbacks throwed or rejected.
+     *
+     *  Note: If current and prev is the same service,
+     *  the `prev.destroy` will **NOT** be called.
      *  @static
      *  @param {Object} current The current scope
      *  @param {Object} prev The previous scope
-     *  @return undefined
+     *  @return {Promise}
      * */
     exports.dispatch = function(current, prev) {
         var proxyList = [];
-        var methodProxy = new _MethodProxy();
         var currentService = serviceMap[current.path];
         var prevService = serviceMap[prev.path];
 
@@ -3293,63 +3351,28 @@ define('sfr/action', ['require', 'sfr/router/router'], function(require) {
         //container init,nothing to do
         if(current.options.src === 'sync') {
             indexUrl = current.url;
-            return;
+            return Promise.resolve();
         }
         
         //set src to current scope
         if(_options.src) {
             current.options.src = _options.src;
         }
-
-        prevService && methodProxy.push(prevService.detach, prevService, current, prev);
-        currentService && methodProxy.push(currentService.create, currentService, current, prev);
-        //container will not be destroyed
-        if(!(prev.url === indexUrl)) {
-            prevService && methodProxy.push(prevService.destroy, prevService, current, prev);
-        }
-        currentService && methodProxy.push(currentService.attach, currentService, current, prev);
         
-        //clean options.src
-        methodProxy.push(function() {
-            _options.src = undefined;
+        return Promise.mapSeries([
+            prevService && prevService.detach.bind(prevService),
+            currentService && currentService.create.bind(currentService),
+            //container will not be destroyed
+            prev.url !== indexUrl && prevService && prevService.destroy.bind(prevService),
+            currentService && currentService.attach.bind(currentService)
+        ], function(cb){
+            if(typeof cb !== 'function') return;
+            return cb(current, prev);
+        }).then(function(){
+            //clean options.src 
+            _options.src = undefined;   // WHAT'S THIS? @qingqian
         });
-
-        return methodProxy.excute();
     };
-
-    /**
-     *  Proxy deferred function,return a deferred object if function no a deferred 
-     *  @static
-     *  @return {object} Returns an object containing two methods: `{push,excute}`
-     * */
-    function _MethodProxy() {
-        var list = [];
-
-        function excute() {
-            deferred = $.Deferred();
-            deferred.resolve();
-            $.each(list, function() {
-                var callback = this;
-                deferred = deferred.then(function() {
-                    return callback();
-                });
-            });
-            list = [];
-            return deferred;
-        }
-
-        function push(fn, context) {
-            var args = (2 in arguments) && (Array.prototype.slice.call(arguments, 2));
-            if(typeof fn === 'function') {
-                list.push(function() {return fn.apply(context, args ? args : []) });
-            }
-        }
-
-        return {
-            push : push,
-            excute : excute
-        };
-    }
 
     /**
      *  Remove a registered service
@@ -3418,27 +3441,39 @@ define('sfr/action', ['require', 'sfr/router/router'], function(require) {
      *  @private
      *  @param {Event} e The click event object
      * */
-    function _delegateClick(e) {
-        
-        var $target = $(this);
-
-        var link = $target.attr('data-sf-href');
+    function _onAnchorClick(e, target) {
+        //link href only support url like pathname,e.g:/sf?params=
+        var link = target.getAttribute('data-sf-href');
+        var options = target.getAttribute('data-sf-options');
 
         if(link) {
-            //link href only support url like pathname,e.g:/sf?params=
-            var options = $target.attr('data-sf-options');
-
             try {
-                options = $.parseJSON(options) ? $.parseJSON(options) : {};
+                options = JSON.parse(options) || {};
             } catch(err) {
                 options = {};
             }
-
-            options = $.extend(options, {"src": "hijack"});
-
+            options.src = "hijack";
             exports.redirect(link, null, options);
 
             e.preventDefault();
+        }
+    }
+
+    function _delegateAnchorClick(cb){
+        document.documentElement.addEventListener("click", function(event){
+            event = event || window.event;
+            var targetEl = _closest(event.target || event.srcElement, "A");
+            if (targetEl) {
+                cb(event, targetEl);
+            }
+        }, false);
+
+        function _closest(element, tagName) {
+            var parent = element;
+            while (parent !== null && parent.tagName !== tagName.toUpperCase()) {
+                parent = parent.parentNode;
+            }
+            return parent;
         }
     }
 
@@ -3447,7 +3482,7 @@ define('sfr/action', ['require', 'sfr/router/router'], function(require) {
      *  @static 
      * */
     exports.start = function() {
-        $(document).delegate('a', 'click', _delegateClick);
+        _delegateAnchorClick(_onAnchorClick);
     } ;
 
     /**
@@ -3457,8 +3492,7 @@ define('sfr/action', ['require', 'sfr/router/router'], function(require) {
      *  @return {Object} The normalized option object
      * */
     exports.config = function(options) {
-        $.extend(_options, options);
-        return _options;
+        return _.extend(_options, options);
     };
 
     /**

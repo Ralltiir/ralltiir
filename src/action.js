@@ -175,7 +175,7 @@ define(function() {
 
         if(link) {
             try {
-                options = JSON.parse(options);
+                options = JSON.parse(options) || {};
             } catch(err) {
                 options = {};
             }
