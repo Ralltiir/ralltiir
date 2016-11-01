@@ -28,7 +28,7 @@ dist:
 	cp ./build/src/main.min.js ./dist/sf-$(VERSION).min.js
 
 doc:
-	-mkdir docs
+	-mkdir -rf ./docs/
 	$(DOC) src/utils/promise.js > docs/promise.md
 	$(DOC) src/utils/underscore.js > docs/underscore.md
 	$(DOC) src/utils/http.js > docs/http.md
