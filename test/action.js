@@ -8,18 +8,13 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         /*
          * Stub 外部对象
          */
-        before(function() {
+        beforeEach(function() {
             action.clear();
             sinon.stub(router, 'reset');
             sinon.stub(router, 'redirect');
             sinon.stub(history, 'back');
         });
-        beforeEach(function() {
-            router.reset.reset();
-            router.redirect.reset();
-            history.back.reset();
-        });
-        after(function() {
+        afterEach(function() {
             router.reset.restore();
             router.redirect.restore();
             history.back.restore();
@@ -138,14 +133,14 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     expect(barService.destroy).to.not.have.been.called;
                 });
             });
-            it('should skip init when options.src === sync', function() {
+            it('should init when options.src === sync', function() {
                 return action.dispatch({
-                    url: '/home',
+                    path: 'foo',
                     options: {
                         src: 'sync'
                     }
                 }, {}).then(function(){
-                    return expect(fooService.create).to.not.have.been.called;
+                    return expect(fooService.create).to.have.been.called;
                 });
             });
             it('should destroy prev action', function() {
@@ -174,12 +169,6 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             it('should call history.back()', function() {
                 action.back({});
                 expect(history.back).to.have.been.called;
-            });
-            it('should set _options.src', function() {
-                action.back({});
-                var current = {};
-                action.dispatch(current, {});
-                expect(current.options.src).to.equal('back');
             });
         });
         describe('.redirect()', function() {
@@ -268,14 +257,6 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                         container: 'container',
                         view: 'view'
                     });
-            });
-        });
-        describe('.config()', function() {
-            it('should return correct options', function() {
-                var c = action.config({
-                    foo: 'bar'
-                });
-                expect(c.foo).to.equal('bar');
             });
         });
     });

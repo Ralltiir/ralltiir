@@ -5,7 +5,6 @@ define(function() {
     var _ = require('utils/underscore');
     var exports = {};
     var serviceMap = {};
-    var _options = {};
     var indexUrl;
 
     /**
@@ -75,17 +74,6 @@ define(function() {
 
         current.options = current.options || {};
 
-        //container init,nothing to do
-        if(current.options.src === 'sync') {
-            indexUrl = current.url;
-            return Promise.resolve();
-        }
-        
-        //set src to current scope
-        if(_options.src) {
-            current.options.src = _options.src;
-        }
-        
         return Promise.mapSeries([
             prevService && prevService.detach.bind(prevService),
             currentService && currentService.create.bind(currentService),
@@ -95,9 +83,6 @@ define(function() {
         ], function(cb){
             if(typeof cb !== 'function') return;
             return cb(current, prev);
-        }).then(function(){
-            //clean options.src 
-            _options.src = undefined;   // WHAT'S THIS? @qingqian
         });
     };
 
@@ -145,10 +130,8 @@ define(function() {
     /**
      *  Back to last state
      *  @static
-     *  @param {Object} options The router options to redirect
      * */
-    exports.back = function(options) {
-        _options.src = 'back';
+    exports.back = function() {
         history.back(); 
     };
 
@@ -211,16 +194,6 @@ define(function() {
     exports.start = function() {
         _delegateAnchorClick(_onAnchorClick);
     } ;
-
-    /**
-     *  Configure the action.
-     *  @static
-     *  @param {Object} options The options to config with
-     *  @return {Object} The normalized option object
-     * */
-    exports.config = function(options) {
-        return _.extend(_options, options);
-    };
 
     /**
      *  Update page, reset or replace current state accordingly
