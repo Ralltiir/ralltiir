@@ -88,12 +88,26 @@ define(['../src/utils/http'], function(http) {
                         expect(h['cache-control']).to.equal('no-cache');
                     });
             });
+            it('should support xhrFields', function() {
+                return http
+                    .ajax('http://json.com', {
+                        xhrFields: {
+                            withCredentials: true
+                        }
+                    })
+                    .then(function() {
+                        expect(xhr.withCredentials).to.equal(true);
+                    });
+            });
             it('should urlencode request body by default', function() {
                 return http
                     .ajax('http://json.com', {
                         method: 'POST',
                         data: {
                             foo: 'bar'
+                        },
+                        xhrFields: {
+                            withCredentials: true
                         }
                     })
                     .then(function() {
