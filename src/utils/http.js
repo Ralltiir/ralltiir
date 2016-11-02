@@ -45,7 +45,7 @@ define(['./promise', './underscore', './url'], function(Promise, _, Url) {
             headers: {},
             data: null,
             jsonp: false,
-            jsonpCallback: 'sf_http_' + Math.random().toString(36).subst(2)
+            jsonpCallback: 'sf_http_' + Math.random().toString(36).substr(2)
         });
         _.forOwn(settings.headers, function(v, k) {
             settings.headers[k] = v.toLowerCase(v);
