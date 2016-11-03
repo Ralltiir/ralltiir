@@ -26,52 +26,52 @@
   <script src="../lib/esl.js"></script>
   <script src="../dist/sf-2.5.js"></script>
   <script>
-    require(['sfr/router/router', 'sfr/action', 'sfr/service'], function(router, action, service) {
+    require(['sfr/router/router', 'sfr/action', 'sfr/service'], function(router, action, Service) {
       var _rootPath = location.pathname;
       router.config({
         root: _rootPath
       });
 
       //create index service
-      var indexService = service.create();
+      var IndexService = new Service();
 
-      indexService.prototype.create = function() {
+      IndexService.create = function() {
         console.log('index create');
       };
 
-      indexService.prototype.attach = function() {
+      IndexService.attach = function() {
         console.log('index attach');
       };
 
-      indexService.prototype.detach = function() {
+      IndexService.detach = function() {
         console.log('index detach');
       };
 
-      indexService.prototype.destroy = function() {
+      IndexService.destroy = function() {
         console.log('index destroy');
       };
 
       //create page service
-      var pageService = service.create();
+      var PageService = new Service();
 
-      pageService.prototype.create = function() {
+      PageService.create = function() {
         console.log('page create');
       };
 
-      pageService.prototype.attach = function() {
+      PageService.attach = function() {
         console.log('page attach');
       };
 
-      pageService.prototype.detach = function() {
+      PageService.detach = function() {
         console.log('page detach');
       };
 
-      pageService.prototype.destroy = function() {
+      PageService.destroy = function() {
         console.log('page destroy');
       };
 
-      action.regist('/page', new pageService());
-      action.regist('/', new indexService());
+      action.regist('/page', Object.create(PageService));
+      action.regist('/', Object.create(IndexService));
 
       router.start();
       action.start();
