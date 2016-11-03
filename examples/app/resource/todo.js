@@ -12,7 +12,13 @@ define(function() {
     }
 
     Todo.query = function(opt) {
-        return [1, 2, 3, 4, 5].map(makeTodo);
+        return new Promise(function(resolve, reject){
+            // mock async process
+            setTimeout(function(){
+                var todolist = [1, 2, 3, 4, 5].map(makeTodo);
+                resolve(todolist);
+            }, 1000);
+        });
     };
 
     return Todo;

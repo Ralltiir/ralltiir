@@ -1,7 +1,12 @@
 define(function() {
+    var _ = require('./underscore');
     var PENDING = 0;
     var FULFILLED = 1;
     var REJECTED = 2;
+    var _config = {
+        longStackTraces: false
+    };
+
     /*
      * Create a new promise. 
      * The passed in function will receive functions resolve and reject as its arguments 
@@ -52,6 +57,9 @@ define(function() {
 
     Promise.prototype._reject = function(err) {
         //console.log('_reject', err);
+        if(_config.longStackTraces && err){
+            err.stack += '\n' + this._originalStack;
+        }
         this._result = err;
         this._state = REJECTED;
         this._flush();

@@ -32,7 +32,7 @@ define(['utils/http', 'utils/underscore'], function(http, _) {
         /*
          * Query Objects with the given `options`.
          * @param {Object} options A set of key/value pairs to configure the URL query.
-         * @return {Promise} A promise resolves when `obj` is created successful, 
+         * @return {Promise} A promise resolves when retrieved successful, 
          * and rejects whenever there is an error.
          */
         query: function(options) {
@@ -43,7 +43,7 @@ define(['utils/http', 'utils/underscore'], function(http, _) {
          * Update the object specified by `obj` with the given `options`.
          * @param {Object} obj A plain object to update with.
          * @param {Object} options A set of key/value pairs to configure the URL query.
-         * @return {Promise} A promise resolves when `obj` is created successful, 
+         * @return {Promise} A promise resolves when `obj` is updated successful, 
          * and rejects whenever there is an error.
          */
         update: function(obj, options) {
@@ -53,7 +53,7 @@ define(['utils/http', 'utils/underscore'], function(http, _) {
         /*
          * Delete objects with the given `options`.
          * @param {Object} options A set of key/value pairs to configure the URL query.
-         * @return {Promise} A promise resolves when `obj` is created successful, 
+         * @return {Promise} A promise resolves when `obj` is deleted successful, 
          * and rejects whenever there is an error.
          */
         delete: function(options) {

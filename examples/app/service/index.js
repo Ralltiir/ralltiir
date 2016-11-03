@@ -1,30 +1,48 @@
 define(function() {
-    var service = require('sfr/service');
+    var Service = require('sfr/service');
+    var TodoList = require('resource/todolist');
+    var IndexView = require('view/index');
+    var ContainerView = require('view/container');
 
-    //create index service
-    var indexService = service.create();
-    var pageEl;
+    IndexService = new Service();
 
-    indexService.prototype.create = function() {
-        console.log('[index] create');
-        pageEl = document.querySelector('#page-index');
+    IndexService.create = function() {
+        console.log('[index service] create');
+
+        // Create时立即加载容器
+        this.containerView = Object.create(ContainerView);
+        this.containerView.create({
+            title: 'All My Todo Lists',
+            background: '#09f',
+            height: '44px'
+        });
+        this.containerView.attach();
+
+        // 开始获取资源
+        var self = this;
+        return TodoList.query().then(function(todolists) {
+            self.indexView = Object.create(IndexView);
+            self.indexView.create(self.containerView.$body);
+            self.indexView.render(todolists);
+        });
     };
 
-    indexService.prototype.attach = function() {
-        console.log('[index] attach');
-        pageEl.style.display = 'block';
+    IndexService.attach = function(todolists) {
+        console.log('[index service] attach');
+        this.indexView.attach();
     };
 
-    indexService.prototype.detach = function() {
-        console.log('[index] detach');
-        // 首页同步渲染时不会调用 create，再次初始化
-        pageEl = document.querySelector('#page-index');
-        pageEl.style.display = 'none';
+    IndexService.detach = function() {
+        console.log('[index service] detach');
+        this.indexView.detach();
     };
 
-    indexService.prototype.destroy = function() {
-        console.log('index destroy');
+    IndexService.destroy = function() {
+        console.log('[index service] destroy');
+
+        this.containerView.destroy();
+        this.indexView.destroy();
     };
 
-    return indexService;
+    return IndexService;
 });
