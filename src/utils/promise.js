@@ -252,10 +252,16 @@ define(function() {
         var result = [];
         iterable.forEach(function(item, idx) {
             ret = ret
-                .then(() => iteratee(item, idx, iterable))
-                .then(x => result.push(x));
+                .then(function(){
+                    return iteratee(item, idx, iterable);
+                })
+                .then(function(x){
+                    return result.push(x);
+                });
         });
-        return ret.then(() => result);
+        return ret.then(function(){
+            return result;
+        });
     }
 
     function _isThenable(obj) {
