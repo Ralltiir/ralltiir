@@ -5,26 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <title>sfapp example</title>
+    <link rel="stylesheet" href="http://pmd.baidu.com/build/css/pmd.css">
   </head>
   <body>
-    <div id="page-index">
-      <ul>
-        <li><a class="redirect" href="#" data-sf-href="/todolist">Todo List 1</a></li>
-        <li><a class="redirect" href="#" data-sf-href="/todolist">Todo List 2</a></li>
-        <li><a class="redirect" href="#" data-sf-href="/todolist">Todo List 3</a></li>
-      </ul>
-    </div>
+
+    <script src="//cdn.bootcss.com/zepto/1.2.0/zepto.js"></script>
+
+    <!--superframe只依赖于esl-->
     <script src="../../lib/esl.js"></script>
     <script src="../../dist/sf-2.5.js"></script>
 
-    <script src="./service/index.js"></script>
-    <script src="./service/todolist.js"></script>
-    <script src="./view/todolist.js"></script>
-    <script src="./resource/todo.js"></script>
     <script>
       require(['sfr/router/router', 'sfr/action', 'service/index', 'service/todolist'], function() {
           var router = require('sfr/router/router');
           var action = require('sfr/action');
+
           var indexSvc = require('service/index');
           var todolistSvc = require('service/todolist');
 
@@ -34,8 +29,8 @@
               root: _rootPath
           });
 
-          action.regist('/', new indexSvc());
-          action.regist('/todolist', new todolistSvc());
+          action.regist('/', indexSvc);
+          action.regist('/todolist', todolistSvc);
 
           router.start();
           action.start();

@@ -1,63 +1,54 @@
 define(function() {
-    var View = require('sfr/view'); 
+    var View = require('sfr/view');
     var action = require('sfr/action');
 
-    var view = new View();
+    var TodoListView = new View();
+    var html = [
+        '<div>',
+        '  <ul class="todolist"></ul>',
+        '</div>'
+    ].join('');
+    var style = [
+        '.todolist{',
+        '    font-size: 0.24rem;',
+        '    margin: 30px auto;',
+        '}',
+        '.todolist li{',
+        '    margin-bottom: 10px;',
+        '    list-style-type: none;',
+        '}'
+    ].join('');
 
-    view.create = function() {
-        container = document.createElement('div');
-        container.setAttribute('id', 'todo-page');
-        document.body.append(container);
-        this.container = container;
+    TodoListView.create = function($parent) {
+        var $style = $('<style>').html(style);
+        this.$container = $(html)
+            .append($style)
+            .appendTo($parent)
+            .hide();
+        this.$list = this.$container.find('.todolist');
     };
 
-    /*
-     *  View render is the core function that your view should override
-     */
-    view.render = function(todolist, opts) {
-        var html = [
-            '<nav>',
-            '  <a href="#" class="back">Back</a>',
-            '</nav>',
-            '<div class="body">',
-            '  <ul class="todolist"></ul>',
-            '</div>',
-        ].join('\n');
-
-        this.container.innerHTML = html;
-        var list = this.container.querySelector('.todolist');
-
-        todolist.forEach(function(todo){
-            var li = document.createElement('li');
-            li.textContent = todo.text;
-            li.setAttribute('id', todo.id);
-            list.appendChild(li);
+    TodoListView.render = function(todolist, opts) {
+        var $list = this.$list;
+        todolist.forEach(function(todo) {
+            $('li')
+                .html(todo.text)
+                .data('id', todo.id)
+                .appendTo($list);
         });
-        this.backEl = this.container.querySelector('.back');
-	};
-
-    /*
-     * View attach, bind some events
-     */
-    view.attach =  function() {
-        this.backEl.addEventListener('click', onBackClick);
     };
 
-    view.detach = function() {
-        this.backEl.removeEventListener('click', onBackClick);
+    TodoListView.attach = function() {
+        this.$container.show();
     };
 
-    /*
-     * View destroy
-     */
-	view.destroy = function() {
-        this.container.remove();
-	};
+    TodoListView.detach = function() {
+        this.$container.hide();
+    };
 
-    function onBackClick(e) {
-        action.back();
-        e.preventDefault();
-    }
+    TodoListView.destroy = function() {
+        this.$container.remove();
+    };
 
-	return view;
+    return TodoListView;
 });

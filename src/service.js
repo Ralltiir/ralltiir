@@ -6,12 +6,7 @@
 
 define(function() {
 
-    var exports = {};
-
-    var service = function(options) {
-        var me = this;
-        me.options = options;
-    };
+    var service = function() {};
     
     /*
      * Called when service created
@@ -61,20 +56,5 @@ define(function() {
      */
     service.prototype.update = function() {};
     
-    /**
-     *  Create a service class with default lifecycle callbacks
-     *  @static
-     *  @return {Class} The created service class
-     *  @example
-     *  var serviceClass = Service.create();
-     * */
-    exports.create = function() {
-        var _class = function() {
-            //nothing todo now
-        }
-        _class.prototype = Object.create(service.prototype);
-        return _class;
-    };
-
-    return exports;
+    return service;
 });
