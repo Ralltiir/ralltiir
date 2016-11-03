@@ -83,6 +83,8 @@ define(function() {
         ], function(cb){
             if(typeof cb !== 'function') return;
             return cb(current, prev);
+        }).catch(function(e){
+            console.error(e);
         });
     };
 
