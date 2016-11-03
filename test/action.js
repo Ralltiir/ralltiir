@@ -8,6 +8,13 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         /*
          * Stub 外部对象
          */
+        var serviceStub = {
+            create: function(){},
+            update: function(){},
+            attach: function(){},
+            detach: function(){},
+            destroy: function(){}
+        };
         beforeEach(function() {
             action.clear();
             sinon.stub(router, 'reset');
@@ -20,17 +27,17 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             history.back.restore();
         });
         describe('.regist()', function() {
-            it('should not throw with undefined option', function() {
+            it('should throw with undefined key', function() {
                 function fn() {
-                    action.regist('key');
+                    action.regist();
                 }
-                expect(fn).to.throw(/illegal action option/);
+                expect(fn).to.throw(/illegal action name/);
             });
-            it('should not throw with empty option', function() {
+            it('should throw with illegal service', function() {
                 function fn() {
                     action.regist('key', {});
                 }
-                expect(fn).to.not.throw();
+                expect(fn).to.throw(/illegal service/);
             });
             it('should throw upon illegal name', function() {
                 function fn() {
@@ -151,7 +158,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         });
         describe('.remove()', function() {
             it('should remove properly', function() {
-                action.regist('bar', {});
+                action.regist('bar', serviceStub);
                 action.remove('bar');
                 expect(action.exist('bar')).to.be.false;
             });
