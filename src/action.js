@@ -2,6 +2,7 @@ define(function() {
 
     var router = require('router/router');
     var Promise = require('utils/promise');
+    var assert = require('utils/assert');
     var _ = require('utils/underscore');
     var exports = {};
     var serviceMap = {};
@@ -17,17 +18,11 @@ define(function() {
      *  action.regist('/foo', new Service());
      * */
     exports.regist = function(name, service) {
-        if(!name){
-            throw new Error('illegal action name');
-        } 
-        if(!service){
-            throw new Error('illegal action option');
-        }
-        if(!serviceMap.hasOwnProperty(name) && isService(service)) {
-            //set service name as a router path.
-            router.add(name, this.dispatch);
-            serviceMap[name] = service;
-        }
+        assert(name, 'illegal action name');
+        assert(isService(service), 'illegal service, make sure to extend from sfr/service');
+        assert(!serviceMap.hasOwnProperty(name), 'path already registerd');
+        router.add(name, this.dispatch);
+        serviceMap[name] = service;
     };
 
     /**
