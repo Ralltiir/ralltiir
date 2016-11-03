@@ -84,7 +84,7 @@ define(function() {
             if(typeof cb !== 'function') return;
             return cb(current, prev);
         }).catch(function(e){
-            console.error(e);
+            console.error('Unable to switch service', e.stack);
         });
     };
 
