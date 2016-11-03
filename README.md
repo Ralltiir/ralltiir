@@ -4,6 +4,9 @@
 
 ## Get Started
 
+> [examples/](examples/)下有API使用示例与App开发示例，
+> 使用静态HTTP服务器即可运行。
+
 只需引入Superframe的Script即可让当前页面变成一个Superframe App。
 例如，在[examples/](examples/)下的`index.html`：
 
