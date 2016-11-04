@@ -8,18 +8,36 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         /*
          * Stub 外部对象
          */
-        var serviceStub = {
-            create: function(){},
-            update: function(){},
-            attach: function(){},
-            detach: function(){},
-            destroy: function(){}
-        };
+        var fooService, barService, current, prev;
         beforeEach(function() {
             action.clear();
             sinon.stub(router, 'reset');
             sinon.stub(router, 'redirect');
             sinon.stub(history, 'back');
+            fooService = {
+                create: sinon.spy(),
+                attach: sinon.spy(),
+                detach: sinon.spy(),
+                destroy: sinon.spy(),
+                update: sinon.spy()
+            };
+            barService = {
+                create: sinon.spy(),
+                attach: sinon.spy(),
+                detach: sinon.spy(),
+                destroy: sinon.spy(),
+                update: sinon.spy()
+            };
+            current = {
+                path: '/foo',
+                url: '/foo?a=b',
+                options: {}
+            };
+            prev = {
+                path: '/bar',
+                url: '/bar?d=c',
+                options: {}
+            };
         });
         afterEach(function() {
             router.reset.restore();
@@ -46,47 +64,14 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 expect(fn).to.throw(/illegal action name/);
             });
             it('should not regist illegal service', function() {
-                var service = {
-                    create: function() {},
-                    attach: function() {},
-                    detach: function() {},
-                    destroy: function() {},
-                    update: function() {}
-                };
-                action.regist('key', service);
+                action.regist('key', fooService);
                 expect(action.exist('key')).to.be.true;
             });
         });
         describe('.dispatch()', function() {
-            var fooService, barService, current, prev;
             beforeEach(function() {
-                action.clear();
-                fooService = {
-                    create: sinon.spy(),
-                    attach: sinon.spy(),
-                    detach: sinon.spy(),
-                    destroy: sinon.spy(),
-                    update: sinon.spy()
-                };
-                barService = {
-                    create: sinon.spy(),
-                    attach: sinon.spy(),
-                    detach: sinon.spy(),
-                    destroy: sinon.spy(),
-                    update: sinon.spy()
-                };
-                action.regist('foo', fooService);
-                action.regist('bar', barService);
-                current = {
-                    path: 'foo',
-                    url: '/foo',
-                    options: {}
-                };
-                prev = {
-                    path: 'bar',
-                    url: '/bar',
-                    options: {}
-                };
+                action.regist('/foo', fooService);
+                action.regist('/bar', barService);
             });
             it('should call create/attach/detach/destroy with correct arguments', function() {
                 return action.dispatch(current, prev).then(function(){
@@ -142,7 +127,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             });
             it('should init when options.src === sync', function() {
                 return action.dispatch({
-                    path: 'foo',
+                    path: '/foo',
                     options: {
                         src: 'sync'
                     }
@@ -158,7 +143,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         });
         describe('.remove()', function() {
             it('should remove properly', function() {
-                action.regist('bar', serviceStub);
+                action.regist('bar', fooService);
                 action.remove('bar');
                 expect(action.exist('bar')).to.be.false;
             });
@@ -227,17 +212,8 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             });
         });
         describe('.update()', function() {
-            var option;
             beforeEach(function() {
-                option = {
-                    create: sinon.spy(),
-                    attach: sinon.spy(),
-                    detach: sinon.spy(),
-                    destroy: sinon.spy(),
-                    update: sinon.spy()
-                };
-                action.clear();
-                action.regist('/foo', option);
+                action.regist('/foo', fooService);
             });
             it('should call router.reset()', function() {
                 action.update();
@@ -253,8 +229,8 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     view: 'view'
                 };
                 action.update('url', 'query', options, extend);
-                expect(option.update).to.have.been.called;
-                expect(option.update).to.have.been
+                expect(fooService.update).to.have.been.called;
+                expect(fooService.update).to.have.been
                     .calledWithMatch({
                         path: '/foo',
                         url: 'url',
