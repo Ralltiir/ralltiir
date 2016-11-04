@@ -50,11 +50,12 @@ define(function (require) {
                 history.back();
                 setTimeout(function () {
                     expect(fn).to.have.been.calledTwice;
+                    expect(fn).to.have.been.calledWithMatch({}, {src: 'sync'});
+                    expect(fn).to.have.been.calledWithMatch({}, {src: 'history'});
                     controller.dispose();
                     done();
                 }, INTERVAL_TIME);
             });
-
         });
 
         describe('redirect', function () {

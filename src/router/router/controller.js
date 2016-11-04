@@ -104,7 +104,7 @@ define(function (require) {
             return outOfControl(url.toString(), true);
         }
 
-        var options = isSync ? {src: 'sync'} : extend({}, e.state, {src: 'back'});
+        var options = isSync ? {src: 'sync'} : extend({src: 'history'}, e.state);
         callHandler(url, options);
     }
 
