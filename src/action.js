@@ -79,7 +79,11 @@ define(function() {
             if(typeof cb !== 'function') return;
             return cb(current, prev);
         }).catch(function(e){
-            console.error('Unable to switch service', e.stack);
+            // throw asyncly rather than console.error(e.stack)
+            // to enable browser console's error tracing.
+            setTimeout(function(){
+                throw e;
+            });
         });
     };
 
