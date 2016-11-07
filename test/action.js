@@ -141,6 +141,21 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 });
             });
         });
+        describe('.back()', function() {
+            it('should set options.src to "back"', function() {
+                action.back({});
+                var current = {};
+                action.dispatch(current, {});
+                expect(current.options.src).to.equal('back');
+            });
+            it('should set options.src to "back" only once', function() {
+                action.back({});
+                var second = {};
+                action.dispatch({}, {});
+                action.dispatch(second, {});
+                expect(second.options.src).to.not.equal('back');
+            });
+        });
         describe('.remove()', function() {
             it('should remove properly', function() {
                 action.regist('bar', fooService);
