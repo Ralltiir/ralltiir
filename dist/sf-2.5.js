@@ -579,7 +579,7 @@ define('sfr/router/router/controller', ['require', 'sfr/router/lang/extend', 'sf
             return outOfControl(url.toString(), true);
         }
 
-        var options = isSync ? {src: 'sync'} : extend({}, e.state, {src: 'back'});
+        var options = isSync ? {src: 'sync'} : extend({src: 'history'}, e.state);
         callHandler(url, options);
     }
 
@@ -892,6 +892,7 @@ define('sfr/router/router', ['require', 'sfr/router/lang/extend', 'sfr/router/ro
 
         var curState = {
             path: path,
+            pathPattern: handler.raw,
             query: query,
             params: params,
             url: url.toString(),
@@ -2848,6 +2849,15 @@ define('sfr/utils/underscore', ['require'], function(require) {
     }
 
     /*
+     * Checks if value is classified as a RegExp object.
+     * @param {any} value The value to check.
+     * @return {Boolean} Returns true if value is a RegExp, else false.
+     */
+    function isRegExp(value) {
+        return value instanceof RegExp;
+    }
+
+    /*
      * Assigns own enumerable string keyed properties of source objects to the destination object. 
      * Source objects are applied from left to right. 
      * Subsequent sources overwrite property assignments of previous sources.  
@@ -3014,6 +3024,7 @@ define('sfr/utils/underscore', ['require'], function(require) {
     exports.isEmpty = isEmpty;
     exports.isString = isString;
     exports.isObject = isObject;
+    exports.isRegExp = isRegExp;
 
     /*
      * Function Related
@@ -3298,38 +3309,134 @@ define('sfr/utils/promise', ['require', 'sfr/utils/underscore'], function(requir
     return Promise;
 });
 ;
+define('sfr/utils/assert', ['require'], function(require) {
+    function assert(predict, msg){
+        if(!predict){
+            throw new Error(msg);
+        }
+    }
+    return assert;
+});
+
+;
+define('sfr/utils/map', ['require', 'sfr/utils/underscore'], function(require) {
+
+	var _ = require('sfr/utils/underscore');
+
+	/*
+	 * Map Data Structure
+	 * Types of keys supported: String, RegExp
+	 */
+	function Map() {
+		this.size = 0;
+		this._data = {};
+	}
+
+	/*
+	 * set key into the map
+	 * @param {String|RegExp} k the key
+	 * @param {any} v the value
+	 * @return {undefined}
+	 */
+	Map.prototype.set = function(k, v) {
+		k = _fingerprint(k);
+		if (!this._data.hasOwnProperty(k)) {
+			this._data[k] = v;
+			this.size++;
+		}
+	};
+
+	/*
+	 * test if the key exists
+	 * @param {String|RegExp} k the key
+	 * @param {any} v the value
+	 * @return {Boolean} Returns true if contains k, return false otherwise.
+	 */
+	Map.prototype.has = function(k) {
+		k = _fingerprint(k);
+		return this._data.hasOwnProperty(k);
+	};
+
+	/*
+	 * delete the specified key
+	 * @param {String|RegExp} k the key
+	 * @return {undefined}
+	 */
+	Map.prototype.delete = function(k) {
+		k = _fingerprint(k);
+		if (this._data.hasOwnProperty(k)) {
+			delete this._data[k];
+			this.size--;
+		}
+	};
+
+	/*
+	 * get value by key
+	 * @param {String|RegExp} k the key
+	 * @return {any} the value associated to k
+	 */
+	Map.prototype.get = function(k) {
+		k = _fingerprint(k);
+		return this._data[k];
+	};
+
+	/*
+	 * clear the map, remove all keys
+	 */
+	Map.prototype.clear = function(k) {
+		this.size = 0;
+		this._data = {};
+	};
+
+	/*
+	 * Get string fingerprint for value
+	 * @param {any} value The value to be summarized.
+	 * @return {String} The fingerprint for the value.
+	 */
+	function _fingerprint(value) {
+		if (_.isRegExp(value)) {
+			return 'reg_' + value;
+		} else if (_.isString(value)) {
+			return 'str_' + value;
+		} else {
+			return 'other_' + value;
+		}
+	}
+
+	return Map;
+});
+;
 
 /*action*/
-define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/utils/underscore'], function(require) {
+define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/utils/assert', 'sfr/utils/map', 'sfr/utils/underscore'], function(require) {
 
     var router = require('sfr/router/router');
     var Promise = require('sfr/utils/promise');
+    var assert = require('sfr/utils/assert');
+    var Map = require('sfr/utils/map');
     var _ = require('sfr/utils/underscore');
     var exports = {};
-    var serviceMap = {};
+    var serviceMap = new Map();
     var indexUrl;
+    var _backManually = false;
 
     /**
      *  Register a service instance to action
      *  @static
-     *  @param {String} name The path of the service
+     *  @param {String|RestFul|RegExp} url The path of the service
      *  @param {Object} service The service object to be registered
      *  @return undefined
      *  @example
-     *  action.regist('/foo', new Service());
+     *  action.regist('/person', new Service());
+     *  action.regist('/person/:id', new Service());
+     *  action.regist(/^person\/\d+/, new Service());
      * */
-    exports.regist = function(name, service) {
-        if(!name){
-            throw new Error('illegal action name');
-        } 
-        if(!service){
-            throw new Error('illegal action option');
-        }
-        if(!serviceMap.hasOwnProperty(name) && isService(service)) {
-            //set service name as a router path.
-            router.add(name, this.dispatch);
-            serviceMap[name] = service;
-        }
+    exports.regist = function(url, service) {
+        assert(url, 'illegal action url');
+        assert(isService(service), 'illegal service, make sure to extend from sfr/service');
+        assert(!serviceMap.has(url), 'path already registerd');
+        router.add(url, this.dispatch);
+        serviceMap.set(url, service);
     };
 
     /**
@@ -3371,10 +3478,14 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
      * */
     exports.dispatch = function(current, prev) {
         var proxyList = [];
-        var currentService = serviceMap[current.path];
-        var prevService = serviceMap[prev.path];
+        var currentService = serviceMap.get(current.pathPattern);
+        var prevService = serviceMap.get(prev.pathPattern);
 
         current.options = current.options || {};
+        if(_backManually){
+            current.options.src = 'back';
+            _backManually = false;
+        }
 
         return Promise.mapSeries([
             prevService && prevService.detach.bind(prevService),
@@ -3386,7 +3497,11 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
             if(typeof cb !== 'function') return;
             return cb(current, prev);
         }).catch(function(e){
-            console.error('Unable to switch service', e.stack);
+            // throw asyncly rather than console.error(e.stack)
+            // to enable browser console's error tracing.
+            setTimeout(function(){
+                throw e;
+            });
         });
     };
 
@@ -3396,9 +3511,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
      *  @param {String} name The path of the service
      * */
     exports.remove = function(name) {
-        if(serviceMap.hasOwnProperty(name)) {
-            delete serviceMap[name];
-        }
+        return serviceMap.delete(name);
     };
 
     /**
@@ -3408,7 +3521,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
      *  @return {Boolean} Returns true if it has been registered, else false.
      * */
     exports.exist = function(name) {
-        return serviceMap.hasOwnProperty(name);
+        return serviceMap.has(name);
     };
 
     /**
@@ -3416,7 +3529,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
      *  @static
      * */
     exports.clear = function(){
-        serviceMap = {};
+        serviceMap.clear();
         router.clear();
     };
 
@@ -3436,6 +3549,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
      *  @static
      * */
     exports.back = function() {
+        _backManually = true;
         history.back(); 
     };
 
@@ -3449,6 +3563,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
     exports.reset = function(url, query, options) {
         router.reset(url, query, options);
     };
+
 
     /**
      *  hijack global link href
@@ -3520,8 +3635,8 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
 
         var name = location.pathname.replace(/.*\/([^/]+$)/,'/$1');
 
-        if(serviceMap.hasOwnProperty(name)) {
-            var service = serviceMap[name];
+        if(serviceMap.has(name)) {
+            var service = serviceMap.get(name);
             service.update({
                 path: name,
                 url: url,
