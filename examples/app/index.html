@@ -30,7 +30,8 @@
           });
 
           action.regist('/', indexSvc);
-          action.regist(/todolist(\/.*)?/, todolistSvc);
+          // equivelant to: action.regist(/todolist\/\d+/, todolistSvc);
+          action.regist('/todolist/:id', todolistSvc);
 
           router.start();
           action.start();

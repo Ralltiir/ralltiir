@@ -3,27 +3,30 @@ define(function() {
     var router = require('router/router');
     var Promise = require('utils/promise');
     var assert = require('utils/assert');
+    var Map = require('utils/map');
     var _ = require('utils/underscore');
     var exports = {};
-    var serviceMap = {};
+    var serviceMap = new Map();
     var indexUrl;
     var _backManually = false;
 
     /**
      *  Register a service instance to action
      *  @static
-     *  @param {String} name The path of the service
+     *  @param {String|RestFul|RegExp} url The path of the service
      *  @param {Object} service The service object to be registered
      *  @return undefined
      *  @example
-     *  action.regist('/foo', new Service());
+     *  action.regist('/person', new Service());
+     *  action.regist('/person/:id', new Service());
+     *  action.regist(/^person\/\d+/, new Service());
      * */
-    exports.regist = function(name, service) {
-        assert(name, 'illegal action name');
+    exports.regist = function(url, service) {
+        assert(url, 'illegal action url');
         assert(isService(service), 'illegal service, make sure to extend from sfr/service');
-        assert(!serviceMap.hasOwnProperty(name), 'path already registerd');
-        router.add(name, this.dispatch);
-        serviceMap[name] = service;
+        assert(!serviceMap.has(url), 'path already registerd');
+        router.add(url, this.dispatch);
+        serviceMap.set(url, service);
     };
 
     /**
@@ -65,8 +68,8 @@ define(function() {
      * */
     exports.dispatch = function(current, prev) {
         var proxyList = [];
-        var currentService = serviceMap[current.path];
-        var prevService = serviceMap[prev.path];
+        var currentService = serviceMap.get(current.pathPattern);
+        var prevService = serviceMap.get(prev.pathPattern);
 
         current.options = current.options || {};
         if(_backManually){
@@ -98,9 +101,7 @@ define(function() {
      *  @param {String} name The path of the service
      * */
     exports.remove = function(name) {
-        if(serviceMap.hasOwnProperty(name)) {
-            delete serviceMap[name];
-        }
+        return serviceMap.delete(name);
     };
 
     /**
@@ -110,7 +111,7 @@ define(function() {
      *  @return {Boolean} Returns true if it has been registered, else false.
      * */
     exports.exist = function(name) {
-        return serviceMap.hasOwnProperty(name);
+        return serviceMap.has(name);
     };
 
     /**
@@ -118,7 +119,7 @@ define(function() {
      *  @static
      * */
     exports.clear = function(){
-        serviceMap = {};
+        serviceMap.clear();
         router.clear();
     };
 
@@ -152,6 +153,7 @@ define(function() {
     exports.reset = function(url, query, options) {
         router.reset(url, query, options);
     };
+
 
     /**
      *  hijack global link href
@@ -223,8 +225,8 @@ define(function() {
 
         var name = location.pathname.replace(/.*\/([^/]+$)/,'/$1');
 
-        if(serviceMap.hasOwnProperty(name)) {
-            var service = serviceMap[name];
+        if(serviceMap.has(name)) {
+            var service = serviceMap.get(name);
             service.update({
                 path: name,
                 url: url,

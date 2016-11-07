@@ -152,6 +152,7 @@ define(function (require) {
 
         var curState = {
             path: path,
+            pathPattern: handler.raw,
             query: query,
             params: params,
             url: url.toString(),

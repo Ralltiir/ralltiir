@@ -27,7 +27,7 @@ define(function() {
         var $container = this.$container;
         todolists.forEach(function(todolist) {
             var $a = $('<a>')
-                .data('sf-href', '/todolist?id=' + todolist.id)
+                .data('sf-href', '/todolist/' + todolist.id)
                 .html(todolist.text);
             $('<li>').append($a).appendTo($container);
         });

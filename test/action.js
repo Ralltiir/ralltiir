@@ -30,11 +30,13 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             };
             current = {
                 path: '/foo',
+                pathPattern: '/foo',
                 url: '/foo?a=b',
                 options: {}
             };
             prev = {
                 path: '/bar',
+                pathPattern: '/bar',
                 url: '/bar?d=c',
                 options: {}
             };
@@ -49,7 +51,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 function fn() {
                     action.regist();
                 }
-                expect(fn).to.throw(/illegal action name/);
+                expect(fn).to.throw(/illegal action url/);
             });
             it('should throw with illegal service', function() {
                 function fn() {
@@ -57,11 +59,11 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 }
                 expect(fn).to.throw(/illegal service/);
             });
-            it('should throw upon illegal name', function() {
+            it('should throw upon illegal url', function() {
                 function fn() {
                     action.regist();
                 }
-                expect(fn).to.throw(/illegal action name/);
+                expect(fn).to.throw(/illegal action url/);
             });
             it('should not regist illegal service', function() {
                 action.regist('key', fooService);
@@ -72,6 +74,8 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             beforeEach(function() {
                 action.regist('/foo', fooService);
                 action.regist('/bar', barService);
+                action.regist('/person/:id', fooService);
+                action.regist(/person\/\d+/, barService);
             });
             it('should call create/attach/detach/destroy with correct arguments', function() {
                 return action.dispatch(current, prev).then(function(){
@@ -128,6 +132,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             it('should init when options.src === sync', function() {
                 return action.dispatch({
                     path: '/foo',
+                    pathPattern: '/foo',
                     options: {
                         src: 'sync'
                     }
@@ -135,9 +140,15 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     return expect(fooService.create).to.have.been.called;
                 });
             });
-            it('should destroy prev action', function() {
-                action.dispatch(current, prev).then(function(){
-                    return expect(barService.destroy).to.have.been.called;
+            it('should retrieve service registered as regexp url', function() {
+                return action.dispatch({
+                    path: '/person/13',
+                    pathPattern: '/person/:id',
+                    url: '/person/13?d=c',
+                    options: {}
+                }, prev).then(function(){
+                    expect(fooService.create).to.have.been.called;
+                    expect(fooService.attach).to.have.been.called;
                 });
             });
         });

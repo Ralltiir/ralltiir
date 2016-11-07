@@ -124,6 +124,7 @@ define(function (require) {
                 expect(params2[1]).to.deep.equal(params1[0]);
                 expect(params2[1]).to.deep.equal({
                     path: '/foo',
+                    pathPattern: '/foo',
                     query: {type: 'f'},
                     params: {},
                     url: '/foo?type=f',
@@ -140,14 +141,23 @@ define(function (require) {
                 expect(fn).to.have.been.called;
                 var params = fn.args[0];
                 var state = params[0];
-                expect(state.query).to.deep.equal({type: 'n'});
-                expect(state.params).to.deep.equal({id: '100'});
+                expect(fn).to.have.been.calledWithMatch({
+                    query: {
+                        type: 'n'
+                    },
+                    params: {
+                        id: '100'
+                    },
+                    path: '/product/100',
+                    pathPattern: '/product/:id'
+                });
             });
 
             it('RegExp handler', function () {
                 var fn = sinon.spy();
+                var regex = /\/\d{1,2}$/;
 
-                router.add(/\/\d{1,2}$/, fn);
+                router.add(regex, fn);
 
                 try {
                     router.redirect('/10');
@@ -156,6 +166,10 @@ define(function (require) {
                 }
                 catch (e) {}
                 expect(fn).to.have.been.calledOnce;
+                expect(fn).to.have.been.calledWithMatch({
+                    pathPattern: regex,
+                    path: '/10'
+                });
             });
 
             it('add the same handler repeatedly should throw error', function () {
@@ -283,6 +297,7 @@ define(function (require) {
                 var state = args[0];
                 expect(state).to.deep.equal({
                     path: '/',
+                    pathPattern: '/',
                     query: {},
                     params: {},
                     url: '/hello/',
