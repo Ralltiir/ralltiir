@@ -12,7 +12,7 @@ define(function() {
         // Create时立即加载容器
         this.containerView = Object.create(ContainerView);
         this.containerView.create({
-            title: 'A Fine Todo List',
+			title: 'A Fine Todo List: ' + current.params.id,
             background: 'lightgreen',
             height: '50px'
         });

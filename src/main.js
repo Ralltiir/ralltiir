@@ -26,6 +26,8 @@ __inline('utils/http.js');
 __inline('utils/url.js');
 __inline('utils/underscore.js');
 __inline('utils/promise.js');
+__inline('utils/assert.js');
+__inline('utils/map.js');
 
 /*action*/
 __inline('action.js');

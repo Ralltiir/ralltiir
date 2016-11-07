@@ -173,6 +173,15 @@ define(function() {
     }
 
     /*
+     * Checks if value is classified as a RegExp object.
+     * @param {any} value The value to check.
+     * @return {Boolean} Returns true if value is a RegExp, else false.
+     */
+    function isRegExp(value) {
+        return value instanceof RegExp;
+    }
+
+    /*
      * Assigns own enumerable string keyed properties of source objects to the destination object. 
      * Source objects are applied from left to right. 
      * Subsequent sources overwrite property assignments of previous sources.  
@@ -339,6 +348,7 @@ define(function() {
     exports.isEmpty = isEmpty;
     exports.isString = isString;
     exports.isObject = isObject;
+    exports.isRegExp = isRegExp;
 
     /*
      * Function Related
