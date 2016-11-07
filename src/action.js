@@ -7,6 +7,7 @@ define(function() {
     var exports = {};
     var serviceMap = {};
     var indexUrl;
+    var _backManually = false;
 
     /**
      *  Register a service instance to action
@@ -68,6 +69,10 @@ define(function() {
         var prevService = serviceMap[prev.path];
 
         current.options = current.options || {};
+        if(_backManually){
+            current.options.src = 'back';
+            _backManually = false;
+        }
 
         return Promise.mapSeries([
             prevService && prevService.detach.bind(prevService),
@@ -133,6 +138,7 @@ define(function() {
      *  @static
      * */
     exports.back = function() {
+        _backManually = true;
         history.back(); 
     };
 
