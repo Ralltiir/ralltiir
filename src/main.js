@@ -23,6 +23,7 @@ __inline('router/uri/util/uri-parser.js');
 
 /*utils*/
 __inline('utils/http.js');
+__inline('utils/di.js');
 __inline('utils/url.js');
 __inline('utils/underscore.js');
 __inline('utils/promise.js');
@@ -38,3 +39,45 @@ __inline('resource.js');
 
 /*view*/
 __inline('view.js');
+
+! function() {
+
+    var deps = [{
+        name: 'action',
+        mid: 'sfr/action'
+    }, {
+        name: 'router',
+        mid: 'sfr/router/router'
+    }, {
+        name: 'view',
+        mid: 'sfr/view'
+    }, {
+        name: 'service',
+        mid: 'sfr/service'
+    }, {
+        name: 'resource',
+        mid: 'sfr/resource'
+    }, {
+        name: 'http',
+        mid: 'sfr/utils/http'
+    }, {
+        name: 'promise',
+        mid: 'sfr/utils/promise'
+    }];
+
+    var midList = deps.map(function(item) {
+        return item.mid;
+    });
+    midList.push('sfr/utils/di');
+
+    define('sfr', midList, function() {
+        var di = require('sfr/utils/di');
+
+        deps.forEach(function(item) {
+            di.value(item.name, require(item.mid));
+        });
+
+        return di.container;
+    });
+
+}();

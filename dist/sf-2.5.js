@@ -2653,6 +2653,51 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
     return exports;
 });
 ;
+define('sfr/utils/di', ['require'], function(require) {
+    var container = {};
+    var di = {
+        container: container
+    };
+
+    /*
+     * Register a service
+     * TODO: implementation
+     */
+    di.service = function(name, impl) {};
+
+    /*
+     * Register a factory
+     * TODO: implementation
+     */
+    di.factory = function(name, impl) {};
+
+    /*
+     * Register a provider
+     * TODO: implementation
+     */
+    di.provider = function(name, impl) {};
+
+    /**
+     * Register a value
+     *
+     * @param {String} name
+     * @param {mixed} val
+     * @return {undefined}
+     * @return {di}
+     */
+    di.value = function(name, val) {
+        Object.defineProperty(container, name, {
+            configurable: true,
+            enumerable: true,
+            value: val,
+            writable: true
+        });
+        return di;
+    };
+
+    return di;
+});
+;
 define('sfr/utils/url', ['sfr/utils/underscore'], function(_) {
     /*
      * Format a plain object into query string.
@@ -3856,3 +3901,45 @@ define('sfr/view', ['require'], function(require) {
     return View;
 });
 ;
+
+! function() {
+
+    var deps = [{
+        name: 'action',
+        mid: 'sfr/action'
+    }, {
+        name: 'router',
+        mid: 'sfr/router/router'
+    }, {
+        name: 'view',
+        mid: 'sfr/view'
+    }, {
+        name: 'service',
+        mid: 'sfr/service'
+    }, {
+        name: 'resource',
+        mid: 'sfr/resource'
+    }, {
+        name: 'http',
+        mid: 'sfr/utils/http'
+    }, {
+        name: 'promise',
+        mid: 'sfr/utils/promise'
+    }];
+
+    var midList = deps.map(function(item) {
+        return item.mid;
+    });
+    midList.push('sfr/utils/di');
+
+    define('sfr', midList, function() {
+        var di = require('sfr/utils/di');
+
+        deps.forEach(function(item) {
+            di.value(item.name, require(item.mid));
+        });
+
+        return di.container;
+    });
+
+}();
