@@ -1,5 +1,5 @@
 define(function() {
-    var Service = require('sfr/service');
+    var Service = require('sfr').service;
     var TodoList = require('resource/todolist');
     var IndexView = require('view/index');
     var ContainerView = require('view/container');

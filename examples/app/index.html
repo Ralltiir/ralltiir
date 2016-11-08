@@ -17,8 +17,11 @@
 
     <script>
       require(['sfr/router/router', 'sfr/action', 'service/index', 'service/todolist'], function() {
-          var router = require('sfr/router/router');
-          var action = require('sfr/action');
+          //var router = require('sfr/router/router');
+          //var action = require('sfr/action');
+
+          var router = require('sfr').router;
+          var action = require('sfr').action;
 
           var indexSvc = require('service/index');
           var todolistSvc = require('service/todolist');
