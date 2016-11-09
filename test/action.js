@@ -270,7 +270,8 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 action.regist('/foo', fooService);
             });
             it('should call router.reset()', function() {
-                action.update();
+                history.replaceState({}, 'title', '/foo');
+                action.update('/foo');
                 expect(router.reset).to.have.been.called;
             });
             it('should call serviceObject.update()', function() {
@@ -278,21 +279,22 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 var options = {
                     foo: 'bar'
                 };
-                var extend = {
+                var extra = {
                     container: 'container',
                     view: 'view'
                 };
-                action.update('url', 'query', options, extend);
+                action.update('url', 'query', options, extra);
                 expect(fooService.update).to.have.been.called;
-                expect(fooService.update).to.have.been
-                    .calledWithMatch({
+                expect(fooService.update).to.have.been.calledWithMatch({}, {
+                    from: {
+                        url: '/foo'
+                    },
+                    to: {
                         path: '/foo',
-                        url: 'url',
-                        prevUrl: '/foo',
-                        query: 'query',
-                        options: options,
-                        extend: extend
-                    });
+                        url: 'url'
+                    },
+                    extra: extra
+                });
             });
         });
     });

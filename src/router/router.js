@@ -350,5 +350,13 @@ define(function (require) {
         controller = implement;
     };
 
+    /**
+     * 获取当前状态
+     */
+    exports.getState = function () {
+        return prevState;
+    };
+
+
     return exports;
 });

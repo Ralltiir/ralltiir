@@ -273,19 +273,25 @@ define(function() {
 
         var prevUrl = location.href.replace(/.*\/([^/]+$)/,'/$1');
 
-        var name = location.pathname.replace(/.*\/([^/]+$)/,'/$1');
+        var currentPath = location.pathname.replace(/.*\/([^/]+$)/,'/$1');
 
-        if(serviceMap.has(name)) {
-            var service = serviceMap.get(name);
-            service.update({
-                path: name,
-                url: url,
-                prevUrl: prevUrl,
-                query: query,
-                options: options,
-                extend: extend
-            });
+        var state = router.getState();
+
+        if(!serviceMap.has(currentPath)) {
+            throw new Error('service not found:' + currentPath);
         }
+        var service = serviceMap.get(currentPath);
+        var transition = {
+            from: {
+                url: prevUrl
+            },
+            to: {
+                url: url,
+                path: currentPath
+            },
+            extra: extend
+        };
+        service.update(state, transition);
         
         router.reset(url, query, options);
     };
