@@ -3464,6 +3464,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
     var serviceMap = new Map();
     var indexUrl;
     var _backManually = false;
+    var _dispatchQueue = DispatchQueue();
 
     /**
      *  Register a service instance to action
@@ -3531,24 +3532,60 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
             current.options.src = 'back';
             _backManually = false;
         }
-
-        return Promise.mapSeries([
-            prevService && prevService.detach.bind(prevService),
-            currentService && currentService.create.bind(currentService),
+        
+        return _dispatchQueue.reset([
+            prevService && prevService.detach.bind(prevService, current, prev),
+            currentService && currentService.create.bind(currentService, current, prev),
             //container will not be destroyed
-            prev.url !== indexUrl && prevService && prevService.destroy.bind(prevService),
-            currentService && currentService.attach.bind(currentService)
-        ], function(cb){
-            if(typeof cb !== 'function') return;
-            return cb(current, prev);
-        }).catch(function(e){
-            // throw asyncly rather than console.error(e.stack)
-            // to enable browser console's error tracing.
-            setTimeout(function(){
-                throw e;
-            });
-        });
+            prev.url !== indexUrl && prevService && prevService.destroy.bind(prevService, current, prev),
+            currentService && currentService.attach.bind(currentService, current, prev)
+        ]).exec();
     };
+
+    /*
+     * Run a queue of functions in serial.
+     * @private
+     */
+    function DispatchQueue() {
+        var MAX_THREAD_COUNT = 10000;
+        var threadID = 0;
+        var queue = [];
+        var exports = {
+            reset: reset,
+            exec: exec
+        };
+
+        /*
+         * When reset called, a thread containing a queue of functions is initialized,
+         * and latter functions in last thread will be ommited.
+         */
+        function reset(q) {
+            queue = q;
+            threadID = (threadID + 1) % MAX_THREAD_COUNT;
+            return exports;
+        }
+
+        /*
+         * When exec called, current queue is executed in serial, 
+         * and a promise for the results of the functions is returned.
+         */
+        function exec(){
+            var thisThreadID = threadID;
+            return Promise.mapSeries(queue, function(cb){
+                if(typeof cb !== 'function') return;
+                if(thisThreadID !== threadID) return;
+                return cb();
+            }).catch(function(e){
+                // throw asyncly rather than console.error(e.stack)
+                // to enable browser console's error tracing.
+                setTimeout(function(){
+                    throw e;
+                });
+            });
+        }
+
+        return exports;
+    }
 
     /**
      *  Remove a registered service
@@ -3665,7 +3702,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
      *  @param {String} url The URL to update
      *  @param {String} query The query string to update
      *  @param {Object} options The router options to update
-     *  @param {Object} extend The extended data to update, contains a `container` and `view`
+     *  @param {Object} extend The extended data to update, contains a `container`, `page`, and `view`
      * */
     exports.update = function(url, query, options, extend) {
         
@@ -3688,8 +3725,7 @@ define('sfr/action', ['require', 'sfr/router/router', 'sfr/utils/promise', 'sfr/
                 prevUrl: prevUrl,
                 query: query,
                 options: options,
-                container: extend.container,
-                view: extend.view
+                extend: extend
             });
         }
         
