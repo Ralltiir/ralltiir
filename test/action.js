@@ -3,7 +3,7 @@
  * @file 测试src/action.js
  */
 
-define(['../src/action', '../router/router', '../src/utils/promise.js'], function(action, router) {
+define(['../src/action', '../router/router', '../src/utils/promise.js'], function(action, router, Promise) {
     describe('action/action', function() {
         /*
          * Stub 外部对象
@@ -92,6 +92,34 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     expect(barService.destroy).to.have.been.calledAfter(fooService.create);
                     expect(fooService.attach).to.have.been.calledAfter(barService.destroy);
                 });
+            });
+            it('should not call create,destroy,attach if dispatch re-started', function() {
+                barService.detach = function(){};
+                sinon.stub(barService, 'detach', function(){
+                    return new Promise(function(resolve, reject){
+                        setTimeout(resolve, 100);
+                    });
+                });
+                var firstDispatch = action.dispatch(current, prev);
+                var secondDispatch = new Promise(function(resolve, reject){
+                    setTimeout(function(){
+                        action.dispatch(prev, current).then(resolve).catch(reject);
+                    }, 10);
+                });
+                return Promise
+                    .all([firstDispatch, secondDispatch])
+                    .then(function(){
+                        // bar -> foo
+                        expect(barService.detach).to.have.been.calledOnce;
+                        expect(fooService.create).to.have.not.been.called;
+                        expect(barService.destroy).to.have.not.been.called;
+                        expect(fooService.attach).to.have.not.been.called;
+                        // foo -> bar
+                        expect(fooService.detach).to.have.been.calledOnce;
+                        expect(barService.create).to.have.been.calledOnce;
+                        expect(fooService.destroy).to.have.been.calledOnce;
+                        expect(barService.attach).to.have.been.calledOnce;
+                    });
             });
             it('should await when create returns a promise', function(){
                 var createdSpy = sinon.spy();
@@ -263,8 +291,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                         prevUrl: '/foo',
                         query: 'query',
                         options: options,
-                        container: 'container',
-                        view: 'view'
+                        extend: extend
                     });
             });
         });
