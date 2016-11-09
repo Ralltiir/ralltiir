@@ -78,6 +78,8 @@ define(function() {
             _backManually = false;
         }
         
+        // Abort currently the running dispatch queue, 
+        // and initiate a new one.
         return _dispatchQueue.reset([
             prevService && prevService.detach.bind(prevService, current, prev),
             currentService && currentService.create.bind(currentService, current, prev),
@@ -88,11 +90,19 @@ define(function() {
     };
 
     /*
-     * Run a queue of functions in serial.
+     * Execute a queue of functions in serial, and previous execution will be stopped.
+     * This is a singleton closure containing current execution queue and threadID.
+     *
+     * A thread (implemented by mapSeries) will be initiated for each execution.
+     * And anytime there's a new thread initiating, the previous threads will stop running.
+     *
+     * @return {Object} DispatchQueue interfaces: {reset, exec}
      * @private
      */
     function DispatchQueue() {
+        // Since we cannot quit a promise, there can be multiple threads running, actually.
         var MAX_THREAD_COUNT = 10000;
+        // This is the ID of the currently running thread
         var threadID = 0;
         var queue = [];
         var exports = {
@@ -115,9 +125,12 @@ define(function() {
          * and a promise for the results of the functions is returned.
          */
         function exec(){
+            // Record the thread ID for current thread
+            // To ensure there's ONLY ONE thread running.
             var thisThreadID = threadID;
             return Promise.mapSeries(queue, function(cb){
                 if(typeof cb !== 'function') return;
+                // Just stop running
                 if(thisThreadID !== threadID) return;
                 return cb();
             }).catch(function(e){
