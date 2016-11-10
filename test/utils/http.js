@@ -56,6 +56,10 @@ define(['../src/utils/http'], function(http) {
                 http.ajax('http://harttle.com');
                 expect(xhr.method).to.equal('GET');
             });
+            it('should respect to port', function() {
+                http.ajax('http://www.baidu.com:3000');
+                expect(xhr.url).to.equal('http://www.baidu.com:3000');
+            });
             it('should resolve when 200', function(done) {
                 http.ajax('http://harttle.com')
                     .then(function(xhr) {

@@ -15,7 +15,7 @@ define(['utils/http', 'utils/underscore'], function(http, _) {
                 url = url.replace(':' + k, v);
             });
             // remove remaining slugs
-            url = url.replace(/:\w+/g, '');
+            url = url.replace(/:[a-zA-Z]\w*/g, '');
             return url;
         },
         /*

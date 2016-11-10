@@ -197,7 +197,7 @@ define(['./promise', './underscore', './url'], function(Promise, _, Url) {
             } catch (e) {}
         }
         if (!xhr) {
-            throw 'Cannot create an XHR instance';
+            throw new Error('Cannot create an XHR instance');
         }
         return xhr;
     }
