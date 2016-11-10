@@ -30,6 +30,8 @@ define(['../src/resource'], function(Resource) {
                     xhr.respond(200, {
                         'Content-Type': 'application/json'
                     }, '[{"id": 2, "name": "harttle"}]');
+                } else if(xhr.url === 'http://json.com/:3000'){
+                    xhr.respond(200);
                 } else {
                     xhr.respond(400);
                 }
@@ -42,6 +44,12 @@ define(['../src/resource'], function(Resource) {
 
         describe('resource', function() {
             var Cat = new Resource('http://json.com/person/:pid/cat/:id');
+            it('should respect to port', function() {
+                var Dog = new Resource('http://json.com/:3000');
+                return Dog.query({}).then(function(xhr){
+                    expect(xhr.url).to.equal('http://json.com/:3000');
+                });
+            });
             it('should create a RESTful item', function() {
                 var cat = {
                     name: 'harttle'
