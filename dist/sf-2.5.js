@@ -305,6 +305,9 @@ define('sfr/router/router/URL', ['require', 'sfr/router/uri/component/Path', 'sf
     var Query = require('sfr/router/uri/component/Query');
     var Fragment = require('sfr/router/uri/component/Fragment');
     var config = require('sfr/router/router/config');
+    // Spec. RFC3986: URI Generic Syntax
+    // see: https://tools.ietf.org/html/rfc3986#page-50
+    var URIRegExp = new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?');
 
     var DEFAULT_TOKEN = '?';
 
@@ -320,8 +323,14 @@ define('sfr/router/router/URL', ['require', 'sfr/router/uri/component/Path', 'sf
      */
     function URL(str, options) {
         options = options || {};
-
         str = (str || '').trim() || config.path;
+
+        var match = URIRegExp.exec(str);
+        // ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
+        //  12            3  4          5       6  7        8 9
+        if(!match){
+            console.warn('URI not valid:')
+        }
 
         var token = this.token = options.token || DEFAULT_TOKEN;
         var root = options.root || config.root;
@@ -2653,7 +2662,7 @@ define('sfr/utils/http', ['sfr/utils/promise', 'sfr/utils/underscore', 'sfr/util
             } catch (e) {}
         }
         if (!xhr) {
-            throw 'Cannot create an XHR instance';
+            throw new Error('Cannot create an XHR instance');
         }
         return xhr;
     }
@@ -3842,7 +3851,7 @@ define('sfr/resource', ['sfr/utils/http', 'sfr/utils/underscore'], function(http
                 url = url.replace(':' + k, v);
             });
             // remove remaining slugs
-            url = url.replace(/:\w+/g, '');
+            url = url.replace(/:[a-zA-Z]\w*/g, '');
             return url;
         },
         /*
