@@ -9,6 +9,9 @@ define(function (require) {
     var Query = require('../uri/component/Query');
     var Fragment = require('../uri/component/Fragment');
     var config = require('./config');
+    // Spec. RFC3986: URI Generic Syntax
+    // see: https://tools.ietf.org/html/rfc3986#page-50
+    var URIRegExp = new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?');
 
     var DEFAULT_TOKEN = '?';
 
@@ -24,8 +27,14 @@ define(function (require) {
      */
     function URL(str, options) {
         options = options || {};
-
         str = (str || '').trim() || config.path;
+
+        var match = URIRegExp.exec(str);
+        // ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
+        //  12            3  4          5       6  7        8 9
+        if(!match){
+            console.warn('URI not valid:')
+        }
 
         var token = this.token = options.token || DEFAULT_TOKEN;
         var root = options.root || config.root;
