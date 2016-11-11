@@ -1,8 +1,11 @@
 {
+  "name": "sfr",
+  "version": "2.5.1",
   "scripts": {
     "test": "make test",
     "test-reports": "make test-reports",
-    "clean": "make clean"
+    "clean": "make clean",
+    "dist": "make dist && cp dist/sf.js dist/${npm_package_name}-${npm_package_version}.js && cp dist/sf.min.js dist/${npm_package_name}-${npm_package_version}.min.js"
   },
   "devDependencies": {
     "chai": "^3.5.0",
