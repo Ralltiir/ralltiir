@@ -30,6 +30,11 @@ fis.media('prod').match('/src/(**).js', {
     isMod: true
 });
 
+fis.match('/src/{utils/di,doc}.js', {
+    release: true,
+    isMod: false
+});
+
 fis.match('/test/(**).js', {
     release: true,
     moduleId: 'test/$1',
