@@ -2,10 +2,14 @@
   "name": "sfr",
   "version": "2.5.1",
   "scripts": {
+    "doc": "make doc",
     "test": "make test",
     "test-reports": "make test-reports",
     "clean": "make clean",
-    "dist": "make dist && cp dist/sf.js dist/${npm_package_name}-${npm_package_version}.js && cp dist/sf.min.js dist/${npm_package_name}-${npm_package_version}.min.js"
+    "build": "make build",
+    "test-watch": "make test-watch",
+    "test-coverage": "make test-coverage",
+    "dist": "make NAME=${npm_package_name} VERSION=${npm_package_version} dist"
   },
   "devDependencies": {
     "chai": "^3.5.0",

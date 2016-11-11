@@ -112,7 +112,7 @@ npm install
 
 ```bash
 # 打包
-make dist
+npm run dist
 ```
 
 打包的结果文件在`dist/`目录下。
@@ -122,8 +122,6 @@ make dist
 本仓库使用Karma作为Test Runner。关于Karma测试环境，请移步<http://gitlab.baidu.com/psfe/karma-testing>，运行一次测试：
 
 ```bash
-make test
-# 或
 npm test
 ```
 
@@ -131,13 +129,13 @@ Karma测试环境可监测文件变化，现由于测试ESL模块需要先进行
 可先启动Karma监测build/dist目录（此时会立即运行一次测试）：
 
 ```bash
-make test-watch
+npm run test-watch
 ```
 
 保持Karma处于运行状态，手动 Build 即可触发测试的执行：
  
 ```bash
-make build
+npm run build
 ```
 
 ### 测试报告
@@ -145,7 +143,7 @@ make build
 生成测试结果（HTML格式）报告和覆盖率报告：
 
 ```bash
-make test-coverage
+npm run test-coverage
 # 或
 npm run test-reports
 # 测试结果报告
@@ -159,12 +157,12 @@ npm run test-reports
 将你的源码和文档文件映射添加到Makefile中，然后执行：
 
 ```bash
-make doc
+npm run doc
 ```
 
 如何正确编写注释见下文。
 
-> `make doc`使用`bin/doc.js`来完成文档生成工作，你可以继续增强它。
+> `npm run doc`使用`bin/doc.js`来完成文档生成工作，你可以继续增强它。
 
 【注意】`docs/`目录是排除在Git之外的，每次Push代码时API文档会持续更新。访问链接：<http://superframe.baidu.com/frame/api/promise.md>
 
