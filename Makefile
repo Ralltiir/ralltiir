@@ -24,8 +24,8 @@ dist:
 	rm -rf ./build
 	mkdir ./build 
 	fis3 release prod -d ./build
-	cp ./build/src/main.js ./dist/sf-$(VERSION).js
-	cp ./build/src/main.min.js ./dist/sf-$(VERSION).min.js
+	cp ./build/src/main.js ./dist/sfr.js
+	cp ./build/src/main.min.js ./dist/sfr.min.js
 
 doc:
 	rm -rf ./docs
