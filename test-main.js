@@ -3,20 +3,19 @@
  * @file 测试脚本载入器
  */
 
+// initiate DI container
+di.value('document', window.document);
+
 var TEST_FILES = Object.keys(window.__karma__.files).filter(isTestFile);
 
-/*
- * 依赖配置
- */
+// 依赖配置
 var paths = pathMap(TEST_FILES);
 require.config({
     baseUrl: '/base/src',
     paths: paths
 });
 
-/*
- * 启动测试
- */
+// 启动测试
 // Important: 禁用__karma__.loaded()，它会在DOM载入后立即调用 mocha.run()
 //     此时esl尚未载入测试脚本。
 window.__karma__.loaded = function() {};
@@ -24,9 +23,7 @@ var mods = TEST_FILES.map(getModuleId);
 require(mods, window.__karma__.start);
 
 
-/*
- * 工具函数
- */
+// 工具函数
 function pathMap(arr) {
     var map = {};
     arr.forEach(function(file){
