@@ -1,5 +1,4 @@
 define(function() {
-    var _ = require('./underscore');
     var PENDING = 0;
     var FULFILLED = 1;
     var REJECTED = 2;
