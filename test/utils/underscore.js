@@ -131,6 +131,23 @@ define(['src/utils/underscore'], function(_) {
                 });
             });
         });
+        describe('.findIndex()', function(){
+            it('should find item with respect to the provided predicate', function() {
+                expect(_.findIndex(['a', 'b', 'c'], function(item){
+                    return item === 'b';
+                })).to.equal(1);
+            });
+            it('should find the first occurrance', function() {
+                expect(_.findIndex(['a', 'b', 'b', 'c'], function(item){
+                    return item === 'b';
+                })).to.equal(1);
+            });
+            it('should return -1 when not found', function() {
+                expect(_.findIndex(['a', 'b', 'b', 'c'], function(item){
+                    return item === 'd';
+                })).to.equal(-1);
+            });
+        });
         describe('.isEmpty()', function() {
             it('should return true for empty array', function() {
                 expect(_.isEmpty([])).to.equal(true);

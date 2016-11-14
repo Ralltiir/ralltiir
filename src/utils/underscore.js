@@ -14,7 +14,6 @@ define(function() {
      */
     var exports = {};
     var _arrayProto = Array.prototype;
-    var _objectProto = Object.prototype;
     var _stringProto = String.prototype;
 
     /*
@@ -125,6 +124,20 @@ define(function() {
     function split(str) {
         var args = _getArgs(arguments);
         return _stringProto.split.apply(str || '', args);
+    }
+
+    /*
+     * Find and return the index of the first element predicate returns truthy for instead of the element itself.
+     * @param {Array} array The array to inspect.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
+     * @param {Number} [fromIndex=0] The index to search from.
+     * @return {number} Returns the index of the found element, else -1.
+     */
+    function findIndex(array, predicate, fromIndex) {
+        for (var i = fromIndex || 0; i < array.length; i++) {
+            if (predicate(array[i], i, array)) return i;
+        }
+        return -1;
     }
 
     /*
@@ -334,6 +347,7 @@ define(function() {
     exports.forEach = forEach;
     exports.map = map;
     exports.toArray = toArray;
+    exports.findIndex = findIndex;
 
     /*
      * String Related

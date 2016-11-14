@@ -31,6 +31,7 @@
     __inline('utils/underscore.js');
     __inline('utils/promise.js');
     __inline('utils/assert.js');
+    __inline('utils/lru-cache.js');
     __inline('utils/map.js');
 
     // core
