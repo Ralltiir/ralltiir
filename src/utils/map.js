@@ -1,10 +1,16 @@
+/*
+ * Map Data Structure for JavaScript
+ *
+ * Types of keys supported: String, RegExp
+ */
+
 define(function() {
 
 	var _ = require('./underscore');
 
 	/*
-	 * Map Data Structure
-	 * Types of keys supported: String, RegExp
+     * @constructor
+     * @return {Map} A map instance with empty data and size 0
 	 */
 	function Map() {
 		this.size = 0;

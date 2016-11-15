@@ -1,3 +1,9 @@
+/* 
+ * A Promise Implementation
+ *
+ * This implementation conforms to Promise/A+ spec. see: https://promisesaplus.com/
+ */
+
 define(function() {
     var PENDING = 0;
     var FULFILLED = 1;
@@ -14,7 +20,6 @@ define(function() {
      * The returned promise will be resolved when resolve is called, and rejected when reject called or any exception occurred.
      * If you pass a promise object to the resolve function, the created promise will follow the state of that promise.
      *
-     * > This implementation conforms to Promise/A+ spec. see: https://promisesaplus.com/
      * @param {Function(function resolve, function reject)} cb The resolver callback.
      * @return {Promise} A thenable. 
      * @constructor

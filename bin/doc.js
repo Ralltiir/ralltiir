@@ -69,6 +69,13 @@ var tagParsers = {
     }
 };
 
+var result = parseFileDesc(src);
+src = result.remaining;
+if(result.filedesc){
+    var desc = trimComment(result.filedesc);
+    console.log(desc + '\n');
+}
+
 /*
  * call parse and render GFM
  */
@@ -92,10 +99,11 @@ parseBlocks(src)
             o.params.forEach(function(param) {
                 console.log(param.name, '|', param.type, '|', param.description);
             });
+            console.log();
         }
-        if (o.ret) {
-            console.log('**Returns**:', o.ret.type, '\n');
-            console.log(`${o.ret.description}\n`);
+        if (o.return) {
+            console.log('**Returns**:', o.return.type, '\n');
+            console.log(`${o.return.description}\n`);
         }
         if (o.example) {
             console.log('**Example**\n');
@@ -132,6 +140,24 @@ function parseSignature(code) {
 
     var params = match[2] || match[4] || '';
     return name.trim() + '(' + params + ')';
+}
+
+/*
+ * file description top of the file
+ */
+function parseFileDesc(src) {
+    var match = src.match(/^\s*\/\*/);
+    if(!match){
+        return {
+            remaining: src
+        };
+    }
+    var begin = match.index + match[0].length;
+    var end = src.indexOf('*/');
+    return {
+        filedesc: src.slice(begin, end),
+        remaining: src.substr(end + 2)
+    };
 }
 
 /*

@@ -16,15 +16,6 @@ define(function() {
     var _storage = {};
 
     /*
-     * Using a specific namespace
-     * @param {String} name The namespace identifier
-     * @return {Object} The scoped cache object
-     */
-    exports.using = function(name) {
-        return usingNamespace(name);
-    };
-
-    /*
      * Create a LRU cache namespace.
      * @param {String} name The namespace identifier
      * @param {Number} options.limit The MAX count of cached items
@@ -132,6 +123,7 @@ define(function() {
 
     /*
      * Create a namespace
+     * @static
      * @param {String} name The namespace identifier
      * @param {Object} options key/value pairs to configure the cache
      */
@@ -142,8 +134,19 @@ define(function() {
         return _storage[name] = new Namespace(name, options);
     };
 
+    /*
+     * Using a specific namespace
+     * @param {String} name The namespace identifier
+     * @static
+     * @return {Object} The scoped cache object
+     */
+    exports.using = function(name) {
+        return usingNamespace(name);
+    };
+
     /**
      * Set a cache item
+     * @static
      * @param {String} name The namespace for your cache item
      * @param {String} key The key for your cache item
      * @param {any} value The value for your cache item
@@ -154,6 +157,7 @@ define(function() {
 
     /**
      *  Get a cache item
+     * @static
      * @param {String} name The namespace for your cache item
      * @param {String} key The key for your cache item
      * @return {any} The value for your cache item, or undefined if the specified item does not exist.
@@ -164,6 +168,7 @@ define(function() {
 
     /**
      * Rename a cache item
+     * @static
      * @param {String} name The namespace for your cache item
      * @param {String} before The source key for your cache item
      * @param {String} after The destination key for your cache item
@@ -173,9 +178,10 @@ define(function() {
     };
 
     /**
-     *  Remove a specific `key` in namespace `name`
-     *  @param {String} name The namespace identifier
-     *  @param {String} key The key to remove
+     * Remove a specific `key` in namespace `name`
+     * @static
+     * @param {String} name The namespace identifier
+     * @param {String} key The key to remove
      * */
     exports.remove = function(name, key) {
         return usingNamespace(name).remove(key);
@@ -183,6 +189,7 @@ define(function() {
 
     /*
      * Clear the given namespace, or all namespaces if `name` not set.
+     * @static
      * @param {String} name The namespace to clear.
      * @return {undefined}
      * */
@@ -196,6 +203,7 @@ define(function() {
 
     /*
      * Check whether the given key exists within the namespace, or whether the namespace exists if key not set.
+     * @static
      * @param {String} name The namespace to check
      * @param {String} key The key to check with
      */

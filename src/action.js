@@ -1,3 +1,10 @@
+/*
+ * A Service Management Singleton
+ *
+ * Accepts service registration and provides service switch,
+ * which is triggered by the Router
+ */
+
 define(function() {
 
     var router = require('router/router');
@@ -51,7 +58,10 @@ define(function() {
 
     /**
      *  Switch from the previous service to the current one.
-     *  Call prev.detach, prev.destroy, current.create, current.attach in serial.
+     *  Call `prev.detach`, `prev.destroy`, 
+     *  `current.create`, `current.attach` in serial.
+     *  Typically called by the Router, 
+     *  you may not want to call dispatch manually.
      *
      *  If any of these callbacks returns a `Thenable`, it'll be await.
      *  If the promise is rejected, the latter callbacks will **NOT** be called.
