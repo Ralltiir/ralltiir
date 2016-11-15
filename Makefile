@@ -33,7 +33,7 @@ doc:
 	$(DOC) src/utils/promise.js > docs/promise.md
 	$(DOC) src/utils/underscore.js > docs/underscore.md
 	$(DOC) src/utils/http.js > docs/http.md
-	$(DOC) src/utils/lru-cache.js > docs/lru-cache.md
+	$(DOC) src/utils/cache.js > docs/cache.md
 	$(DOC) src/resource.js > docs/resource.md
 	$(DOC) src/action.js > docs/action.md
 	$(DOC) src/router/router.js > docs/router.md

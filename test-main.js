@@ -3,9 +3,6 @@
  * @file 测试脚本载入器
  */
 
-// initiate DI container
-di.value('document', window.document);
-
 var TEST_FILES = Object.keys(window.__karma__.files).filter(isTestFile);
 
 // 依赖配置

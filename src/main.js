@@ -74,6 +74,8 @@
         deps.forEach(function(item) {
             di.value(item.name, require(item.mid));
         });
+        di.value('document', window.document);
+        di.value('window', window);
 
         return di.container;
     });
