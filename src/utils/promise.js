@@ -247,6 +247,7 @@ define(function() {
 
     /*
      * Call functions in serial until someone rejected.
+     * @static
      * @param {Array} iterable the array to iterate with.
      * @param {Array} iteratee returns a new promise.
      * The iteratee is invoked with three arguments: (value, index, iterable). 

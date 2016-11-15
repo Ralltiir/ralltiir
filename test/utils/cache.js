@@ -3,7 +3,7 @@
  * @file 测试src/view/cache.js
  */
 
-define(['../src/utils/lru-cache'], function(cache) {
+define(['../src/utils/cache'], function(cache) {
     describe('view/cache', function() {
         beforeEach(function() {
             cache.clear();
