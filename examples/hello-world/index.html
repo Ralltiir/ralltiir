@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+
+<body>
+
+  <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-1-4/esl.source.js"></script>
+  <script src="http://superframe.baidu.com/dist/sfr.js"></script>
+
+  <script>
+    require(['sfr', 'hello-world'], function() {
+      var sfr = require('sfr');
+
+      sfr.action.regist('/', require('hello-world'));
+      sfr.action.start();
+
+      sfr.router.config({
+        root: location.pathname
+      });
+      sfr.router.start();
+    });
+  </script>
+</body>
+
+</html>

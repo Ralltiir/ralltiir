@@ -12,34 +12,21 @@
     <script src="//cdn.bootcss.com/zepto/1.2.0/zepto.js"></script>
 
     <!--superframe只依赖于esl-->
-    <script src="../../lib/esl.js"></script>
+    <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-1-4/esl.source.js"></script>
     <script src="http://superframe.baidu.com/dist/sfr.js"></script>
 
     <script>
-      require(['sfr/router/router', 'sfr/action', 'service/index', 'service/todolist'], function() {
-          //var router = require('sfr/router/router');
-          //var action = require('sfr/action');
+      require(['sfr', 'service/index', 'service/todolist'], function() {
+          var sfr = require('sfr');
 
-          var router = require('sfr').router;
-          var action = require('sfr').action;
+          sfr.action.regist('/', require('service/index'));
+          sfr.action.regist('/todolist/:id', require('service/todolist'));
+          sfr.action.start();
 
-          var indexSvc = require('service/index');
-          var todolistSvc = require('service/todolist');
-
-          var _rootPath = location.pathname;
-
-          router.config({
-              root: _rootPath
+          sfr.router.config({
+              root: location.pathname
           });
-
-          action.regist('/', indexSvc);
-          // equivelant to: action.regist(/todolist\/\d+/, todolistSvc);
-          action.regist('/todolist/:id', todolistSvc);
-
-          router.start();
-          action.start();
-
-          window.action = action;
+          sfr.router.start();
       });
     </script>
   </body>

@@ -1,10 +1,10 @@
 define(function() {
-    var Service = require('sfr').service;
+    var sfr = require('sfr');
     var TodoList = require('resource/todolist');
     var IndexView = require('view/index');
     var ContainerView = require('view/container');
 
-    IndexService = new Service();
+    IndexService = new sfr.service();
 
     IndexService.create = function() {
         console.log('[index service] create');
