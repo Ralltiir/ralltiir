@@ -175,6 +175,16 @@ define(function() {
     };
 
     /**
+     *  config the action, called by action.start
+     *  @param {Object} options key/value pairs to config the action
+     *  @static
+     * */
+    exports.config = function(options){
+        router.config(options);
+        // nothing more, actually :)
+    };
+
+    /**
      *  Clear all registered service
      *  @static
      * */
@@ -258,10 +268,15 @@ define(function() {
 
     /**
      *  Action init, call this to start the action
+     *  @param {Object} options key/value pairs to config the action, calling action.config() internally
      *  @static 
      * */
-    exports.start = function() {
+    exports.start = function(options) {
+        if(arguments.length){
+            exports.config(options);
+        }
         _delegateAnchorClick(_onAnchorClick);
+        router.start();
     } ;
 
     /**

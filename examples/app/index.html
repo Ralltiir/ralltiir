@@ -21,12 +21,9 @@
 
           sfr.action.regist('/', require('service/index'));
           sfr.action.regist('/todolist/:id', require('service/todolist'));
-          sfr.action.start();
-
-          sfr.router.config({
+          sfr.action.start({
               root: location.pathname
           });
-          sfr.router.start();
       });
     </script>
   </body>

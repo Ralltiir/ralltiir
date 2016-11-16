@@ -237,9 +237,11 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 a.setAttribute('data-sf-href', 'foo');
                 a.setAttribute('data-sf-options', JSON.stringify(options));
                 document.body.append(a);
+                sinon.stub(action, 'config');
             });
             afterEach(function() {
                 a.remove();
+                action.config.restore();
             });
             it('should support redirect via data-sf-href', function() {
                 action.start();
@@ -263,6 +265,28 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 expect(router.redirect).to.have.been.calledWith('foo', null, {
                     src: 'hijack'
                 });
+            });
+            it('should not call .config() when no arguments given', function() {
+                action.start();
+                expect(action.config).to.have.not.been.called;
+            });
+            it("should call .config() when there's arguments given", function() {
+                var opts = {root: '/bar'};
+                action.start(opts);
+                expect(action.config).to.have.been.calledWith(opts);
+            });
+        });
+        describe('.config()', function() {
+            beforeEach(function(){
+                sinon.stub(router, 'config');
+            });
+            afterEach(function(){
+                router.config.restore();
+            });
+            it('should call router.config', function() {
+                var opts = {root: '/foo'};
+                action.config(opts);
+                expect(router.config).to.have.been.calledWith(opts);
             });
         });
         describe('.update()', function() {

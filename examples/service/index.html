@@ -12,10 +12,12 @@
   <script src="http://superframe.baidu.com/dist/sfr.js"></script>
 
   <script>
-    require(['sfr', 'hello-world'], function() {
+    require(['sfr', 'index', 'foo'], function() {
       var sfr = require('sfr');
 
-      sfr.action.regist('/', require('hello-world'));
+      sfr.action.regist('/', require('index'));
+      sfr.action.regist('/foo', require('foo'));
+
       sfr.action.start({
         root: location.pathname
       });
