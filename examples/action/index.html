@@ -12,10 +12,13 @@
   <script src="http://superframe.baidu.com/dist/sfr-dev.js"></script>
 
   <script>
-    require(['sfr', 'hello-world'], function() {
+    require(['sfr', 'index', 'todo', 'list'], function() {
       var sfr = require('sfr');
 
-      sfr.action.regist('/', require('hello-world'));
+      sfr.action.regist('/', require('index'));
+      sfr.action.regist('/todos/:id', require('todo'));
+      sfr.action.regist(/\/lists\/(\d+)/, require('list'));
+
       sfr.action.start({
         root: location.pathname
       });
