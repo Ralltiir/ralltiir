@@ -1,6 +1,14 @@
 /**
  * @file  Event Emitter
  * @author  Firede(firede@firede.us)
+ * example:
+ *
+ * var emitter = new Emitter();
+ * emitter.on('foo', function(value) {
+ *     console.log(value);
+ *  });
+ *  // console.log: 'test'
+ *  emitter.emit('foo', 'test');
  */
 
 define(function () {
@@ -14,7 +22,7 @@ define(function () {
     function Emitter() {}
 
     /**
-     * Emitter的prototype（为了便于访问）
+     * Emitter的prototype（为了便于访问），以及代码压缩
      *
      * @inner
      */

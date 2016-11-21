@@ -7,7 +7,7 @@
 // https://github.com/component/emitter/blob/master/test/emitter.js
 
 define(function(require) {
-    var Emitter = require('router/emitter');
+    var Emitter = require('utils/emitter');
 
     describe('router/emitter', function() {
         describe('Custom', function() {
