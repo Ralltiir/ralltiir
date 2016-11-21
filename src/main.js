@@ -5,7 +5,6 @@
     // router
     __inline('router/lang/extend.js');
     __inline('router/lang/inherits.js');
-    __inline('router/emitter.js');
     __inline('router/router/URL.js');
     __inline('router/router/config.js');
     __inline('router/router/controller.js');
@@ -33,6 +32,7 @@
     __inline('utils/assert.js');
     __inline('utils/cache.js');
     __inline('utils/map.js');
+    __inline('utils/emitter.js');
 
     // core
     __inline('action.js');
@@ -64,6 +64,9 @@
     }, {
         name: 'promise',
         mid: 'sfr/utils/promise'
+    }, {
+        name: 'emitter',
+        mid: 'sfr/utils/emitter'
     }];
 
     var midList = deps.map(function(item) {
