@@ -5,10 +5,10 @@ describe('doc', function() {
         di.value('document', window.document);
     });
 
-    it('should create div.sfa', function() {
+    it('should create div#sfr-app', function() {
         // access the doc
         doc = di.container.doc;
-        var div = document.querySelector('div.sfa');
+        var div = document.querySelector('div#sfr-app');
         expect(div).to.be.ok;
     });
 });

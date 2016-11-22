@@ -56,6 +56,9 @@
         name: 'service',
         mid: 'sfr/service'
     }, {
+        name: '_',
+        mid: 'sfr/utils/underscore'
+    }, {
         name: 'resource',
         mid: 'sfr/resource'
     }, {

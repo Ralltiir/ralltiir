@@ -8,9 +8,11 @@ define(function() {
     var PENDING = 0;
     var FULFILLED = 1;
     var REJECTED = 2;
+    var UNHANDLED_REJECTION_EVENT_MSG = 'cannot make RejectionEvent when promise not rejected';
     var _config = {
         longStackTraces: false
     };
+    var assert = require('./assert');
 
     /*
      * Create a new promise. 
@@ -40,6 +42,7 @@ define(function() {
         this._result;
         this._fulfilledCbs = [];
         this._rejectedCbs = [];
+        this._errorPending = false;
 
         // 标准：Promises/A+ 2.2.4, see https://promisesaplus.com/ 
         // In practice, this requirement ensures that 
@@ -53,24 +56,22 @@ define(function() {
     }
 
     Promise.prototype._fulfill = function(result) {
-        //console.log('_fulfill', result);
         this._result = result;
         this._state = FULFILLED;
         this._flush();
     };
 
     Promise.prototype._reject = function(err) {
-        //console.log('_reject', err);
         if(_config.longStackTraces && err){
             err.stack += '\n' + this._originalStack;
         }
         this._result = err;
         this._state = REJECTED;
+        this._errorPending = true;
         this._flush();
     };
 
     Promise.prototype._resolve = function(result) {
-        //console.log('_resolve', result);
         if (_isThenable(result)) {
             // result.then is un-trusted
             this._doResolve(result.then.bind(result));
@@ -102,6 +103,16 @@ define(function() {
             called = true;
             self._reject(err);
         }
+        setTimeout(function(){
+            this._checkUnHandledRejection();
+        }.bind(this));
+    };
+
+    Promise.prototype._checkUnHandledRejection = function(){
+        if(this._errorPending){
+            var event = _mkRejectionEvent(this);
+            window.dispatchEvent(event);
+        }
     };
 
     Promise.prototype._flush = function() {
@@ -109,12 +120,15 @@ define(function() {
             return;
         }
         var cbs = this._state === REJECTED ? this._rejectedCbs : this._fulfilledCbs;
-        var self = this;
+
         cbs.forEach(function(callback) {
-            if (typeof callback === 'function') {
-                callback(self._result);
+            if (this._state === REJECTED && this._errorPending){
+                this._errorPending = false;
             }
-        });
+            if (typeof callback === 'function') {
+                callback(this._result);
+            }
+        }, this);
         this._rejectedCbs = [];
         this._fulfilledCbs = [];
     };
@@ -267,6 +281,22 @@ define(function() {
         return ret.then(function(){
             return result;
         });
+    }
+
+    function _mkRejectionEvent (promise) {
+        assert(promise._state === REJECTED, UNHANDLED_REJECTION_EVENT_MSG);
+        var RejectionEvent;
+        if(typeof PromiseRejectionEvent === 'function'){
+            RejectionEvent = PromiseRejectionEvent;
+        } else{
+            RejectionEvent = CustomEvent;
+        }
+        var event = new RejectionEvent('PromiseRejectionEvent', {
+            promise: promise,
+            reason: promise._result
+        });
+        event.reason = event.reason || promise._result;
+        return event;
     }
 
     function _isThenable(obj) {

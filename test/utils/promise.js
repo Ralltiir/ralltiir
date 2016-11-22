@@ -205,5 +205,42 @@ define(['../src/utils/promise'], function(Promise) {
                     .catch(() => expect(spy).to.not.have.been.called);
             });
         });
+        describe('unhandledrejection', function() {
+            var handler;
+            beforeEach(function() {
+                handler = sinon.spy();
+                window.addEventListener('unhandledrejection', handler);
+            });
+            afterEach(function() {
+                window.removeEventListener('unhandledrejection', handler);
+            });
+            it('should throw PromiseRejectionEvent', function(done) {
+                Promise.reject('foo');
+                setTimeout(function() {
+                    expect(handler).to.have.been.calledWithMatch({
+                        reason: 'foo'
+                    });
+                    done();
+                }, 1000);
+            });
+            it('should not throw when error handled', function(done) {
+                Promise.reject('foo').catch(function() {});
+                setTimeout(function() {
+                    expect(handler).to.have.not.been.calledWithMatch({
+                        reason: 'foo'
+                    });
+                    done();
+                }, 100);
+            });
+            it('should not throw when no error occurred', function(done) {
+                Promise.resolve('foo');
+                setTimeout(function() {
+                    expect(handler).to.have.not.been.calledWithMatch({
+                        reason: 'foo'
+                    });
+                    done();
+                }, 100);
+            });
+        });
     });
 });
