@@ -291,7 +291,7 @@ define(function() {
         } else{
             RejectionEvent = CustomEvent;
         }
-        var event = new RejectionEvent('PromiseRejectionEvent', {
+        var event = new RejectionEvent('unhandledrejection', {
             promise: promise,
             reason: promise._result
         });
