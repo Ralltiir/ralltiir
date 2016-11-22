@@ -17,6 +17,7 @@ define(function() {
 
     /*
      * Create a LRU cache namespace.
+     * @name Namespace
      * @param {String} name The namespace identifier
      * @param {Number} options.limit The MAX count of cached items
      * @param {Function(val, key)} options.onRemove The callback when item removed
@@ -31,7 +32,8 @@ define(function() {
     }
     Namespace.prototype = {
         /**
-         *  Get a cache item, and reset the item accessed to the tail.
+         * Get a cache item, and reset the item accessed to the tail.
+         * @class Namespace 
          * @param {String} key The key for your cache item
          * @return {any} The value for your cache item, or undefined if the specified item does not exist.
          * */
@@ -46,6 +48,7 @@ define(function() {
         },
         /**
          * Set a cache item and put the item to the tail, while remove the first item when limit overflow.
+         * @class Namespace 
          * @param {String} key The key for your cache item
          * @param {any} value The value for your cache item
          * */
@@ -64,6 +67,7 @@ define(function() {
         },
         /*
          * Check whether the given key exists within the namespace, or whether the namespace exists if key not set.
+         * @class Namespace 
          * @param {String} key The key to check with
          */
         contains: function(key) {
@@ -71,6 +75,7 @@ define(function() {
         },
         /**
          * Rename a cache item
+         * @class Namespace 
          * @param {String} before The source key for your cache item
          * @param {String} after The destination key for your cache item
          */
@@ -88,6 +93,7 @@ define(function() {
         },
         /**
          *  Remove a specific `key` in namespace `name`
+         *  @class Namespace 
          *  @param {String} key The key to remove
          * */
         remove: function(key) {
@@ -101,6 +107,7 @@ define(function() {
         },
         /*
          * Clear the given namespace, or all namespaces if `name` not set.
+         * @class Namespace 
          * @param {String} name The namespace to clear.
          * @return {undefined}
          * */
@@ -125,7 +132,7 @@ define(function() {
      * Create a namespace
      * @static
      * @param {String} name The namespace identifier
-     * @param {Object} options key/value pairs to configure the cache
+     * @param {Object} options The options object used to create the namespace
      */
     exports.create = function(name, options) {
         assert(name, 'cannot create namespace with empty name');
