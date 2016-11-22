@@ -2,13 +2,15 @@
  * @file  Event Emitter
  * @author  Firede(firede@firede.us)
  * example:
- *
+ * 
+ * ```javascript
  * var emitter = new Emitter();
  * emitter.on('foo', function(value) {
  *     console.log(value);
  *  });
  *  // console.log: 'test'
  *  emitter.emit('foo', 'test');
+ *  ```
  */
 
 define(function () {

@@ -7,7 +7,7 @@ di.factory('doc', function(container){
 
     function mkDoc(){
         var doc = mainDoc.createElement('div');
-        doc.setAttribute('class', 'sfa');
+        doc.setAttribute('class', 'sfr-app');
         return doc;
     }
 });
