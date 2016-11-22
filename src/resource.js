@@ -59,7 +59,7 @@ define(['utils/http', 'utils/underscore'], function(http, _) {
         delete: function(options) {
             var url = this.getUrl(options);
             return http.delete(url);
-        },
+        }
     };
     return Resource;
 });

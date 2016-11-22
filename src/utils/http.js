@@ -129,7 +129,7 @@ define(['./promise', './underscore', './url'], function(Promise, _, Url) {
         //console.log('_doAjax with', settings);
         var xhr;
         try {
-            xhr = _createXHR();
+            xhr = exports.createXHR();
         } catch (e) {
             return Promise.reject(e);
         }
@@ -185,16 +185,13 @@ define(['./promise', './underscore', './url'], function(Promise, _, Url) {
         return xhr;
     }
 
-    function _createXHR() {
-        //console.log('create xhr');
+    exports.createXHR = function () {
         var xhr = false;
 
         if (window.XMLHttpRequest) { // Mozilla, Safari,...
             xhr = new XMLHttpRequest();
         } else if (window.ActiveXObject) { // IE
-            try {
-                xhr = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {}
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
         }
         if (!xhr) {
             throw new Error('Cannot create an XHR instance');
