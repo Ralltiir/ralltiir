@@ -59,6 +59,9 @@
         name: 'resource',
         mid: 'sfr/resource'
     }, {
+        name: 'cache',
+        mid: 'srf/utils/cache'
+    }, {
         name: 'http',
         mid: 'sfr/utils/http'
     }, {
