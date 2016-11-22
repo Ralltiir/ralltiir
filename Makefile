@@ -9,23 +9,38 @@ export KARMA_BIN=./node_modules/karma/bin/karma
 export TEST=$(KARMA_BIN) --port $(PORT)
 export DOC=node ./bin/doc.js
 
-.PHONY: test test-reports test-watch test-run test-listen build dist clean dist-clean doc
+.PHONY: test dist doc
 
 
 # Build Related
 
-build: 
-	rm -rf ./build && mkdir ./build 
+build-prepare:
+	rm -rf ./build/
+	[ -d ./build ] || mkdir ./build 
+
+build-dev: build-prepare
 	fis3 release -d ./build
 
-dist: 
-	rm -rf ./build && mkdir ./build 
+build/banner.js: build-prepare
+	echo '/*' > $@
+	echo ' * Superframe' >> $@
+	echo ' * Homepage: http://superframe.baidu.com' >> $@
+	echo " * Commit Hash: "`git rev-parse HEAD` >> $@
+	echo ' */' >> $@
+
+build-prod: build-prepare
 	fis3 release prod -d ./build
+
+dist-prepare: 
 	[ -d ./dist ] || mkdir ./dist
-	cp ./build/src/main.js ./dist/${NAME}.js
-	cp ./build/src/main.min.js ./dist/${NAME}.min.js
-	cp ./build/src/main.js ./dist/${NAME}-${VERSION}.js
-	cp ./build/src/main.min.js ./dist/${NAME}-${VERSION}.min.js
+
+dist: build-prod dist-prepare build/banner.js
+	cat build/banner.js > dist/${NAME}.js
+	cat build/src/main.js >> dist/${NAME}.js
+	cat build/banner.js > dist/${NAME}.min.js
+	cat build/src/main.min.js >> dist/${NAME}.min.js
+	cp dist/${NAME}.js dist/${NAME}-${VERSION}.js
+	cp dist/${NAME}.min.js dist/${NAME}-${VERSION}.min.js
 
 doc:
 	rm -rf ./docs
