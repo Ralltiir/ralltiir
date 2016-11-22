@@ -41,6 +41,8 @@ var tagParsers = {
     'inner': c => true,
     'static': c => true,
     'constructor': c => true,
+    'name': c => c,
+    'class': c => c,
     /*
      * Parse the param descriptor from comment string
      * @param {String} comment The comment string
@@ -83,13 +85,7 @@ parseBlocks(src)
     .forEach(function(o) {
         if (o.hasOwnProperty('private') || (o.hasOwnProperty('inner'))) return;
 
-        if (o.hasOwnProperty('static')) {
-            console.log(`## ${moduleName}.${o.signature}\n`);
-        } else if (o.hasOwnProperty('constructor')) {
-            console.log(`## new ${o.signature}\n`);
-        } else {
-            console.log(`## ${moduleName}#${o.signature}\n`);
-        }
+        printName(o);
 
         console.log(`${o.description}\n`);
         if (o.params.length) {
@@ -111,6 +107,22 @@ parseBlocks(src)
         }
         console.log('\n');
     });
+
+
+function printName(o){
+    if (o.hasOwnProperty('name')){
+        console.log(`## ${o.name}\n`);
+        return;
+    }
+    var cls = o['class'] || moduleName;
+    if (o.hasOwnProperty('static')) {
+        console.log(`## ${cls}.${o.signature}\n`);
+    } else if (o.hasOwnProperty('constructor')) {
+        console.log(`## new ${o.signature}\n`);
+    } else {
+        console.log(`## ${cls}#${o.signature}\n`);
+    }
+}
 
 /*
  * Parse the function signature
