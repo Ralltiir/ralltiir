@@ -66,16 +66,16 @@ dist-clean: clean
 
 # Test Related
 
-test: build
+test: build-dev
 	$(TEST) start --reporters mocha
 
-test-reports: build
+test-reports: build-dev
 	$(TEST) start --reporters mocha,html,coverage
 
-test-watch: build
+test-watch: build-dev
 	$(TEST) start --auto-watch --no-single-run
 
-test-listen: build
+test-listen: build-dev
 	$(TEST) start --browsers --no-single-run
 
 test-run:
