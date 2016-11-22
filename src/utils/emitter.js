@@ -212,6 +212,7 @@ define(function () {
      *
      * @param {Object} obj 目标对象
      * @return {Object} 混入Emitter后的对象
+     * @static
      */
     Emitter.mixin = function (obj) {
         // forIn不利于V8的优化
