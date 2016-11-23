@@ -218,7 +218,8 @@ define(['../src/utils/promise'], function(Promise) {
                 Promise.reject('foo');
                 setTimeout(function() {
                     expect(handler).to.have.been.calledWithMatch({
-                        reason: 'foo'
+                        reason: 'foo',
+                        type: 'unhandledrejection'
                     });
                     done();
                 }, 1000);
@@ -227,7 +228,8 @@ define(['../src/utils/promise'], function(Promise) {
                 Promise.reject('foo').catch(function() {});
                 setTimeout(function() {
                     expect(handler).to.have.not.been.calledWithMatch({
-                        reason: 'foo'
+                        reason: 'foo',
+                        type: 'unhandledrejection'
                     });
                     done();
                 }, 100);
@@ -236,7 +238,8 @@ define(['../src/utils/promise'], function(Promise) {
                 Promise.resolve('foo');
                 setTimeout(function() {
                     expect(handler).to.have.not.been.calledWithMatch({
-                        reason: 'foo'
+                        reason: 'foo',
+                        type: 'unhandledrejection'
                     });
                     done();
                 }, 100);
