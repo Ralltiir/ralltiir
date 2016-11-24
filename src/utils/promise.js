@@ -244,18 +244,25 @@ define(function() {
             var results = promises.map(function() {
                 return undefined;
             });
-            var count = 0;
+            var count = promises.length;
             promises
                 .map(Promise.resolve)
                 .forEach(function(promise, idx) {
                     promise.then(function(result) {
                         results[idx] = result;
-                        count++;
-                        if (count === promises.length) {
-                            resolve(results);
-                        }
+                        count--;
+                        flush();
                     }, reject);
                 });
+
+            // case for empty array
+            flush();
+
+            function flush(){
+                if (count <= 0) {
+                    resolve(results);
+                }
+            }
         });
     };
 

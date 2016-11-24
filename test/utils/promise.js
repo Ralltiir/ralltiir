@@ -163,6 +163,9 @@ define(['../src/utils/promise'], function(Promise) {
                         expect(arr).to.deep.equal(['foo', 'bar']);
                     });
             });
+            it('should resolve empty array', function() {
+                return Promise.all([]);
+            });
         });
         describe('.mapSeries()', function() {
             it('should resolve when all resolved', function() {
