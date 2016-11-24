@@ -153,6 +153,29 @@ define(function (require) {
                 });
             });
 
+            it('RESTful handler (complex)', function () {
+                var fn = sinon.spy();
+
+                router.add('/sf_baike/item/:word/:id', fn);
+                router.redirect('/sf_baike/item/%E5%88%98%E5%BE%B7%E5%8D%8E/114923?adapt=1&fr=aladdin');
+
+                expect(fn).to.have.been.called;
+                var params = fn.args[0];
+                var state = params[0];
+                expect(fn).to.have.been.calledWithMatch({
+                    query: {
+                        fr: 'aladdin',
+                        adapt: "1"
+                    },
+                    params: {
+                        id: '114923',
+                        word: '刘德华'
+                    },
+                    path: '/sf_baike/item/%E5%88%98%E5%BE%B7%E5%8D%8E/114923',
+                    pathPattern: '/sf_baike/item/:word/:id'
+                });
+            });
+
             it('RegExp handler', function () {
                 var fn = sinon.spy();
                 var regex = /\/\d{1,2}$/;
