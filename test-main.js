@@ -17,7 +17,10 @@ require.config({
 //     此时esl尚未载入测试脚本。
 window.__karma__.loaded = function() {};
 var mods = TEST_FILES.map(getModuleId);
-require(mods, window.__karma__.start);
+require(mods, function(){
+    console.log(mods.length + ' test modules loaded');
+    window.__karma__.start();
+});
 
 
 // 工具函数
