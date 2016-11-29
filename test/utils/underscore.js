@@ -55,6 +55,21 @@ define(['src/utils/underscore'], function(_) {
                     car: 'car'
                 });
             });
+            it('should only assign to the dst object', function() {
+                var dst = {
+                    foo: 'bar'
+                };
+                var src1 = {
+                    bar: 'coo'
+                };
+                var src2 = {
+                    coo: 'foo'
+                }
+                _.assign(dst, src1, src2);
+                expect(src1).to.deep.equal({
+                    bar: 'coo'
+                });
+            });
         });
         describe('.defaults()', function() {
             it('should handle null dst', function() {

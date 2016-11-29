@@ -14,9 +14,19 @@ define(function() {
     var _ = require('utils/underscore');
     var exports = {};
     var serviceMap = new Map();
-    var indexUrl;
-    var _backManually = false;
-    var _dispatchQueue = DispatchQueue();
+    var backManually = false;
+
+    // The state data JUST for the next dispatch
+    var stageData = {};
+    var dispatchQueue = DispatchQueue();
+
+    /*
+     * Get the stage data being passed to next dispatch
+     * @private
+     */
+    exports.getState = function(){
+        return stageData;
+    };
 
     /**
      *  Register a service instance to action
@@ -82,20 +92,21 @@ define(function() {
         var currentService = serviceMap.get(current.pathPattern);
         var prevService = serviceMap.get(prev.pathPattern);
 
-        current.options = current.options || {};
-        if(_backManually){
+        var data = stageData;
+        stageData = {};
+
+        if(backManually){
+            backManually = false;
             current.options.src = 'back';
-            _backManually = false;
         }
         
         // Abort currently the running dispatch queue, 
         // and initiate a new one.
-        return _dispatchQueue.reset([
-            prevService && prevService.detach.bind(prevService, current, prev),
-            currentService && currentService.create.bind(currentService, current, prev),
-            //container will not be destroyed
-            prev.url !== indexUrl && prevService && prevService.destroy.bind(prevService, current, prev),
-            currentService && currentService.attach.bind(currentService, current, prev)
+        return dispatchQueue.reset([
+            prevService && prevService.detach.bind(prevService, current, prev, data),
+            currentService && currentService.create.bind(currentService, current, prev, data),
+            prevService && prevService.destroy.bind(prevService, current, prev, data),
+            currentService && currentService.attach.bind(currentService, current, prev, data)
         ]).exec();
     };
 
@@ -194,13 +205,18 @@ define(function() {
     };
 
     /**
-     *  Redirect to another page, and change to next state
-     *  @static
-     *  @param {String} url The URL to redirect
-     *  @param {String} query The query string to redirect
-     *  @param {Object} options The router options to redirect
+     * Redirect to another page, and change to next state
+     * @static
+     * @param {String} url The URL to redirect
+     * @param {String} query The query string to redirect
+     * @param {Object} options The router options to redirect
+     * @param {String} options.title Optional, 页面的title
+     * @param {Boolean} options.force Optional, 是否强制跳转
+     * @param {Boolean} options.silent Optional, 是否静默跳转（不改变URL）
+     * @param {Object} data extended data being passed to `current.options`
      * */
-    exports.redirect = function(url, query, options) {
+    exports.redirect = function(url, query, options, data) {
+        _.assign(stageData, data);
         router.redirect(url, query, options);
     };
 
@@ -209,21 +225,25 @@ define(function() {
      *  @static
      * */
     exports.back = function() {
-        _backManually = true;
+        backManually = true;
         history.back(); 
     };
 
     /**
-     *  Reset/replace current state
-     *  @static
-     *  @param {String} url The URL to reset
-     *  @param {String} query The query string to reset
-     *  @param {Object} options The router options to reset
+     * Reset/replace current state
+     * @static
+     * @param {String} url The URL to reset
+     * @param {String} query The query string to reset
+     * @param {Object} options The router options
+     * @param {String} options.title Optional, 页面的title
+     * @param {Boolean} options.force Optional, 是否强制跳转
+     * @param {Boolean} options.silent Optional, 是否静默跳转（不改变URL）
+     * @param {Object} data extended data being passed to `current.options`
      * */
-    exports.reset = function(url, query, options) {
+    exports.reset = function(url, query, options, data) {
+        _.assign(stageData, data);
         router.reset(url, query, options);
     };
-
 
     /**
      *  hijack global link href
@@ -285,9 +305,9 @@ define(function() {
      *  @param {String} url The URL to update
      *  @param {String} query The query string to update
      *  @param {Object} options The router options to update
-     *  @param {Object} extend The extended data to update, contains a `container`, `page`, and `view`
+     *  @param {Object} data The extended data to update, typically contains `container`, `page`, and `view`
      * */
-    exports.update = function(url, query, options, extend) {
+    exports.update = function(url, query, options, data) {
         
         options = options ? options : {};
         
@@ -300,7 +320,7 @@ define(function() {
 
         var currentPath = location.pathname.replace(/.*\/([^/]+$)/,'/$1');
 
-        var state = router.getState();
+        var routerOptions = router.getState();
 
         if(!serviceMap.has(currentPath)) {
             throw new Error('service not found:' + currentPath);
@@ -314,9 +334,9 @@ define(function() {
                 url: url,
                 path: currentPath
             },
-            extra: extend
+            extra: data
         };
-        service.update(state, transition);
+        service.update(routerOptions, transition, data);
         
         router.reset(url, query, options);
     };

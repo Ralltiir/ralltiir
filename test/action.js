@@ -181,16 +181,20 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             });
         });
         describe('.back()', function() {
+            it('should call history.back()', function() {
+                action.back({});
+                expect(history.back).to.have.been.called;
+            });
             it('should set options.src to "back"', function() {
                 action.back({});
-                var current = {};
+                var current = {options: {}};
                 action.dispatch(current, {});
                 expect(current.options.src).to.equal('back');
             });
             it('should set options.src to "back" only once', function() {
-                action.back({});
-                var second = {};
-                action.dispatch({}, {});
+                action.back();
+                var second = {options: {}};
+                action.dispatch({options: {}}, {});
                 action.dispatch(second, {});
                 expect(second.options.src).to.not.equal('back');
             });
@@ -203,6 +207,10 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             });
         });
         describe('.redirect()', function() {
+            beforeEach(function() {
+                action.regist('/foo', fooService);
+                action.regist('/bar', barService);
+            });
             it('should call router with correct arguments', function() {
                 var url = 'xx',
                     query = 'bb',
@@ -210,20 +218,57 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 action.redirect(url, query, options);
                 expect(router.redirect).to.have.been.calledWith(url, query, options);
             });
-        });
-        describe('.back()', function() {
-            it('should call history.back()', function() {
-                action.back({});
-                expect(history.back).to.have.been.called;
+            it('should pass stage data to next dispatch', function() {
+                action.redirect('/foo', 'bb', {}, {foo: 'bar'});
+                return action.dispatch({pathPattern: '/foo'}, {}).then(function(){
+                    expect(fooService.create.args[0][2]).to.deep.equal({
+                        foo: 'bar'
+                    });
+                });
+            });
+            it('should not pass stage data to further dispatches', function() {
+                action.redirect('/foo', 'bb', {}, {foo: 'bar'});
+                var current = {pathPattern: '/foo'};
+                return action.dispatch(current, {}).then(function(){
+                    fooService.create.reset();
+                    return action.dispatch(current, {});
+                })
+                .then(function(){
+                    expect(fooService.create.args[0][2].foo).to.be.undefined;
+                });
             });
         });
-        describe('.redirect()', function() {
+        describe('.reset()', function() {
+            beforeEach(function() {
+                action.regist('/foo', fooService);
+                action.regist('/bar', barService);
+            });
             it('should call router with correct arguments', function() {
                 var url = 'xx',
                     query = 'bb',
                     options = {};
                 action.reset(url, query, options);
                 expect(router.reset).to.have.been.calledWith(url, query, options);
+            });
+            it('should pass stage data to next dispatch', function() {
+                action.reset('/foo', 'bb', {}, {foo: 'bar'});
+                return action.dispatch({pathPattern: '/foo'}, {}).then(function(){
+                    console.log(fooService.create.args);
+                    expect(fooService.create.args[0][2]).to.deep.equal({
+                        foo: 'bar'
+                    });
+                });
+            });
+            it('should not pass stage data to further dispatches', function() {
+                action.reset('/foo', 'bb', {}, {foo: 'bar'});
+                var current = {pathPattern: '/foo'};
+                return action.dispatch(current, {}).then(function(){
+                    fooService.create.reset();
+                    return action.dispatch(current, {});
+                })
+                .then(function(){
+                    expect(fooService.create.args[0][2].foo).to.be.undefined;
+                });
             });
         });
         describe('.start()', function() {
