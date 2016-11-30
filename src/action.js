@@ -336,9 +336,11 @@ define(function() {
             },
             extra: data
         };
-        service.update(routerOptions, transition, data);
-        
         router.reset(url, query, options);
+
+        return Promise.resolve().then(function(){
+            return service.update(routerOptions, transition, data);
+        });
     };
     
     return exports;
