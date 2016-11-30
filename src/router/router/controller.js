@@ -129,40 +129,6 @@ define(function (require) {
     var exports = {};
 
     /**
-     * 劫持全局的click事件
-     *
-     * @inner
-     * @param {Event} e 事件参数
-     */
-    function hackClick(e) {
-        var target = e.target;
-        // 先上寻找A标签
-        if (e.path) {
-            for (var i = 0, item; item = e.path[i]; i++) {
-                if (item.tagName === 'A') {
-                    target = item;
-                    break;
-                }
-            }
-        }
-        else {
-            while (target && target.tagName !== 'A') {
-                target = target.parentNode;
-            }
-        }
-
-        if (!target) {
-            return;
-        }
-
-        var href = getLink(target);
-        if (href) {
-            exports.redirect(ignoreRoot(href), null, {src: 'hijack'});
-            e.preventDefault();
-        }
-    }
-
-    /**
      * URL超出控制范围
      *
      * @inner
@@ -188,7 +154,6 @@ define(function (require) {
      */
     exports.init = function (apply) {
         window.addEventListener('popstate', monitor, false);
-        //document.body.addEventListener('click', hackClick, false);
         applyHandler = apply;
 
         // 首次调用为同步渲染
@@ -255,7 +220,6 @@ define(function (require) {
      */
     exports.dispose = function () {
         window.removeEventListener('popstate', monitor, false);
-        //document.body.removeEventListener('click', hackClick, false);
         curLocation = null;
     };
 
