@@ -352,17 +352,18 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     container: 'container',
                     view: 'view'
                 };
-                action.update('url', 'query', options, extra);
-                expect(fooService.update).to.have.been.called;
-                expect(fooService.update).to.have.been.calledWithMatch({}, {
-                    from: {
-                        url: '/foo'
-                    },
-                    to: {
-                        path: '/foo',
-                        url: 'url'
-                    },
-                    extra: extra
+                return action.update('url', 'query', options, extra).then(function(){
+                    expect(fooService.update).to.have.been.called;
+                    expect(fooService.update).to.have.been.calledWithMatch({}, {
+                        from: {
+                            url: '/foo'
+                        },
+                        to: {
+                            path: '/foo',
+                            url: 'url'
+                        },
+                        extra: extra
+                    });
                 });
             });
         });
