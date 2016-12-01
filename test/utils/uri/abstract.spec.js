@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var Abstract = require('router/uri/component/Abstract');
+    var Abstract = require('utils/uri/component/Abstract');
 
-    describe('router/uri/component/Abstract', function () {
+    describe('utils/uri/component/Abstract', function () {
 
         it('should have many base methods', function () {
             var absObj = new Abstract();

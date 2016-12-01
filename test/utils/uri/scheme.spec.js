@@ -4,9 +4,9 @@
  */
 
 define(function (require) {
-    var Scheme = require('router/uri/component/Scheme');
+    var Scheme = require('utils/uri/component/Scheme');
 
-    describe('router/uri/component/Scheme', function () {
+    describe('utils/uri/component/Scheme', function () {
 
         describe('set', function () {
 

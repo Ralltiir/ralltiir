@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var Fragment = require('router/uri/component/Fragment');
+    var Fragment = require('utils/uri/component/Fragment');
 
-    describe('router/uri/component/Fragment', function () {
+    describe('utils/uri/component/Fragment', function () {
 
         describe('#toString()', function () {
 

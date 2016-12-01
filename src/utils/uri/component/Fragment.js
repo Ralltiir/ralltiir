@@ -4,7 +4,7 @@
  */
 
 define(function (require) {
-    var inherits = require('../../lang/inherits');
+    var inherits = require('../../underscore').inherits;
     var Abstract = require('./Abstract');
 
     var DEFAULT_PREFIX = '#';

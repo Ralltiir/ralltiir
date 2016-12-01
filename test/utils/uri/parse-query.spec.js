@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var parse = require('router/uri/util/parse-query');
+    var parse = require('utils/uri/util/parse-query');
 
-    describe('router/uri/util/parse-query', function () {
+    describe('utils/uri/util/parse-query', function () {
 
         it('with empty string', function () {
             var query = '';

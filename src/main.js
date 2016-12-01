@@ -3,26 +3,10 @@
     __inline('utils/di.js');
 
     // router
-    __inline('router/lang/extend.js');
-    __inline('router/lang/inherits.js');
     __inline('router/router/URL.js');
     __inline('router/router/config.js');
     __inline('router/router/controller.js');
     __inline('router/router.js');
-    __inline('router/uri.js');
-    __inline('router/uri/URI.js');
-    __inline('router/uri/component/Abstract.js');
-    __inline('router/uri/component/Fragment.js');
-    __inline('router/uri/component/Host.js');
-    __inline('router/uri/component/Password.js');
-    __inline('router/uri/component/Path.js');
-    __inline('router/uri/component/Port.js');
-    __inline('router/uri/component/Query.js');
-    __inline('router/uri/component/Scheme.js');
-    __inline('router/uri/component/UserName.js');
-    __inline('router/uri/util/parse-query.js');
-    __inline('router/uri/util/stringify-query.js');
-    __inline('router/uri/util/uri-parser.js');
 
     // utils
     __inline('utils/http.js');
@@ -33,6 +17,21 @@
     __inline('utils/cache.js');
     __inline('utils/map.js');
     __inline('utils/emitter.js');
+
+    // utils/uri
+    __inline('utils/uri/URI.js');
+    __inline('utils/uri/component/Abstract.js');
+    __inline('utils/uri/component/Fragment.js');
+    __inline('utils/uri/component/Host.js');
+    __inline('utils/uri/component/Password.js');
+    __inline('utils/uri/component/Path.js');
+    __inline('utils/uri/component/Port.js');
+    __inline('utils/uri/component/Query.js');
+    __inline('utils/uri/component/Scheme.js');
+    __inline('utils/uri/component/UserName.js');
+    __inline('utils/uri/util/parse-query.js');
+    __inline('utils/uri/util/stringify-query.js');
+    __inline('utils/uri/util/uri-parser.js');
 
     // core
     __inline('action.js');
@@ -73,6 +72,9 @@
     }, {
         name: 'emitter',
         mid: 'sfr/utils/emitter'
+    }, {
+        name: 'url',
+        mid: 'utils/url'
     }];
 
     var midList = deps.map(function(item) {

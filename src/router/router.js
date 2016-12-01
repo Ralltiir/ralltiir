@@ -5,7 +5,7 @@
 
 define(function (require) {
 
-    var extend = require('./lang/extend');
+    var extend = require('../utils/underscore').extend;
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
 

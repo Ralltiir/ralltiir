@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var Port = require('router/uri/component/Port');
+    var Port = require('utils/uri/component/Port');
 
-    describe('router/uri/component/port', function () {
+    describe('utils/uri/component/port', function () {
 
         describe('#equal()', function () {
 

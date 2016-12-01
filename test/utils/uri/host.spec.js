@@ -4,9 +4,9 @@
  */
 
 define(function (require) {
-    var Host = require('router/uri/component/Host');
+    var Host = require('utils/uri/component/Host');
 
-    describe('router/uri/componet/Host', function () {
+    describe('utils/uri/componet/Host', function () {
 
         describe('#set()', function () {
 

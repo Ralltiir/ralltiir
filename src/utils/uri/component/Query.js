@@ -4,8 +4,10 @@
  */
 
 define(function (require) {
-    var inherits = require('../../lang/inherits');
-    var extend = require('../../lang/extend');
+    var inherits = require('../../underscore').inherits;
+    var extend = require('../../underscore').extend;
+    var isObject = require('../../underscore').isObject;
+    var isString = require('../../underscore').isString;
     var Abstract = require('./Abstract');
 
     var parse = require('../util/parse-query');
@@ -18,29 +20,6 @@ define(function (require) {
      * @type {string}
      */
     var DEFAULT_PREFIX = '?';
-
-    /**
-     * 判断对象
-     *
-     * @inner
-     * @param {*} data 变量
-     * @return {boolean}
-     */
-    function isObject(data) {
-        return '[object Object]'
-            === Object.prototype.toString.call(data);
-    }
-
-    /**
-     * 判断字符串
-     *
-     * @inner
-     * @param {*} str 变量
-     * @return {boolean}
-     */
-    function isString(str) {
-        return typeof str === 'string';
-    }
 
     /**
      * 比较数组
