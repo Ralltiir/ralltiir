@@ -9,6 +9,8 @@
  */
 
 define(function() {
+    var assert = require('./assert');
+
     /*
      * 变量定义
      */
@@ -327,6 +329,23 @@ define(function() {
         };
     }
 
+    /**
+     * Creates a function that provides value to wrapper as its first argument.
+     * Any additional arguments provided to the function are appended to those provided to the wrapper. The wrapper is invoked with the this binding of the created function.\
+     *
+     * @param  {*}        value    The value to wrap.
+     * @param  {Function} wrapper  The wrapper function.
+     * @return {Function}          Returns the new function.
+     */
+    function wrap(value, wrapper) {
+        assert((typeof wrapper === 'function'), 'wrapper should be a function');
+        return function () {
+            var args = Array.prototype.slice.call(arguments, 0);
+            args.unshift(value);
+            return wrapper.apply(this, args);
+        };
+    }
+
     /* 
      * objectect Related
      */
@@ -370,6 +389,7 @@ define(function() {
     exports.partial = partial;
     exports.partialRight = partialRight;
     exports.negate = negate;
+    exports.wrap = wrap;
 
     return exports;
 });
