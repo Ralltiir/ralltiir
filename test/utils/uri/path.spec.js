@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var Path = require('router/uri/component/Path');
+    var Path = require('utils/uri/component/Path');
 
-    describe('router/uri/component/path', function () {
+    describe('utils/uri/component/path', function () {
 
         describe('.resolve()', function () {
 

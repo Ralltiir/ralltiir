@@ -7,7 +7,7 @@ define(function (require) {
 
     var UNDEFINED;
 
-    var extend = require('../../lang/extend');
+    var extend = require('../../underscore').extend;
 
     /**
      * 标准化URI数据

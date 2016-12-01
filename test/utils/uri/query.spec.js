@@ -5,12 +5,12 @@
 
 define(function (require) {
 
-    var Query = require('router/uri/component/Query');
+    var Query = require('utils/uri/component/Query');
 
     var KEY_DECODE = '中文';
     var KEY_ENCODE = encodeURIComponent(KEY_DECODE);
 
-    describe('router/uri/component/Query', function () {
+    describe('utils/uri/component/Query', function () {
 
         describe('set', function () {
 

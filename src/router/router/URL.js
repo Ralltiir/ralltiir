@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var Path = require('../uri/component/Path');
-    var Query = require('../uri/component/Query');
-    var Fragment = require('../uri/component/Fragment');
+    var Path = require('../../utils/uri/component/Path');
+    var Query = require('../../utils/uri/component/Query');
+    var Fragment = require('../../utils/uri/component/Fragment');
     var config = require('./config');
     // Spec. RFC3986: URI Generic Syntax
     // see: https://tools.ietf.org/html/rfc3986#page-50

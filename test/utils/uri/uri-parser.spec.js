@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var parseURI = require('router/uri/util/uri-parser');
+    var parseURI = require('utils/uri/util/uri-parser');
 
-    describe('router/uri/util/uri-parser', function () {
+    describe('utils/uri/util/uri-parser', function () {
 
         describe('string param', function () {
 

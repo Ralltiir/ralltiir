@@ -5,9 +5,9 @@
 
 define(function (require) {
 
-    var stringify = require('router/uri/util/stringify-query');
+    var stringify = require('utils/uri/util/stringify-query');
 
-    describe('router/uri/util/stringify-query', function () {
+    describe('utils/uri/util/stringify-query', function () {
 
         it('with noraml item', function () {
             var query = {name: 'cxl', age: 10};
