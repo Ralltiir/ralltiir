@@ -74,7 +74,7 @@
         mid: 'sfr/utils/emitter'
     }, {
         name: 'url',
-        mid: 'utils/url'
+        mid: 'sfr/utils/url'
     }];
 
     var midList = deps.map(function(item) {
