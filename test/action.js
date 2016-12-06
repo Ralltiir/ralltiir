@@ -231,6 +231,9 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             beforeEach(function() {
                 action.regist('/foo', fooService);
                 action.regist('/bar', barService);
+                action.start({
+                    root: '/root/page'
+                });
             });
             it('should call router with correct arguments', function() {
                 var url = 'xx',
@@ -246,6 +249,10 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                         foo: 'bar'
                     });
                 });
+            });
+            it('should redirect to root page for sfr://root', function() {
+                action.redirect('sfr://root');
+                expect(router.redirect).to.have.been.calledWith('/root/page');
             });
             it('should not pass stage data to further dispatches', function() {
                 action.redirect('/foo', 'bb', {}, {foo: 'bar'});
