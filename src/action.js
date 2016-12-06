@@ -12,13 +12,24 @@ define(function() {
     var assert = require('utils/assert');
     var Map = require('utils/map');
     var _ = require('utils/underscore');
+    var Url = require('utils/url');
     var exports = {};
-    var serviceMap = new Map();
-    var backManually = false;
+    var serviceMap, backManually, root, isRootPage;
 
     // The state data JUST for the next dispatch
     var stageData = {};
     var dispatchQueue = DispatchQueue();
+
+    /*
+     * This is provided to reset closure variables which defines the inner state.
+     * @private
+     */
+    exports.init = function(){
+        serviceMap = new Map();
+        backManually = false;
+        root = '/';
+        isRootPage = true;
+    };
 
     /*
      * Get the stage data being passed to next dispatch
@@ -99,6 +110,11 @@ define(function() {
             backManually = false;
             current.options.src = 'back';
         }
+
+        // mark initial page out
+        if(current && current.src !== 'sync'){
+            isRootPage = false;
+        }
         
         // Abort currently the running dispatch queue, 
         // and initiate a new one.
@@ -108,6 +124,13 @@ define(function() {
             prevService && prevService.destroy.bind(prevService, current, prev, data),
             currentService && currentService.attach.bind(currentService, current, prev, data)
         ]).exec();
+    };
+
+    /*
+     * Check if currently in initial page
+     */
+    exports.isRootPage = function(){
+        return isRootPage;
     };
 
     /*
@@ -191,8 +214,8 @@ define(function() {
      *  @static
      * */
     exports.config = function(options){
+        root = (options && options.root) || '/';
         router.config(options);
-        // nothing more, actually :)
     };
 
     /**
@@ -216,6 +239,14 @@ define(function() {
      * @param {Object} data extended data being passed to `current.options`
      * */
     exports.redirect = function(url, query, options, data) {
+        var urlObj = Url.parse(url);
+        if(urlObj.scheme && urlObj.scheme.data === 'sfr'){
+            if(urlObj.path && urlObj.path.data === 'root'){
+                url = root;
+                query = null;
+            }
+        }
+
         _.assign(stageData, data);
         router.redirect(url, query, options);
     };
@@ -241,6 +272,9 @@ define(function() {
      * @param {Object} data extended data being passed to `current.options`
      * */
     exports.reset = function(url, query, options, data) {
+        if(isRootPage){
+            root = url;
+        }
         _.assign(stageData, data);
         router.reset(url, query, options);
     };
@@ -342,6 +376,8 @@ define(function() {
             return service.update(routerOptions, transition, data);
         });
     };
+
+    exports.init();
     
     return exports;
 });
