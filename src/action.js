@@ -239,17 +239,24 @@ define(function() {
      * @param {Object} data extended data being passed to `current.options`
      * */
     exports.redirect = function(url, query, options, data) {
-        var urlObj = Url.parse(url);
-        if(urlObj.scheme && urlObj.scheme.data === 'sfr'){
-            if(urlObj.path && urlObj.path.data === 'root'){
-                url = root;
-                query = null;
-            }
-        }
-
+        url = resolveUrl(url);
         _.assign(stageData, data);
         router.redirect(url, query, options);
     };
+
+    function resolveUrl(url){
+        var urlObj = Url.parse(url);
+
+        // Superframe protocol, eg. sfr://root
+        if(urlObj.scheme === 'sfr'){
+            if(urlObj.host === 'root'){
+                return root;
+            }
+        }
+
+        // fallback to url
+        return url;
+    }
 
     /**
      *  Back to last state
