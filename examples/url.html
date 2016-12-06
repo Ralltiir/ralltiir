@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Url Usage Demo</title>
+  <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-1-4/esl.source.js"></script>
+  <script src="http://superframe.baidu.com/dist/sfr-dev.js"></script>
+</head>
+
+<body>
+
+  <h1>Url Usage Demo</h1>
+
+  <p>Check out the console.</p>
+
+  <script>
+    require(['sfr'], function(sfr) {
+      var Url = sfr.url;
+
+      // URL Construction
+      var url = new Url({
+        scheme: 'https',
+        host: 'www.baidu.com',
+        path: '/sfr/demo',
+        query: {
+          author: 'harttle'
+        }
+      });
+      console.log('constructed url:');
+      // "https://www.baidu.com/sfr/demo?author=harttle"
+      console.log(url.toString());
+
+      // URL Parsing
+      console.log('parse url:');
+      // Object {scheme: Scheme, username: UserName, password: Password, host: Host, port: Port…}
+      console.log(Url.parse(url));
+
+      // URL Resolving
+      var from = 'http://www.baidu.com/foo/bar';
+      var to = './harttle';
+      console.log('resolve url:');
+      // http:/www.baidu.com/foo/harttle
+      console.log(Url.resolve(from, to));
+
+      // URL Param Construction
+      var query = Url.param({
+        foo: 'bar',
+        author: '杨珺'
+      });
+      console.log('param formating:');
+      // "foo=bar&author=%E6%9D%A8%E7%8F%BA"
+      console.log(query);
+    });
+  </script>
+</body>
+
+</html>
