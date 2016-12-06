@@ -15,6 +15,7 @@
       <li> <a href="./http.html">HTTP</a> </li>
       <li> <a href="./resource.html">Resource</a> </li>
       <li> <a href="./view.html">View</a></li>
+      <li> <a href="./url.html">Url</a></li>
     </ul>
   </section>
   <section>
@@ -23,62 +24,6 @@
       <li> <a href="./app">Todo List App</a></li>
     </ul>
   </section>
-  <script src="../lib/esl.js"></script>
-  <script src="../dist/sf-2.5.js"></script>
-  <script>
-    require(['sfr/router/router', 'sfr/action', 'sfr/service'], function(router, action, Service) {
-      var _rootPath = location.pathname;
-      router.config({
-        root: _rootPath
-      });
-
-      //create index service
-      var IndexService = new Service();
-
-      IndexService.create = function() {
-        console.log('index create');
-      };
-
-      IndexService.attach = function() {
-        console.log('index attach');
-      };
-
-      IndexService.detach = function() {
-        console.log('index detach');
-      };
-
-      IndexService.destroy = function() {
-        console.log('index destroy');
-      };
-
-      //create page service
-      var PageService = new Service();
-
-      PageService.create = function() {
-        console.log('page create');
-      };
-
-      PageService.attach = function() {
-        console.log('page attach');
-      };
-
-      PageService.detach = function() {
-        console.log('page detach');
-      };
-
-      PageService.destroy = function() {
-        console.log('page destroy');
-      };
-
-      action.regist('/page', Object.create(PageService));
-      action.regist('/', Object.create(IndexService));
-
-      router.start();
-      action.start();
-
-      window.action = action;
-    });
-  </script>
 </body>
 
 </html>
