@@ -180,6 +180,27 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 });
             });
         });
+        describe('.isRootPage()', function(){
+            beforeEach(function() {
+                action.init();
+                action.regist('/foo', fooService);
+                action.regist('/bar', barService);
+            });
+            it('should set as true initally', function() {
+                expect(action.isRootPage()).to.be.true;
+            });
+            it('should return false when dispatched to another service', function() {
+                return action.dispatch(current, prev).then(function(){
+                    expect(action.isRootPage()).to.be.false;
+                });
+            });
+            it('should return true when dispatched to sync', function() {
+                current.src = 'sync';
+                return action.dispatch(current, prev).then(function(){
+                    expect(action.isRootPage()).to.be.true;
+                });
+            });
+        });
         describe('.back()', function() {
             it('should call history.back()', function() {
                 action.back({});
