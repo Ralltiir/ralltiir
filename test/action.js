@@ -218,7 +218,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 });
             });
             it('should return true when dispatched to sync', function() {
-                current.src = 'sync';
+                current.options.src = 'sync';
                 return action.dispatch(current, prev).then(function(){
                     expect(action.isIndexPage()).to.be.true;
                 });
@@ -306,7 +306,6 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             it('should pass stage data to next dispatch', function() {
                 action.reset('/foo', 'bb', {}, {foo: 'bar'});
                 return action.dispatch({pathPattern: '/foo'}, {}).then(function(){
-                    console.log(fooService.create.args);
                     expect(fooService.create.args[0][2]).to.deep.equal({
                         foo: 'bar'
                     });
