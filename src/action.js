@@ -125,7 +125,7 @@ define(function() {
         }
 
         // mark initial page out
-        if(current.src === 'sync'){
+        if(current.options && current.options.src === 'sync'){
             indexPageUrl = current.url || '/';
         } else{
             isIndexPage = false;

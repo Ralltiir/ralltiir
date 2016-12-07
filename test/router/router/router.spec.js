@@ -81,8 +81,6 @@ define(function (require) {
                 catch (e) {
                     error = e;
                 }
-                console.log(mockLocation.replace.args);
-                console.log('testing:', mockLocation.type);
                 expect(mockLocation.replace).to.have.been.calledWith('/root/foo');
                 expect(error.message).to.match(/can not find route/);
             });
