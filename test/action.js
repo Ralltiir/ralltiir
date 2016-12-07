@@ -203,24 +203,24 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 });
             });
         });
-        describe('.isRootPage()', function(){
+        describe('.isIndexPage()', function(){
             beforeEach(function() {
                 action.init();
                 action.regist('/foo', fooService);
                 action.regist('/bar', barService);
             });
             it('should set as true initally', function() {
-                expect(action.isRootPage()).to.be.true;
+                expect(action.isIndexPage()).to.be.true;
             });
             it('should return false when dispatched to another service', function() {
                 return action.dispatch(current, prev).then(function(){
-                    expect(action.isRootPage()).to.be.false;
+                    expect(action.isIndexPage()).to.be.false;
                 });
             });
             it('should return true when dispatched to sync', function() {
                 current.src = 'sync';
                 return action.dispatch(current, prev).then(function(){
-                    expect(action.isRootPage()).to.be.true;
+                    expect(action.isIndexPage()).to.be.true;
                 });
             });
         });
@@ -273,9 +273,11 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     });
                 });
             });
-            it('should redirect to root page for sfr://root', function() {
-                action.redirect('sfr://root');
-                expect(router.redirect).to.have.been.calledWith('/root/page');
+            it('should redirect to root page for sfr://index', function() {
+                current.src = 'sync';
+                action.dispatch(current, prev);
+                action.redirect('sfr://index');
+                expect(router.redirect).to.have.been.calledWith('/foo?a=b');
             });
             it('should not pass stage data to further dispatches', function() {
                 action.redirect('/foo', 'bb', {}, {foo: 'bar'});
