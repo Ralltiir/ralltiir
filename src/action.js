@@ -14,7 +14,7 @@ define(function() {
     var _ = require('utils/underscore');
     var Url = require('utils/url');
     var exports = {};
-    var serviceMap, backManually, root, isRootPage;
+    var serviceMap, backManually, indexPageUrl, isIndexPage;
 
     // The state data JUST for the next dispatch
     var stageData = {};
@@ -27,8 +27,8 @@ define(function() {
     exports.init = function(){
         serviceMap = new Map();
         backManually = false;
-        root = '/';
-        isRootPage = true;
+        indexPageUrl = '/';
+        isIndexPage = true;
     };
 
     /*
@@ -110,6 +110,8 @@ define(function() {
      *  @return {Promise}
      * */
     exports.dispatch = function(current, prev) {
+        assert(current, 'cannot dispatch with options:' + current);
+
         var proxyList = [];
         var currentService = serviceMap.get(current.pathPattern);
         var prevService = serviceMap.get(prev.pathPattern);
@@ -123,8 +125,10 @@ define(function() {
         }
 
         // mark initial page out
-        if(current && current.src !== 'sync'){
-            isRootPage = false;
+        if(current.src === 'sync'){
+            indexPageUrl = current.url || '/';
+        } else{
+            isIndexPage = false;
         }
         
         // Abort currently the running dispatch queue, 
@@ -140,8 +144,8 @@ define(function() {
     /*
      * Check if currently in initial page
      */
-    exports.isRootPage = function(){
-        return isRootPage;
+    exports.isIndexPage = function(){
+        return isIndexPage;
     };
 
     /*
@@ -225,7 +229,6 @@ define(function() {
      *  @static
      * */
     exports.config = function(options){
-        root = (options && options.root) || '/';
         router.config(options);
     };
 
@@ -260,8 +263,8 @@ define(function() {
 
         // Superframe protocol, eg. sfr://root
         if(urlObj.scheme === 'sfr'){
-            if(urlObj.host === 'root'){
-                return root;
+            if(urlObj.host === 'index'){
+                return indexPageUrl;
             }
         }
 
@@ -290,8 +293,8 @@ define(function() {
      * @param {Object} data extended data being passed to `current.options`
      * */
     exports.reset = function(url, query, options, data) {
-        if(isRootPage){
-            root = url;
+        if(isIndexPage){
+            indexPageUrl = url;
         }
         _.assign(stageData, data);
         router.reset(url, query, options);
