@@ -3,6 +3,14 @@
  * @author treelite(c.xinle@gmail.com)
  */
 
+// window.location.replace 只读。
+// 等待 DI+AMD 框架完成之后再迁移这段代码。
+var mockLocation = {
+    type: 'mock',
+    replace: sinon.spy()
+};
+di.value('location', mockLocation);
+
 define(function (require) {
     var router = require('router/router');
     var URL = require('router/router/URL');
@@ -30,6 +38,10 @@ define(function (require) {
 
     describe('router/router', function () {
 
+        beforeEach(function(){
+            mockLocation.replace.reset();
+        });
+
         describe('start/stop', function () {
 
             it('should init controller and dipose controller', function () {
@@ -51,6 +63,9 @@ define(function (require) {
 
             beforeEach(function () {
                 router.start();
+                router.config({
+                    root: '/root'
+                });
             });
 
             afterEach(function () {
@@ -61,13 +76,15 @@ define(function (require) {
             it('no handler, throw exception', function () {
                 var error;
                 try {
-                    router.redirect('/');
+                    router.redirect('/foo');
                 }
                 catch (e) {
                     error = e;
                 }
-                expect(error).not.to.be.undefined;
-                expect(error.message.indexOf('route') >= 0).to.be.ok;
+                console.log(mockLocation.replace.args);
+                console.log('testing:', mockLocation.type);
+                expect(mockLocation.replace).to.have.been.calledWith('/root/foo');
+                expect(error.message).to.match(/can not find route/);
             });
 
             it('default handler', function () {
@@ -101,7 +118,7 @@ define(function (require) {
                 expect(state.query).to.deep.equal({name: ['treelite', 'saber']});
                 expect(state.params).to.deep.equal({});
                 expect(state.options).to.deep.equal(options);
-                expect(state.url).to.equal('/home/work?name=treelite&name=saber');
+                expect(state.url).to.equal('/root/home/work?name=treelite&name=saber');
             });
 
             it('handler\'s prevState', function () {
@@ -127,7 +144,7 @@ define(function (require) {
                     pathPattern: '/foo',
                     query: {type: 'f'},
                     params: {},
-                    url: '/foo?type=f',
+                    url: '/root/foo?type=f',
                     options: {}
                 });
             });

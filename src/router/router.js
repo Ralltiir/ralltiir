@@ -8,6 +8,8 @@ define(function (require) {
     var extend = require('../utils/underscore').extend;
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
+    var URL = require('../utils/url');
+    var location = di.container.location;
 
     var exports = {};
 
@@ -143,7 +145,9 @@ define(function (require) {
         if (!handler) {
             waitingRoute = null;
             pending = false;
-            throw new Error('can not found route for: ' + path);
+            var url = URL.resolve(globalConfig.root, url.toString()); 
+            location.replace(url.toString());
+            throw new Error('can not find route for: ' + path);
         }
 
         if (options.title) {
