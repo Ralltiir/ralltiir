@@ -87,6 +87,7 @@
         });
         di.value('document', window.document);
         di.value('window', window);
+        di.value('location', location);
 
         return di.container;
     });
