@@ -58,6 +58,17 @@ define(function() {
         serviceMap.set(url, service);
     };
 
+    /*
+     * Un-register a service by path
+     * @param {String|RestFul|RegExp} url The path of the service
+     */
+    exports.unregist = function(url){
+        assert(url, 'illegal action url');
+        assert(serviceMap.has(url), 'path not registered');
+        router.remove(url);
+        serviceMap.delete(url);
+    }
+
     /**
      *  Check if value is a valid service instance
      *  @param {any} value The value to check.

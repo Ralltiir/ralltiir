@@ -72,6 +72,27 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 expect(action.exist('key')).to.be.true;
             });
         });
+        describe('.unregist()', function() {
+            beforeEach(function(){
+                action.regist('key', fooService);
+            });
+            it('should throw with undefined key', function() {
+                function fn() {
+                    action.unregist();
+                }
+                expect(fn).to.throw(/illegal action url/);
+            });
+            it('should throw not when registered', function() {
+                function fn() {
+                    action.unregist('not-registered');
+                }
+                expect(fn).to.throw(/path not registered/);
+            });
+            it('should un-register', function() {
+                action.unregist('key');
+                expect(action.exist('key')).to.be.false;
+            });
+        });
         describe('.dispatch()', function() {
             beforeEach(function() {
                 action.regist('/foo', fooService);
