@@ -289,12 +289,17 @@ define(function() {
     /**
      *  hijack global link href
      *  @private
-     *  @param {Event} e The click event object
+     *  @param {Event} event The click event object
      * */
-    function _onAnchorClick(e, target) {
+    function _onAnchorClick(event) {
+        event = event || window.event;
+        var targetEl = _closest(event.target || event.srcElement, "A");
+
+        if (!targetEl) return;
+
         //link href only support url like pathname,e.g:/sf?params=
-        var link = target.getAttribute('data-sf-href');
-        var options = target.getAttribute('data-sf-options');
+        var link = targetEl.getAttribute('data-sf-href');
+        var options = targetEl.getAttribute('data-sf-options');
 
         if(link) {
             try {
@@ -305,26 +310,20 @@ define(function() {
             options.src = "hijack";
             exports.redirect(link, null, options);
 
-            e.preventDefault();
+            event.preventDefault();
         }
     }
 
-    function _delegateAnchorClick(cb){
-        document.documentElement.addEventListener("click", function(event){
-            event = event || window.event;
-            var targetEl = _closest(event.target || event.srcElement, "A");
-            if (targetEl) {
-                cb(event, targetEl);
-            }
-        }, false);
-
-        function _closest(element, tagName) {
-            var parent = element;
-            while (parent !== null && parent.tagName !== tagName.toUpperCase()) {
-                parent = parent.parentNode;
-            }
-            return parent;
+    /*
+     * Find the closes parent (matching the tagName)
+     * @private
+     */
+    function _closest(element, tagName) {
+        var parent = element;
+        while (parent !== null && parent.tagName !== tagName.toUpperCase()) {
+            parent = parent.parentNode;
         }
+        return parent;
     }
 
     /**
@@ -336,9 +335,17 @@ define(function() {
         if(arguments.length){
             exports.config(options);
         }
-        _delegateAnchorClick(_onAnchorClick);
+        document.body.addEventListener("click", _onAnchorClick);
         router.start();
-    } ;
+    };
+
+    /*
+     * Stop superframe redirects
+     */
+    exports.stop = function() {
+        document.body.removeEventListener("click", _onAnchorClick);
+        router.stop();
+    };
 
     /**
      *  Update page, reset or replace current state accordingly

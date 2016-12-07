@@ -13,6 +13,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
             action.clear();
             sinon.stub(router, 'reset');
             sinon.stub(router, 'redirect');
+            sinon.stub(router, 'stop');
             sinon.stub(history, 'back');
             fooService = {
                 create: sinon.spy(),
@@ -44,6 +45,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         afterEach(function() {
             router.reset.restore();
             router.redirect.restore();
+            router.stop.restore();
             history.back.restore();
         });
         describe('.regist()', function() {
@@ -299,7 +301,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 });
             });
         });
-        describe('.start()', function() {
+        describe('.start(), .stop()', function() {
             var a;
             beforeEach(function() {
                 var link = '/foo',
@@ -320,6 +322,16 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 action.start();
                 a.click();
                 expect(router.redirect).to.have.been.calledWith('foo', null);
+            });
+            it('should not redirect data-sf-href after .stop() called', function() {
+                action.start();
+                action.stop();
+                a.click();
+                expect(router.redirect).to.have.not.been.called;
+            });
+            it('should call router.stop() when .stop() called', function() {
+                action.stop();
+                expect(router.stop).to.have.been.called;
             });
             it('should support redirect options via data-sf-options', function() {
                 action.start();
