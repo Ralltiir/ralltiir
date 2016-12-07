@@ -81,13 +81,14 @@
         return item.mid;
     });
 
+    di.value('document', window.document);
+    di.value('window', window);
+    di.value('location', location);
+
     define('sfr', midList, function() {
         deps.forEach(function(item) {
             di.value(item.name, require(item.mid));
         });
-        di.value('document', window.document);
-        di.value('window', window);
-        di.value('location', location);
 
         return di.container;
     });
