@@ -327,6 +327,7 @@ define(function() {
         var options = targetEl.getAttribute('data-sf-options');
 
         if(link) {
+            event.preventDefault();
             try {
                 options = JSON.parse(options) || {};
             } catch(err) {
@@ -334,8 +335,6 @@ define(function() {
             }
             options.src = "hijack";
             exports.redirect(link, null, options);
-
-            event.preventDefault();
         }
     }
 
