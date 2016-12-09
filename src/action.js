@@ -12,9 +12,10 @@ define(function() {
     var assert = require('utils/assert');
     var Map = require('utils/map');
     var _ = require('utils/underscore');
-    var Url = require('utils/url');
+    var URL = require('utils/url');
+    var location = di.container.location;
     var exports = {};
-    var serviceMap, backManually, indexPageUrl, isIndexPage;
+    var serviceMap, backManually, indexPageUrl, isIndexPage, root;
 
     // The state data JUST for the next dispatch
     var stageData = {};
@@ -27,6 +28,7 @@ define(function() {
     exports.init = function(){
         serviceMap = new Map();
         backManually = false;
+        root = '/';
         indexPageUrl = '/';
         isIndexPage = true;
     };
@@ -229,6 +231,9 @@ define(function() {
      *  @static
      * */
     exports.config = function(options){
+        if(options && options.root) {
+            root = options.root;
+        }
         router.config(options);
     };
 
@@ -255,11 +260,17 @@ define(function() {
     exports.redirect = function(url, query, options, data) {
         url = resolveUrl(url);
         _.assign(stageData, data);
-        router.redirect(url, query, options);
+        try{
+            router.redirect(url, query, options);
+        } catch(e) {
+            url = URL.resolve(root, url); 
+            location.replace(url);
+            throw e;
+        }
     };
 
     function resolveUrl(url){
-        var urlObj = Url.parse(url);
+        var urlObj = URL.parse(url);
 
         // Superframe protocol, eg. sfr://root
         if(urlObj.scheme === 'sfr'){

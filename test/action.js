@@ -3,6 +3,26 @@
  * @file 测试src/action.js
  */
 
+// window.location.replace 只读。
+// 等待 DI+AMD 框架完成之后再迁移这段代码。
+var mockLocation = {
+    type: 'mock',
+    replace: sinon.spy()
+};
+Object.defineProperties(mockLocation, {
+    href: {
+        get: function(){
+            return window.location.href;
+        }
+    },
+    pathname: {
+        get: function(){
+            return window.location.pathname;
+        }
+    }
+});
+di.value('location', mockLocation);
+
 define(['../src/action', '../router/router', '../src/utils/promise.js'], function(action, router, Promise) {
     describe('action/action', function() {
         /*
@@ -12,7 +32,11 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         beforeEach(function() {
             action.clear();
             sinon.stub(router, 'reset');
-            sinon.stub(router, 'redirect');
+            sinon.stub(router, 'redirect', function(url) {
+                if(url === '/not-defined-service'){
+                    throw new Error('service not found');
+                } 
+            });
             sinon.stub(router, 'stop');
             sinon.stub(history, 'back');
             fooService = {
@@ -290,6 +314,16 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     expect(fooService.create.args[0][2].foo).to.be.undefined;
                 });
             });
+            it('should redirect when router fails', function() {
+                function fn() {
+                    action.redirect('/not-defined-service', {}, {});
+                }
+                expect(fn).to.throw(/service not found/);
+                try{
+                    fn();
+                } catch(e) {}
+                expect(mockLocation.replace).to.have.been.calledWith('/not-defined-service');
+            });
         });
         describe('.reset()', function() {
             beforeEach(function() {
@@ -399,6 +433,10 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         describe('.update()', function() {
             beforeEach(function() {
                 action.regist('/foo', fooService);
+                action.start({
+                    root: '/root'
+                });
+                mockLocation.replace.reset();
             });
             it('should call router.reset()', function() {
                 history.replaceState({}, 'title', '/foo');
