@@ -16,6 +16,9 @@ require.config({
 // Important: 禁用__karma__.loaded()，它会在DOM载入后立即调用 mocha.run()
 //     此时esl尚未载入测试脚本。
 window.__karma__.loaded = function() {};
+
+// 设置DEBUG环境
+window.DEBUG || (window.DEBUG = false);
 var mods = TEST_FILES.map(getModuleId);
 require(mods, function(){
     console.log(mods.length + ' test modules loaded');
@@ -34,8 +37,7 @@ function pathMap(arr) {
 }
 
 function isTestFile(filepath){
-    return /\/base\/test\//.test(filepath) && 
-        filepath !== '/base/test/index.js';
+    return /\/base\/test\//.test(filepath);
 }
 
 function getModuleId(filepath){

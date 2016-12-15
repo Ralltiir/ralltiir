@@ -1,6 +1,5 @@
-# @file: Build & Test 
 # @author: yangjun14(yangjun14@baidu.com)
-
+# Use npm scripts instead
 
 # Variables
 
@@ -36,6 +35,7 @@ dist-prepare:
 
 dist: build-prod dist-prepare build/banner.js
 	cat build/banner.js > dist/${NAME}.js
+	echo 'window.DEBUG || (window.DEBUG = false);' >> dist/${NAME}.js
 	cat build/src/main.js >> dist/${NAME}.js
 	cat build/banner.js > dist/${NAME}.min.js
 	cat build/src/main.min.js >> dist/${NAME}.min.js

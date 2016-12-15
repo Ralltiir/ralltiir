@@ -2,6 +2,10 @@
     // DI loaded first
     __inline('utils/di.js');
 
+    if (DEBUG) {
+        __inline('utils/debug.js');
+    }
+
     // router
     __inline('router/router/URL.js');
     __inline('router/router/config.js');
