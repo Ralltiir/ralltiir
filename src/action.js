@@ -16,6 +16,9 @@ define(function() {
     var location = di.container.location;
     var exports = {};
     var serviceMap, backManually, indexPageUrl, isIndexPage, root;
+    if (DEBUG) {
+        var debug = require('utils/debug');
+    }
 
     // The state data JUST for the next dispatch
     var stageData = {};
@@ -58,6 +61,9 @@ define(function() {
         assert(!serviceMap.has(url), 'path already registerd');
         router.add(url, this.dispatch);
         serviceMap.set(url, service);
+        if (DEBUG) {
+            log("service registered to: " + url);
+        }
     };
 
     /*
@@ -69,6 +75,9 @@ define(function() {
         assert(serviceMap.has(url), 'path not registered');
         router.remove(url);
         serviceMap.delete(url);
+        if (DEBUG) {
+            log("service unregistered from: " + url);
+        }
     }
 
     /**
@@ -113,6 +122,10 @@ define(function() {
      * */
     exports.dispatch = function(current, prev) {
         assert(current, 'cannot dispatch with options:' + current);
+
+        if (DEBUG) {
+            log("action dispatching to: " +  current.url );
+        }
 
         var proxyList = [];
         var currentService = serviceMap.get(current.pathPattern);
@@ -258,6 +271,9 @@ define(function() {
      * @param {Object} data extended data being passed to `current.options`
      * */
     exports.redirect = function(url, query, options, data) {
+        if (DEBUG) {
+            log("action redirecting to: " + url);
+        }
         url = resolveUrl(url);
         _.assign(stageData, data);
         try{

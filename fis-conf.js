@@ -62,8 +62,14 @@ fis.match('main.js', {
 fis.match('main.min.js', {
     isMod: false,
     optimizer: fis.plugin('uglify-js', {
-        output : {
+        output: {
             max_line_len : 500
+        },
+        compress: {
+            dead_code: true,
+            global_defs: {
+                DEBUG: false
+            }
         }
     }),
     release: '/src/main.min.js'
