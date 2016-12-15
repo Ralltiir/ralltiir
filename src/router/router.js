@@ -9,9 +9,7 @@ define(function (require) {
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
     var URL = require('../utils/url');
-    if (DEBUG) {
-        var debug = require('../utils/debug');
-    }
+    var debug = require('../utils/debug');
 
     var exports = {};
 

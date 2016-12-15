@@ -13,8 +13,9 @@ define(function() {
         longStackTraces: false
     };
     var assert = require('./assert');
+    var debug = require('./debug');
+
     if (DEBUG) {
-        var debug = require('./debug');
         var promiseId = 0;
     }
 
