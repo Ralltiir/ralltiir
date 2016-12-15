@@ -6,7 +6,11 @@
  * Log to server:
  *   window.DEBUG = "http://
  */
+
 define(function() {
+	if(window.DEBUG === undefined){
+        window.DEBUG = undefined;
+    }
     var remote = window.DEBUG_SERVER;
     var timeOffset = Date.now();
     var lastTime = timeOffset;

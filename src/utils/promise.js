@@ -56,11 +56,11 @@ define(function() {
         var self = this;
         if (DEBUG) {
             var id = promiseId++;
-            log("promise initialized: " + id);
+            debug.log("promise initialized: " + id);
         }
         setTimeout(function() {
             if (DEBUG) {
-                log("promise resolving: " + id);
+                debug.log("promise resolving: " + id);
             }
             self._doResolve(cb);
         });
