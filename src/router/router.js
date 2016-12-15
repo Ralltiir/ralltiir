@@ -97,7 +97,7 @@ define(function (require) {
      */
     function apply(url, options) {
         if (DEBUG) {
-            log("router apply: " + url);
+            debug.log("router apply: " + url);
         }
         options = options || {};
 
@@ -171,13 +171,13 @@ define(function (require) {
         if (handler.fn.length > args.length) {
             args.push(finish);
             if (DEBUG) {
-                log("router calling handler: " + handler.name);
+                debug.log("router calling handler: " + handler.name);
             }
             handler.fn.apply(handler.thisArg, args);
         }
         else {
             if (DEBUG) {
-                log("router calling handler: " + handler.name);
+                debug.log("router calling handler: " + handler.name);
             }
             handler.fn.apply(handler.thisArg, args);
             finish();
@@ -327,7 +327,7 @@ define(function (require) {
      */
     exports.redirect = function (url, query, options) {
         if (DEBUG) {
-            log("router redirecting to: " + url);
+            debug.log("router redirecting to: " + url);
         }
         controller.redirect(url, query, options);
     };

@@ -62,7 +62,7 @@ define(function() {
         router.add(url, this.dispatch);
         serviceMap.set(url, service);
         if (DEBUG) {
-            log("service registered to: " + url);
+            debug.log("service registered to: " + url);
         }
     };
 
@@ -76,7 +76,7 @@ define(function() {
         router.remove(url);
         serviceMap.delete(url);
         if (DEBUG) {
-            log("service unregistered from: " + url);
+            debug.log("service unregistered from: " + url);
         }
     }
 
@@ -124,7 +124,7 @@ define(function() {
         assert(current, 'cannot dispatch with options:' + current);
 
         if (DEBUG) {
-            log("action dispatching to: " +  current.url );
+            debug.log("action dispatching to: " +  current.url );
         }
 
         var proxyList = [];
@@ -272,7 +272,7 @@ define(function() {
      * */
     exports.redirect = function(url, query, options, data) {
         if (DEBUG) {
-            log("action redirecting to: " + url);
+            debug.log("action redirecting to: " + url);
         }
         url = resolveUrl(url);
         _.assign(stageData, data);
