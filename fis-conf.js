@@ -30,6 +30,13 @@ fis.media('prod').match('/src/(**).js', {
     isMod: true
 });
 
+// not included in main.js, build manually
+fis.media('prod').match('/src/utils/debug.js', {
+    release: true,
+    moduleId: 'sfr/utils/debug',
+    isMod: true
+});
+
 fis.match('/src/{utils/di,doc}.js', {
     release: true,
     isMod: false
