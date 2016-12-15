@@ -3,14 +3,6 @@
  * @author treelite(c.xinle@gmail.com)
  */
 
-// window.location.replace 只读。
-// 等待 DI+AMD 框架完成之后再迁移这段代码。
-var mockLocation = {
-    type: 'mock',
-    replace: sinon.spy()
-};
-di.value('location', mockLocation);
-
 define(function (require) {
     var router = require('router/router');
     var URL = require('router/router/URL');
@@ -37,10 +29,6 @@ define(function (require) {
     router.controller(controller);
 
     describe('router/router', function () {
-
-        beforeEach(function(){
-            mockLocation.replace.reset();
-        });
 
         describe('start/stop', function () {
 
@@ -81,7 +69,6 @@ define(function (require) {
                 catch (e) {
                     error = e;
                 }
-                expect(mockLocation.replace).to.have.been.calledWith('/root/foo');
                 expect(error.message).to.match(/can not find route/);
             });
 
