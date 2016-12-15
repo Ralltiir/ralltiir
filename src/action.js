@@ -13,12 +13,10 @@ define(function() {
     var Map = require('utils/map');
     var _ = require('utils/underscore');
     var URL = require('utils/url');
+    var debug = require('utils/debug');
     var location = di.container.location;
     var exports = {};
     var serviceMap, backManually, indexPageUrl, isIndexPage, root;
-    if (DEBUG) {
-        var debug = require('utils/debug');
-    }
 
     // The state data JUST for the next dispatch
     var stageData = {};
