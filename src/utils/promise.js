@@ -14,7 +14,7 @@ define(function() {
     };
     var assert = require('./assert');
     if (DEBUG) {
-        var debug = require('utils/debug');
+        var debug = require('./debug');
         var promiseId = 0;
     }
 
