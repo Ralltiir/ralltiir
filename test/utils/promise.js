@@ -141,6 +141,18 @@ define(['../src/utils/promise'], function(Promise) {
                 });
             });
         });
+        describe('.fromCallback()', function() {
+            it('should resolve when callback called', function() {
+                return expect(Promise.fromCallback(function(cb){
+                    cb('foo');
+                })).to.eventually.equal('foo');
+            });
+            it('should reject when callback throws', function() {
+                return expect(Promise.fromCallback(function(cb){
+                    throw 'bar';
+                })).to.eventually.be.rejectedWith('bar');
+            });
+        });
         describe('.all()', function() {
             it('should resolve when all resolved', function() {
                 return Promise.all([

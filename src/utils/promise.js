@@ -13,6 +13,11 @@ define(function() {
         longStackTraces: false
     };
     var assert = require('./assert');
+    var debug = require('./debug');
+
+    if (DEBUG) {
+        var promiseId = 0;
+    }
 
     /*
      * Create a new promise. 
@@ -50,7 +55,14 @@ define(function() {
         //   after the event loop turn in which then is called, 
         //   and with a fresh stack.
         var self = this;
+        if (DEBUG) {
+            var id = promiseId++;
+            debug.log("promise initialized: " + id);
+        }
         setTimeout(function() {
+            if (DEBUG) {
+                debug.log("promise resolving: " + id);
+            }
             self._doResolve(cb);
         });
     }
@@ -263,6 +275,18 @@ define(function() {
                     resolve(results);
                 }
             }
+        });
+    };
+    /*
+     * Promisify callback
+     * @param {Function} resolver The callback to promisify
+     * @return {Promise} that is resolved by a node style callback function. This is the most fitting way to do on the fly promisification when libraries don't expose classes for automatic promisification.
+     */
+    Promise.fromCallback = function(resolver) {
+        return new Promise(function(resolve){
+            resolver(function(arg){
+                resolve(arg);
+            });
         });
     };
 

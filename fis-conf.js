@@ -30,6 +30,13 @@ fis.media('prod').match('/src/(**).js', {
     isMod: true
 });
 
+// not included in main.js, build manually
+fis.media('prod').match('/src/utils/debug.js', {
+    release: true,
+    moduleId: 'sfr/utils/debug',
+    isMod: true
+});
+
 fis.match('/src/{utils/di,doc}.js', {
     release: true,
     isMod: false
@@ -62,8 +69,14 @@ fis.match('main.js', {
 fis.match('main.min.js', {
     isMod: false,
     optimizer: fis.plugin('uglify-js', {
-        output : {
+        output: {
             max_line_len : 500
+        },
+        compress: {
+            dead_code: true,
+            global_defs: {
+                DEBUG: false
+            }
         }
     }),
     release: '/src/main.min.js'

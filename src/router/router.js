@@ -9,6 +9,7 @@ define(function (require) {
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
     var URL = require('../utils/url');
+    var debug = require('../utils/debug');
 
     var exports = {};
 
@@ -93,6 +94,9 @@ define(function (require) {
      * @param {String} options.title 页面标题
      */
     function apply(url, options) {
+        if (DEBUG) {
+            debug.log("router apply: " + url);
+        }
         options = options || {};
 
         // 只保存最后一次的待调用信息
@@ -164,9 +168,15 @@ define(function (require) {
 
         if (handler.fn.length > args.length) {
             args.push(finish);
+            if (DEBUG) {
+                debug.log("router calling handler: " + handler.name);
+            }
             handler.fn.apply(handler.thisArg, args);
         }
         else {
+            if (DEBUG) {
+                debug.log("router calling handler: " + handler.name);
+            }
             handler.fn.apply(handler.thisArg, args);
             finish();
         }
@@ -314,6 +324,9 @@ define(function (require) {
      * @param {Boolean} options.silent 是否静默跳转（不改变URL）
      */
     exports.redirect = function (url, query, options) {
+        if (DEBUG) {
+            debug.log("router redirecting to: " + url);
+        }
         controller.redirect(url, query, options);
     };
 

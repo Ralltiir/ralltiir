@@ -1,6 +1,5 @@
-# @file: Build & Test 
 # @author: yangjun14(yangjun14@baidu.com)
-
+# Use npm scripts instead
 
 # Variables
 
