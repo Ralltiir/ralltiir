@@ -277,6 +277,18 @@ define(function() {
             }
         });
     };
+    /*
+     * Promisify callback
+     * @param {Function} resolver The callback to promisify
+     * @return {Promise} that is resolved by a node style callback function. This is the most fitting way to do on the fly promisification when libraries don't expose classes for automatic promisification.
+     */
+    Promise.fromCallback = function(resolver) {
+        return new Promise(function(resolve){
+            resolver(function(arg){
+                resolve(arg);
+            });
+        });
+    };
 
     /*
      * Call functions in serial until someone rejected.
