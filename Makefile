@@ -33,6 +33,7 @@ build-prod: build-prepare
 dist-prepare: 
 	[ -d ./dist ] || mkdir ./dist
 
+# use `npm run dist` instead!
 dist: build-prod dist-prepare build/banner.js
 	cat build/banner.js > dist/${NAME}.js
 	cat build/src/main.js >> dist/${NAME}.js

@@ -147,10 +147,22 @@ define(function() {
         // Abort currently the running dispatch queue, 
         // and initiate a new one.
         return dispatchQueue.reset([
-            prevService && prevService.detach.bind(prevService, current, prev, data),
-            currentService && currentService.create.bind(currentService, current, prev, data),
-            prevService && prevService.destroy.bind(prevService, current, prev, data),
-            currentService && currentService.attach.bind(currentService, current, prev, data)
+            function prevDetach() {
+                if(!prevService) return;
+                return prevService.detach(current, prev, data);
+            },
+            function currCreate() {
+                if(!currentService) return;
+                return currentService.create(current, prev, data);
+            },
+            function prevDestroy() {
+                if(!prevService) return;
+                return prevService.destroy(current, prev, data);
+            },
+            function currAttach() {
+                if(!currentService) return;
+                return currentService.attach(current, prev, data);
+            }
         ]).exec();
     };
 
@@ -204,6 +216,9 @@ define(function() {
                 if(typeof cb !== 'function') return;
                 // Just stop running
                 if(thisThreadID !== threadID) return;
+                if(DEBUG) {
+                    debug.log('calling lifecycle', cb.name);
+                }
                 return cb();
             }).catch(function(e){
                 // throw asyncly rather than console.error(e.stack)

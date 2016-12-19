@@ -64,7 +64,7 @@ define(function() {
                 debug.log("promise resolving: " + id);
             }
             self._doResolve(cb);
-        });
+        }, 1);
     }
 
     Promise.prototype._fulfill = function(result) {
