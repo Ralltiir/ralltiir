@@ -16,7 +16,7 @@ define(function() {
     var debug = require('utils/debug');
     var location = di.container.location;
     var exports = {};
-    var serviceMap, backManually, indexPageUrl, isIndexPage, root;
+    var serviceMap, backManually, indexPageUrl, isIndexPage, root, pageId
 
     // The state data JUST for the next dispatch
     var stageData = {};
@@ -32,6 +32,7 @@ define(function() {
         root = '/';
         indexPageUrl = '/';
         isIndexPage = true;
+		pageId = 0;
     };
 
     /*
@@ -289,6 +290,9 @@ define(function() {
         }
         url = resolveUrl(url);
         _.assign(stageData, data);
+		options = _.assign({}, options, {
+			id: pageId++
+		});
         try{
             router.redirect(url, query, options);
         } catch(e) {
