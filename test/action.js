@@ -276,6 +276,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
         });
         describe('.redirect()', function() {
             beforeEach(function() {
+				action.init();
                 action.regist('/foo', fooService);
                 action.regist('/bar', barService);
                 action.start({
@@ -287,7 +288,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                     query = 'bb',
                     options = {};
                 action.redirect(url, query, options);
-                expect(router.redirect).to.have.been.calledWith(url, query, options);
+                expect(router.redirect).to.have.been.calledWithMatch(url, query, {});
             });
             it('should pass stage data to next dispatch', function() {
                 action.redirect('/foo', 'bb', {}, {foo: 'bar'});
@@ -298,10 +299,21 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 });
             });
             it('should redirect to root page for sfr://index', function() {
-                current.src = 'sync';
+                current.options.src = 'sync';
                 action.dispatch(current, prev);
                 action.redirect('sfr://index');
                 expect(router.redirect).to.have.been.calledWith('/foo?a=b');
+            });
+            it('should increase page id', function() {
+                action.dispatch(current, prev);
+                action.redirect('/foo');
+                expect(router.redirect).to.have.been.calledWithMatch('/foo', undefined, {
+					id: 0
+				});
+                action.redirect('/bar');
+                expect(router.redirect).to.have.been.calledWithMatch('/bar', undefined, {
+					id: 1
+				});
             });
             it('should not pass stage data to further dispatches', function() {
                 action.redirect('/foo', 'bb', {}, {foo: 'bar'});
@@ -369,6 +381,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 a.setAttribute('data-sf-options', JSON.stringify(options));
                 document.body.append(a);
                 sinon.stub(action, 'config');
+                action.init();
             });
             afterEach(function() {
                 a.remove();
@@ -393,6 +406,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 action.start();
                 a.click();
                 var options = {
+					id: 0,
                     foo: 'bar',
                     src: 'hijack'
                 };
@@ -404,6 +418,7 @@ define(['../src/action', '../router/router', '../src/utils/promise.js'], functio
                 action.start();
                 a.click();
                 expect(router.redirect).to.have.been.calledWith('foo', null, {
+					id: 0,
                     src: 'hijack'
                 });
             });
