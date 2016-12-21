@@ -1,13 +1,14 @@
-di.factory('doc', function(container){
-    var mainDoc = container.document;
+define(function() {
 
-    var doc = mkDoc();
-    mainDoc.body.appendChild(doc);
-    return doc;
-
-    function mkDoc(){
-        var doc = mainDoc.createElement('div');
-        doc.setAttribute('id', 'sfr-app');
+    function docFactory(mainDoc) {
+        var doc = mainDoc.querySelector('#sfr-app');
+        if (!doc) {
+            doc = mainDoc.createElement('div');
+            doc.setAttribute('id', 'sfr-app');
+            mainDoc.body.appendChild(doc);
+        }
         return doc;
     }
+
+    return docFactory;
 });
