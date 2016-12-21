@@ -1,8 +1,8 @@
 ! function() {
     // DI loaded first
     __inline('utils/di.js');
-
     __inline('utils/debug.js');
+    __inline('config.js');
 
     // router
     __inline('router/router/URL.js');
@@ -42,57 +42,21 @@
     __inline('view.js');
     __inline('doc.js');
 
-    // Register DI modules manually,
-    // TODO: this should be removed by not dependent on esl
-    var deps = [{
-        name: 'action',
-        mid: 'sfr/action'
-    }, {
-        name: 'router',
-        mid: 'sfr/router/router'
-    }, {
-        name: 'view',
-        mid: 'sfr/view'
-    }, {
-        name: 'service',
-        mid: 'sfr/service'
-    }, {
-        name: '_',
-        mid: 'sfr/utils/underscore'
-    }, {
-        name: 'resource',
-        mid: 'sfr/resource'
-    }, {
-        name: 'cache',
-        mid: 'sfr/utils/cache'
-    }, {
-        name: 'http',
-        mid: 'sfr/utils/http'
-    }, {
-        name: 'promise',
-        mid: 'sfr/utils/promise'
-    }, {
-        name: 'emitter',
-        mid: 'sfr/utils/emitter'
-    }, {
-        name: 'url',
-        mid: 'sfr/utils/url'
-    }];
 
-    var midList = deps.map(function(item) {
-        return item.mid;
-    });
+    require(['sfr/utils/di', 'sfr/config'], function(DI, config) {
+        var amdModuleList = Object.keys(config)
+            .filter(function(key) {
+                return config[key].module;
+            })
+            .map(function(key) {
+                return config[key].module;
+            });
 
-    di.value('document', window.document);
-    di.value('window', window);
-    di.value('location', location);
+        define('sfr', amdModuleList, function() {
+            var di = new DI(config);
 
-    define('sfr', midList, function() {
-        deps.forEach(function(item) {
-            di.value(item.name, require(item.mid));
+            Object.keys(config).forEach(di.resolve, di);
+            return di.container;
         });
-
-        return di.container;
     });
-
 }();

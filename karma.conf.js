@@ -35,10 +35,6 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            // load DI first
-            'src/utils/di.js',
-            'src/doc.js',
-            // TODO: remove this, as well as test-main.js
             'lib/esl.js',
             'test-main.js', {
                 pattern: 'src/**/*.js',
