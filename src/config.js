@@ -4,7 +4,7 @@ define(function() {
         action: {
             type: 'factory',
             module: 'sfr/action',
-            args: ['router', 'location']
+            args: ['router', 'location', 'history']
         },
         router: {
             type: 'value',
@@ -44,22 +44,26 @@ define(function() {
             type: 'value',
             module: 'sfr/utils/di'
         },
-        // Language Enhancements
-        assert: {
-            type: 'value',
-            module: 'sfr/utils/assert'
-        },
-        _: {
-            type: 'value',
-            module: 'sfr/utils/underscore'
-        },
-        promise: {
-            type: 'value',
-            module: 'sfr/utils/promise'
-        },
         emitter: {
             type: 'value',
             module: 'sfr/utils/emitter'
+        },
+        // Language Enhancements
+        assert: {
+            type: 'value',
+            module: 'sfr/lang/assert'
+        },
+        _: {
+            type: 'value',
+            module: 'sfr/lang/underscore'
+        },
+        Promise: {
+            type: 'value',
+            module: 'sfr/lang/promise'
+        },
+        map: {
+            type: 'value',
+            module: 'sfr/lang/map'
         },
         // DOM/BOM APIs
         window: {
@@ -74,6 +78,10 @@ define(function() {
             type: 'value',
             value: window.location
         },
+        history: {
+            type: 'value',
+            value: window.history
+        }
     };
     return config;
 });

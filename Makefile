@@ -50,8 +50,8 @@ dist: build-prod dist-prepare build/banner.js
 doc:
 	rm -rf ./docs
 	mkdir ./docs
-	$(DOC) src/utils/promise.js > docs/promise.md
-	$(DOC) src/utils/underscore.js > docs/underscore.md
+	$(DOC) src/lang/promise.js > docs/promise.md
+	$(DOC) src/lang/underscore.js > docs/underscore.md
 	$(DOC) src/utils/http.js > docs/http.md
 	$(DOC) src/utils/cache.js > docs/cache.md
 	$(DOC) src/utils/emitter.js > docs/emitter.md

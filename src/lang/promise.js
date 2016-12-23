@@ -13,7 +13,7 @@ define(function() {
         longStackTraces: false
     };
     var assert = require('./assert');
-    var debug = require('./debug');
+    var debug = require('../utils/debug');
 
     if (DEBUG) {
         var promiseId = 0;

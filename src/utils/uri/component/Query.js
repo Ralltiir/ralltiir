@@ -4,12 +4,8 @@
  */
 
 define(function (require) {
-    var inherits = require('../../underscore').inherits;
-    var extend = require('../../underscore').extend;
-    var isObject = require('../../underscore').isObject;
-    var isString = require('../../underscore').isString;
+    var _ = require('../../../lang/underscore');
     var Abstract = require('./Abstract');
-
     var parse = require('../util/parse-query');
     var stringify = require('../util/stringify-query');
 
@@ -64,7 +60,7 @@ define(function (require) {
      */
     function compareObject(a, b) {
 
-        if (!isObject(a) || !isObject(b)) {
+        if (!_.isObject(a) || !_.isObject(b)) {
             return false;
         }
 
@@ -110,7 +106,7 @@ define(function (require) {
                 return decodeURIComponent(k || '');
             });
         }
-        else if (!value && !isString(value)) {
+        else if (!value && !_.isString(value)) {
             value = null;
         }
         else {
@@ -164,7 +160,7 @@ define(function (require) {
         Abstract.call(this, data);
     }
 
-    inherits(Query, Abstract);
+    _.inherits(Query, Abstract);
 
     /**
      * 设置query
@@ -176,7 +172,7 @@ define(function (require) {
 
         if (arguments.length === 1) {
             var query = arguments[0];
-            if (isObject(query)) {
+            if (_.isObject(query)) {
                 var data = this.data = {};
                 Object.keys(query).forEach(function (key) {
                     data[key] = decodeValue(query[key]);
@@ -200,7 +196,7 @@ define(function (require) {
      * @return {*}
      */
     Query.prototype.get = function (name) {
-        return name ? this.data[name] : extend({}, this.data);
+        return name ? this.data[name] : _.extend({}, this.data);
     };
 
     /**
@@ -225,7 +221,7 @@ define(function (require) {
      * @return {boolean}
      */
     Query.prototype.equal = function (query) {
-        if (isString(query)) {
+        if (_.isString(query)) {
             query = parse(query);
         }
         else if (query instanceof Query) {
@@ -245,7 +241,7 @@ define(function (require) {
     Query.prototype.add = function (key, value) {
         var data = this.data;
 
-        if (isObject(key)) {
+        if (_.isObject(key)) {
             Object.keys(key).forEach(function (k) {
                 addQueryItem(k, key[k], data);
             });

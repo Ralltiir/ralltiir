@@ -1,36 +1,35 @@
-/*
- * @author yangjun14(yangjun14@baidu.com)
- * @file 测试src/action.js
- */
-
 define(function() {
-
-    var Promise = require( '../src/utils/promise.js');
-    var router = require('../router/router');
+    var Promise = require('../src/lang/promise.js');
     var actionFactory = require('../src/action');
 
     describe('action', function() {
-        var action, fooService, barService, current, prev, mockLocation;
+        var action, fooService, barService, current, prev, location, history, router;
 
-        before(function() {
-            var router = require('router/router');
-            mockLocation = {
+        beforeEach(function() {
+            router = {
+                reset: sinon.spy(),
+                stop: sinon.spy(),
+                back: sinon.spy(),
+                add: sinon.spy(),
+                remove: sinon.spy(),
+                config: sinon.spy(),
+                start: sinon.spy(),
+                getState: sinon.spy(() => ({})),
+                clear: sinon.spy(),
+                redirect: sinon.spy(function(url) {
+                    if (url === '/not-defined-service') {
+                        throw new Error('service not found');
+                    }
+                })
+            };
+            history = {
+                back: sinon.spy()
+            };
+            location = {
                 href: window.location.href,
                 pathname: window.location.pathname,
                 replace: sinon.spy()
             };
-            action = actionFactory(router, mockLocation);
-        });
-        beforeEach(function() {
-            action.clear();
-            sinon.stub(router, 'reset');
-            sinon.stub(router, 'redirect', function(url) {
-                if (url === '/not-defined-service') {
-                    throw new Error('service not found');
-                }
-            });
-            sinon.stub(router, 'stop');
-            sinon.stub(history, 'back');
             fooService = {
                 create: sinon.spy(),
                 attach: sinon.spy(),
@@ -57,31 +56,20 @@ define(function() {
                 url: '/bar?d=c',
                 options: {}
             };
+            action = actionFactory(router, location, history);
         });
         afterEach(function() {
-            router.reset.restore();
-            router.redirect.restore();
-            router.stop.restore();
-            history.back.restore();
+            action.stop();
         });
         describe('.regist()', function() {
             it('should throw with undefined key', function() {
-                function fn() {
-                    action.regist();
-                }
-                expect(fn).to.throw(/illegal action url/);
+                expect(() => action.regist()).to.throw(/illegal action url/);
             });
             it('should throw with illegal service', function() {
-                function fn() {
-                    action.regist('key', {});
-                }
-                expect(fn).to.throw(/illegal service/);
+                expect(() => action.regist('key', {})).to.throw(/illegal service/);
             });
             it('should throw upon illegal url', function() {
-                function fn() {
-                    action.regist();
-                }
-                expect(fn).to.throw(/illegal action url/);
+                expect(() => action.regist()).to.throw(/illegal action url/);
             });
             it('should not regist illegal service', function() {
                 action.regist('key', fooService);
@@ -89,20 +77,12 @@ define(function() {
             });
         });
         describe('.unregist()', function() {
-            beforeEach(function() {
-                action.regist('key', fooService);
-            });
+            beforeEach(() => action.regist('key', fooService));
             it('should throw with undefined key', function() {
-                function fn() {
-                    action.unregist();
-                }
-                expect(fn).to.throw(/illegal action url/);
+                expect(() => action.unregist()).to.throw(/illegal action url/);
             });
             it('should throw not when registered', function() {
-                function fn() {
-                    action.unregist('not-registered');
-                }
-                expect(fn).to.throw(/path not registered/);
+                expect(() => action.unregist('not-registered')).to.throw(/path not registered/);
             });
             it('should un-register', function() {
                 action.unregist('key');
@@ -134,11 +114,8 @@ define(function() {
             });
             it('should not call create,destroy,attach if dispatch re-started', function() {
                 barService.detach = function() {};
-                sinon.stub(barService, 'detach', function() {
-                    return new Promise(function(resolve, reject) {
-                        setTimeout(resolve, 100);
-                    });
-                });
+                sinon.stub(barService, 'detach',
+                    () => new Promise(resolve => setTimeout(resolve, 100)));
                 var firstDispatch = action.dispatch(current, prev);
                 var secondDispatch = new Promise(function(resolve, reject) {
                     setTimeout(function() {
@@ -162,20 +139,17 @@ define(function() {
             });
             it('should await when create returns a promise', function() {
                 var createdSpy = sinon.spy();
-                fooService.create = function() {
-                    return new Promise(function(resolve, reject) {
-                        setTimeout(function() {
-                            createdSpy();
-                            resolve('created');
-                        }, 100);
-                    });
-                };
+                fooService.create = () => new Promise(function(resolve) {
+                    setTimeout(function() {
+                        createdSpy();
+                        resolve('created');
+                    }, 100);
+                });
                 return action.dispatch(current, prev).then(function() {
                     expect(barService.destroy).to.have.been.calledAfter(createdSpy);
                 });
             });
             it('should abort when create throws', function() {
-                var createdSpy = sinon.spy();
                 fooService.create = function() {
                     throw 'foo';
                 };
@@ -186,10 +160,7 @@ define(function() {
                 });
             });
             it('should abort when create returns a rejected promise', function() {
-                var createdSpy = sinon.spy();
-                fooService.create = function() {
-                    return Promise.reject('foo')
-                };
+                fooService.create = () => Promise.reject('foo');
                 return action.dispatch(current, prev).catch(function(e) {
                     expect(e).to.equal('foo');
                 }).then(function() {
@@ -326,7 +297,7 @@ define(function() {
                 try {
                     fn();
                 } catch (e) {}
-                expect(mockLocation.replace).to.have.been.calledWith('/not-defined-service');
+                expect(location.replace).to.have.been.calledWith('/not-defined-service');
             });
         });
         describe('.reset()', function() {
@@ -364,10 +335,9 @@ define(function() {
         describe('.start(), .stop()', function() {
             var a;
             beforeEach(function() {
-                var link = '/foo',
-                    options = {
-                        foo: 'bar'
-                    };
+                var options = {
+                    foo: 'bar'
+                };
                 a = document.createElement('a');
                 a.setAttribute('data-sf-href', 'foo');
                 a.setAttribute('data-sf-options', JSON.stringify(options));
@@ -387,6 +357,7 @@ define(function() {
             it('should not redirect data-sf-href after .stop() called', function() {
                 action.start();
                 action.stop();
+                expect(router.redirect).to.have.not.been.called;
                 a.click();
                 expect(router.redirect).to.have.not.been.called;
             });
@@ -426,10 +397,10 @@ define(function() {
         });
         describe('.config()', function() {
             beforeEach(function() {
-                sinon.stub(router, 'config');
+                //sinon.stub(router, 'config');
             });
             afterEach(function() {
-                router.config.restore();
+                //router.config.restore();
             });
             it('should call router.config', function() {
                 var opts = { root: '/foo' };
@@ -443,16 +414,16 @@ define(function() {
                 action.start({
                     root: '/root'
                 });
-                mockLocation.replace.reset();
+                location.replace.reset();
             });
             it('should call router.reset()', function() {
-                mockLocation.pathname = '/root/foo';
+                location.pathname = '/root/foo';
                 action.update('/foo');
                 expect(router.reset).to.have.been.called;
             });
             it('should call serviceObject.update()', function() {
-                mockLocation.pathname = '/root/bar/foo';
-                mockLocation.href = 'http://foo.com/root/bar/foo';
+                location.pathname = '/root/bar/foo';
+                location.href = 'http://foo.com/root/bar/foo';
                 var options = {
                     foo: 'bar'
                 };

@@ -7,9 +7,9 @@
  * */
 define(function() {
 
-    var _ = require('./underscore');
+    var _ = require('../lang/underscore');
 
-    var assert = require('./assert');
+    var assert = require('../lang/assert');
 
     var exports = {};
 

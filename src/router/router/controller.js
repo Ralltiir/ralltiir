@@ -5,7 +5,7 @@
 
 define(function (require) {
 
-    var extend = require('../../utils/underscore').extend;
+    var extend = require('../../lang/underscore').extend;
     var URL = require('./URL');
     var config = require('./config');
     var applyHandler;

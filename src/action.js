@@ -7,16 +7,16 @@
 
 define(function() {
 
-    var Promise = require('utils/promise');
-    var assert = require('utils/assert');
-    var Map = require('utils/map');
-    var _ = require('utils/underscore');
+    var Promise = require('lang/promise');
+    var assert = require('lang/assert');
+    var Map = require('lang/map');
+    var _ = require('lang/underscore');
     var URL = require('utils/url');
     var debug = require('utils/debug');
 
-    function actionFactory(router, location) {
+    function actionFactory(router, location, history) {
         var exports = {};
-        var serviceMap, backManually, indexPageUrl, isIndexPage, root, pageId
+        var serviceMap, backManually, indexPageUrl, isIndexPage, root, pageId;
 
         // The state data JUST for the next dispatch
         var stageData = {};
@@ -77,7 +77,7 @@ define(function() {
             if (DEBUG) {
                 debug.log("service unregistered from: " + url);
             }
-        }
+        };
 
         /**
          *  Check if value is a valid service instance
@@ -126,7 +126,6 @@ define(function() {
                 debug.log("action dispatching to: " + current.url);
             }
 
-            var proxyList = [];
             var currentService = serviceMap.get(current.pathPattern);
             var prevService = serviceMap.get(prev.pathPattern);
 

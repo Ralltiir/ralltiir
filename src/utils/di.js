@@ -5,9 +5,12 @@
  *   * entities returned by factories are always cached
  */
 define(function() {
+    var assert = require('../lang/assert');
+
     /*
      * Create a IoC container
      * @param {Object} config The dependency tree configuration
+     * @param {Function} require Optional, the require used by DI, defaults to `window.require`
      */
     function DI(config, require) {
         this.require = require || window.require;

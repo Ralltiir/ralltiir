@@ -4,7 +4,7 @@
  */
 
 define(function (require) {
-    var inherits = require('../../underscore').inherits;
+    var _ = require('../../../lang/underscore');
     var Abstract = require('./Abstract');
 
     /**
@@ -17,7 +17,7 @@ define(function (require) {
         Abstract.call(this, data);
     }
 
-    inherits(UserName, Abstract);
+    _.inherits(UserName, Abstract);
 
     return UserName;
 });

@@ -1,9 +1,4 @@
 ! function() {
-    // DI loaded first
-    __inline('utils/di.js');
-    __inline('utils/debug.js');
-    __inline('config.js');
-
     // router
     __inline('router/router/URL.js');
     __inline('router/router/config.js');
@@ -11,14 +6,18 @@
     __inline('router/router.js');
 
     // utils
+    __inline('utils/di.js');
+    __inline('utils/debug.js');
     __inline('utils/http.js');
     __inline('utils/url.js');
-    __inline('utils/underscore.js');
-    __inline('utils/promise.js');
-    __inline('utils/assert.js');
     __inline('utils/cache.js');
-    __inline('utils/map.js');
     __inline('utils/emitter.js');
+
+    // lang
+    __inline('lang/underscore.js');
+    __inline('lang/promise.js');
+    __inline('lang/assert.js');
+    __inline('lang/map.js');
 
     // utils/uri
     __inline('utils/uri/URI.js');
@@ -41,6 +40,7 @@
     __inline('resource.js');
     __inline('view.js');
     __inline('doc.js');
+    __inline('config.js');
 
 
     require(['sfr/utils/di', 'sfr/config'], function(DI, config) {
