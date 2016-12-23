@@ -1,4 +1,4 @@
-define(['utils/http', 'utils/underscore'], function(http, _) {
+define(['utils/http', 'lang/underscore'], function(http, _) {
     function Resource(url) {
         this.url = url;
     }

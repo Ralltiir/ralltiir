@@ -1,4 +1,7 @@
-define(['./promise', './underscore', './url'], function(Promise, _, Url) {
+define(function() {
+    var _ = require('../lang/underscore');
+    var Promise = require('../lang/promise');
+    var Url = require('./url');
     var exports = {};
 
     /*
