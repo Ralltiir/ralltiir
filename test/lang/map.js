@@ -1,4 +1,4 @@
-define(['../src/utils/map'], function(Map) {
+define(['../src/lang/map'], function(Map) {
     describe('Map', function() {
 		var map;
 		beforeEach(function() {

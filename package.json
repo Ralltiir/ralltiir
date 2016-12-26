@@ -1,6 +1,7 @@
 {
   "name": "sfr",
-  "version": "2.5.1",
+  "version": "2.5.2",
+  "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc": "make doc",
     "test": "make test",
@@ -9,7 +10,7 @@
     "build": "make build",
     "test-watch": "make test-watch",
     "test-coverage": "make test-coverage",
-    "dist": "make NAME=${npm_package_name} VERSION=${npm_package_version} dist"
+    "dist": "make dist"
   },
   "devDependencies": {
     "chai": "^3.5.0",

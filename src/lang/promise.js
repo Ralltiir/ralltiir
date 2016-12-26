@@ -13,7 +13,7 @@ define(function() {
         longStackTraces: false
     };
     var assert = require('./assert');
-    var debug = require('./debug');
+    var debug = require('../utils/debug');
 
     if (DEBUG) {
         var promiseId = 0;
@@ -64,7 +64,7 @@ define(function() {
                 debug.log("promise resolving: " + id);
             }
             self._doResolve(cb);
-        });
+        }, 1);
     }
 
     Promise.prototype._fulfill = function(result) {

@@ -1,6 +1,6 @@
 define(function() {
-    var View = require('sfr/view');
-    var action = require('sfr/action');
+    var View = require('sfr').view;
+    var action = require('sfr').action;
 
     var html = [
         '<div>',
