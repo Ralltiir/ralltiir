@@ -6,7 +6,10 @@
 export PORT=9877
 export KARMA_BIN=./node_modules/karma/bin/karma
 export TEST=$(KARMA_BIN) --port $(PORT)
-export DOC=node ./bin/doc.js
+export DOC=./bin/doc.js
+export NAME=$(shell node -p 'require("./package.json").name')
+export VERSION=$(shell node -p 'require("./package.json").version')
+export DESCRIPTION=$(shell node -p 'require("./package.json").description')
 
 .PHONY: test dist doc
 
@@ -23,7 +26,9 @@ build-dev: build-prepare
 build/banner.js: build-prepare
 	echo '/*' > $@
 	echo ' * Superframe' >> $@
+	echo ' * Version: '$(NAME)-$(VERSION) >> $@
 	echo ' * Homepage: http://superframe.baidu.com' >> $@
+	echo ' * Build Date: '`date --rfc-3339=seconds` >> $@
 	echo " * Commit Hash: "`git rev-parse HEAD` >> $@
 	echo ' */' >> $@
 
@@ -33,19 +38,20 @@ build-prod: build-prepare
 dist-prepare: 
 	[ -d ./dist ] || mkdir ./dist
 
+# use `npm run dist` instead!
 dist: build-prod dist-prepare build/banner.js
-	cat build/banner.js > dist/${NAME}.js
-	cat build/src/main.js >> dist/${NAME}.js
-	cat build/banner.js > dist/${NAME}.min.js
-	cat build/src/main.min.js >> dist/${NAME}.min.js
-	cp dist/${NAME}.js dist/${NAME}-${VERSION}.js
-	cp dist/${NAME}.min.js dist/${NAME}-${VERSION}.min.js
+	cat build/banner.js > dist/$(NAME).js
+	cat build/src/main.js >> dist/$(NAME).js
+	cat build/banner.js > dist/$(NAME).min.js
+	cat build/src/main.min.js >> dist/$(NAME).min.js
+	cp dist/$(NAME).js dist/$(NAME)-$(VERSION).js
+	cp dist/$(NAME).min.js dist/$(NAME)-$(VERSION).min.js
 
 doc:
 	rm -rf ./docs
 	mkdir ./docs
-	$(DOC) src/utils/promise.js > docs/promise.md
-	$(DOC) src/utils/underscore.js > docs/underscore.md
+	$(DOC) src/lang/promise.js > docs/promise.md
+	$(DOC) src/lang/underscore.js > docs/underscore.md
 	$(DOC) src/utils/http.js > docs/http.md
 	$(DOC) src/utils/cache.js > docs/cache.md
 	$(DOC) src/utils/emitter.js > docs/emitter.md

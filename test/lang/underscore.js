@@ -1,9 +1,6 @@
-/*
- * @author yangjun14(yangjvn@126.com)
- * @file 测试src/utils/underscore.js
- */
+define(function() {
+    var _ = require('src/lang/underscore');
 
-define(['src/utils/underscore'], function(_) {
     describe('underscore', function() {
         var obj = {
             foo: 'bar',

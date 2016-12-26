@@ -1,79 +1,57 @@
-// Declare DI object in top level scope
-var di = {};
-
-! function() {
-    var container = di.container = {};
-
-    /*
-     * Register a service
-     * @param {String} name the name of your service
-     * @param {Function} Constructor the constructor of your service
-     * @return {Object} di
-     */
-    di.service = function(name, Constructor) {
-        return defineLazyProperty(name, function(){
-            return new Constructor();
-        });
-    };
+/*
+ * IoC Dependency Injector
+ *   * only support sync AMD modules
+ *   * cyclic dependencies are not handled
+ *   * entities returned by factories are always cached
+ */
+define(function() {
+    var assert = require('../lang/assert');
 
     /*
-     * Register a factory
-     * @param {String} name the name of your factory
-     * @param {Function} factory the factory function
-     * @return {Object} di
+     * Create a IoC container
+     * @param {Object} config The dependency tree configuration
+     * @param {Function} require Optional, the require used by DI, defaults to `window.require`
      */
-    di.factory = function(name, factory) {
-        return defineLazyProperty(name, factory);
-    };
-
-    /*
-     * Register a provider
-     * @param {String} name the name of your provider
-     * @param {Function} Provider the constructor of your provider
-     * @return {Object} di
-     */
-    di.provider = function(name, Provider) {
-        return defineLazyProperty(name, function(){
-            var provider = new Provider();
-            return provider.$get();
-        });
-    };
-
-    /**
-     * Register a value
-     *
-     * @param {String} name the name of your value
-     * @param {any} val the value you want to provide with
-     * @return {Object} di
-     */
-    di.value = function(name, val) {
-        return defineLazyProperty(name, function(){
-            return val;
-        });
-    };
-
-    /*
-     * Define a lazy property for container,
-     * The value will be cached after the first run.
-     * @param {String} name the name of your property
-     * @param {Function} getter the getter of your property
-     * @return {Object} di
-     * @private
-     */
-    function defineLazyProperty(name, getter){
-        Object.defineProperty(container, name, {
-            configurable: true,
-            get: function() {
-                var obj = getter(container);
-                Object.defineProperty(container, name, {
-                    configurable: false,
-                    writable: false,
-                    enumerable: true,
-                    value: obj
-                });
-                return obj;
-            }
-        });
-        return di;
+    function DI(config, require) {
+        this.require = require || window.require;
+        this.config = config;
+        this.container = Object.create(null);
     }
-}();
+
+    DI.prototype.resolve = function(name) {
+        if (this.container[name]) {
+            return this.container[name];
+        }
+        var decl = this.config[name];
+        assert(decl, 'module declaration not found: ' + name);
+
+        var recipe = decl.value;
+        if (!recipe) {
+            assert(decl.module, 'empty AMD module id');
+            recipe = this.require(decl.module);
+        }
+
+        if (decl.type === 'value') {
+            return this.container[name] = recipe;
+        }
+
+        if (decl.type === 'factory') {
+            assert(typeof recipe === 'function', 'entity not injectable: ' + recipe);
+            var deps = decl.args || [];
+            return this.container[name] = this.inject(recipe, deps);
+        }
+
+        throw new Error('recipe type ' + decl.type + ' not recognized');
+    }
+
+    DI.prototype.inject = function(factory, deps) {
+        // Note: cyclic dependencies are not detected, avoid this!
+        var args = deps.map(function(name) {
+            return this.resolve(name);
+        }, this);
+
+        return factory.apply(null, args);
+    };
+
+    return DI;
+});
