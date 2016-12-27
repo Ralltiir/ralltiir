@@ -366,7 +366,11 @@ define(function() {
                     options = {};
                 }
                 options.src = "hijack";
-                exports.redirect(link, null, options);
+                var extra = {
+                    event: event,
+                    anchor: targetEl
+                };
+                exports.redirect(link, null, options, extra);
             }
         }
 
