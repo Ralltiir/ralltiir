@@ -57,7 +57,7 @@ define(function() {
             type: 'value',
             module: 'sfr/lang/underscore'
         },
-        Promise: {
+        promise: {
             type: 'value',
             module: 'sfr/lang/promise'
         },
