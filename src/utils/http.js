@@ -74,7 +74,9 @@ define(function() {
         if (data instanceof FormData) {
             return 'multipart/form-data';
         }
-        return 'application/x-www-form-urlencoded; charset=UTF-8';
+        // header restrictions on CORS requests, see:
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+        return 'application/x-www-form-urlencoded';
     }
 
     /*
