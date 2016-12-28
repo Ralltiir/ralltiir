@@ -54,8 +54,10 @@ define(function() {
             settings.headers[k] = v.toLowerCase(v);
         });
 
-        settings.headers['content-type'] = settings.headers['content-type'] ||
-            _guessContentType(settings.data);
+        if(settings.headers['content-type'] || settings.data) {
+            settings.headers['content-type'] = settings.headers['content-type'] ||
+                _guessContentType(settings.data);
+        }
 
         //console.log('before parse data', settings);
         if (/application\/json/.test(settings.headers['content-type'])) {
