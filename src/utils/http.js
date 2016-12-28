@@ -74,7 +74,7 @@ define(function() {
         if (data instanceof FormData) {
             return 'multipart/form-data';
         }
-        return 'application/x-www-form-urlencoded; charset=UTF-8';
+        return 'application/x-www-form-urlencoded';
     }
 
     /*
