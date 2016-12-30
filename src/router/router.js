@@ -160,7 +160,8 @@ define(function (require) {
             pathPattern: handler.raw,
             query: query,
             params: params,
-            url: url.toString(),
+            url: controller.ignoreRoot(url.toString()),
+            originalUrl: url.toString(),
             options: options
         };
         var args = [curState, prevState];

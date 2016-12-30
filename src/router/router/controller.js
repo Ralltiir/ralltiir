@@ -223,6 +223,8 @@ define(function (require) {
         curLocation = null;
     };
 
+    exports.ignoreRoot = ignoreRoot;
+
     return exports;
 
 });
