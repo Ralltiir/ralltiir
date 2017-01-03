@@ -5,10 +5,10 @@
 define(function() {
     var match, server;
     
-    match = location.search.match(/(?:^|&)debug=true/i);
+    match = location.search.match(/(?:^\?|&)debug=true/i);
     window.DEBUG = match ? 'superframe' : window.DEBUG;
 
-    match = location.search.match(/(?:^|&)debug-server=([^&]*)/i);
+    match = location.search.match(/(?:^\?|&)debug-server=([^&]*)/i);
     server = match ? decodeURIComponent(match[1]) : false;
 
     var timeOffset = Date.now();
