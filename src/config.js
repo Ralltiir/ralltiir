@@ -4,7 +4,7 @@ define(function() {
         action: {
             type: 'factory',
             module: 'sfr/action',
-            args: ['router', 'location', 'history']
+            args: ['router', 'location', 'history', 'doc']
         },
         router: {
             type: 'value',
