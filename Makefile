@@ -28,8 +28,9 @@ build/banner.js: build-prepare
 	echo ' * Superframe' >> $@
 	echo ' * Version: '$(NAME)-$(VERSION) >> $@
 	echo ' * Homepage: http://superframe.baidu.com' >> $@
-	echo ' * Build Date: '`date --rfc-3339=seconds` >> $@
+	echo ' * Build Date: '`date --iso-8601=seconds` >> $@
 	echo " * Commit Hash: "`git rev-parse HEAD` >> $@
+	echo ' * Commit Message: '`git log -1 --pretty=%B` >> $@
 	echo ' */' >> $@
 
 build-prod: build-prepare

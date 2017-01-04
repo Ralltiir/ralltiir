@@ -56,7 +56,10 @@ define(function() {
                 url: '/bar?d=c',
                 options: {}
             };
-            action = actionFactory(router, location, history);
+            doc = {
+                ensureAttached: sinon.spy()
+            };
+            action = actionFactory(router, location, history, doc);
         });
         afterEach(function() {
             action.stop();
@@ -102,6 +105,11 @@ define(function() {
                     expect(fooService.attach).to.have.been.calledWith(current, prev);
                     expect(barService.detach).to.have.been.calledWith(current, prev);
                     expect(barService.destroy).to.have.been.calledWith(current, prev);
+                });
+            });
+            it('should call doc.ensureAttached()', function(){
+                return action.dispatch(current, prev).then(function() {
+                    expect(doc.ensureAttached).to.have.been.called;
                 });
             });
             it('should call detach,create,destroy,attach in a sequence', function() {

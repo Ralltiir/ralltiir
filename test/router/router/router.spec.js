@@ -6,12 +6,14 @@
 define(function (require) {
     var router = require('router/router');
     var URL = require('router/router/URL');
+    var ctrl = require('router/router/controller');
 
     // mock controller
     var controller = {
         init: function (applyHander) {
             this.applyHander = applyHander;
         },
+        ignoreRoot: ctrl.ignoreRoot,
         redirect: function (url, query, options) {
             url = new URL(url, {query: query});
             if (!this.url || !this.url.equal(url)) {
@@ -103,7 +105,8 @@ define(function (require) {
                 expect(state.query).to.deep.equal({name: ['treelite', 'saber']});
                 expect(state.params).to.deep.equal({});
                 expect(state.options).to.deep.equal(options);
-                expect(state.url).to.equal('/root/home/work?name=treelite&name=saber');
+                expect(state.url).to.equal('/home/work?name=treelite&name=saber');
+                expect(state.originalUrl).to.equal('/root/home/work?name=treelite&name=saber');
             });
 
             it('handler\'s prevState', function () {
@@ -129,7 +132,8 @@ define(function (require) {
                     pathPattern: '/foo',
                     query: {type: 'f'},
                     params: {},
-                    url: '/root/foo?type=f',
+                    url: '/foo?type=f',
+                    originalUrl: '/root/foo?type=f',
                     options: {}
                 });
             });
@@ -325,7 +329,8 @@ define(function (require) {
                     pathPattern: '/',
                     query: {},
                     params: {},
-                    url: '/hello/',
+                    url: '/',
+                    originalUrl: '/hello/',
                     options: {}
                 });
             });
