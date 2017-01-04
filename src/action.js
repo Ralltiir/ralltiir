@@ -15,6 +15,9 @@ define(function() {
     var debug = require('utils/debug');
 
     function actionFactory(router, location, history, doc) {
+        if (DEBUG) {
+            debug.log('')
+        }
         var exports = {};
         var serviceMap, backManually, indexPageUrl, isIndexPage, root, pageId;
 
