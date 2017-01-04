@@ -1,5 +1,5 @@
 define(function() {
-    var Promise = require('sfr').Promise;
+    var Promise = require('sfr').promise;
 
     var id = 0;
 
