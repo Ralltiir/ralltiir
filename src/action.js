@@ -14,7 +14,7 @@ define(function() {
     var URL = require('utils/url');
     var debug = require('utils/debug');
 
-    function actionFactory(router, location, history) {
+    function actionFactory(router, location, history, doc) {
         var exports = {};
         var serviceMap, backManually, indexPageUrl, isIndexPage, root, pageId;
 
@@ -144,6 +144,7 @@ define(function() {
                 isIndexPage = false;
             }
 
+            doc.ensureAttached();
             // Abort currently the running dispatch queue, 
             // and initiate a new one.
             return dispatchQueue.reset([
