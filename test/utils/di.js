@@ -1,9 +1,10 @@
 define(['../src/utils/di'], function(DI) {
     describe('di', function() {
         var di, require, modules, config;
-        before(function() {
+        beforeEach(function() {
             modules = {
                 'amd/family': sinon.stub().returns('a fine family'),
+                'amd/female': sinon.stub().returns('Alice'),
                 'amd/child': 'am a child'
             };
             config = {
@@ -19,6 +20,11 @@ define(['../src/utils/di'], function(DI) {
                 child: {
                     type: 'value',
                     module: 'amd/child'
+                },
+                female: {
+                    type: 'factory',
+                    cache: false,
+                    module: 'amd/female'
                 }
             };
             require = function(mod) {
@@ -45,10 +51,16 @@ define(['../src/utils/di'], function(DI) {
                 di.resolve('family')
                 expect(modules['amd/family']).to.have.been.calledOnce;
             });
+            it('should not cache when disabled', function() {
+                di.resolve('female')
+                expect(modules['amd/female']).to.have.been.calledOnce;
+                di.resolve('female')
+                expect(modules['amd/female']).to.have.been.calledTwice;
+            });
         });
         describe('#inject()', function() {
             var family;
-            before(function() {
+            beforeEach(function() {
                 family = di.resolve('family');
             });
             it('should return resolve parent', function() {

@@ -13,11 +13,6 @@ define(function() {
         longStackTraces: false
     };
     var assert = require('./assert');
-    var debug = require('../utils/debug');
-
-    if (DEBUG) {
-        var promiseId = 0;
-    }
 
     /*
      * Create a new promise. 
@@ -55,14 +50,7 @@ define(function() {
         //   after the event loop turn in which then is called, 
         //   and with a fresh stack.
         var self = this;
-        if (DEBUG) {
-            var id = promiseId++;
-            debug.log("promise initialized: " + id);
-        }
         setTimeout(function() {
-            if (DEBUG) {
-                debug.log("promise resolving: " + id);
-            }
             self._doResolve(cb);
         }, 1);
     }

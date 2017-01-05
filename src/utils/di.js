@@ -6,6 +6,7 @@
  */
 define(function() {
     var assert = require('../lang/assert');
+    var _ = require('../lang/underscore.js');
 
     /*
      * Create a IoC container
@@ -14,34 +15,34 @@ define(function() {
      */
     function DI(config, require) {
         this.require = require || window.require;
-        this.config = config;
+        this.config = this.normalize(config);
         this.container = Object.create(null);
     }
 
     DI.prototype.resolve = function(name) {
-        if (this.container[name]) {
-            return this.container[name];
-        }
         var decl = this.config[name];
         assert(decl, 'module declaration not found: ' + name);
 
-        var recipe = decl.value;
-        if (!recipe) {
-            assert(decl.module, 'empty AMD module id');
-            recipe = this.require(decl.module);
+        // cache check
+        if (this.container[name] && decl.cache) {
+            return this.container[name];
         }
 
-        if (decl.type === 'value') {
-            return this.container[name] = recipe;
+        // AMD resolving
+        if (decl.value === undefined && decl.module) {
+            decl.value = this.require(decl.module);
         }
 
-        if (decl.type === 'factory') {
-            assert(typeof recipe === 'function', 'entity not injectable: ' + recipe);
-            var deps = decl.args || [];
-            return this.container[name] = this.inject(recipe, deps);
+        switch (decl.type) {
+            case 'value':
+                return this.container[name] = decl.value;
+            case 'factory':
+                assert(typeof decl.value === 'function', 'entity not injectable: ' + decl.value);
+                var deps = decl.args || [];
+                return this.container[name] = this.inject(decl.value, deps);
+            default:
+                throw new Error('DI type ' + decl.type + ' not recognized');
         }
-
-        throw new Error('recipe type ' + decl.type + ' not recognized');
     }
 
     DI.prototype.inject = function(factory, deps) {
@@ -52,6 +53,18 @@ define(function() {
 
         return factory.apply(null, args);
     };
+
+    DI.prototype.normalize = function(config) {
+        _.forOwn(config, function(decl, key) {
+            if (decl.cache === undefined) {
+                decl.cache = true;
+            }
+            if (decl.type === undefined) {
+                decl.type = 'value';
+            }
+        });
+        return config;
+    }
 
     return DI;
 });
