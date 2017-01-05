@@ -31,9 +31,9 @@ fis.media('prod').match('/src/(**).js', {
 });
 
 // not included in main.js, build manually
-fis.media('prod').match('/src/utils/debug.js', {
+fis.media('prod').match('/src/utils/logger.js', {
     release: true,
-    moduleId: 'sfr/utils/debug',
+    moduleId: 'sfr/utils/logger',
     isMod: true
 });
 
@@ -69,9 +69,7 @@ fis.match('main.min.js', {
         },
         compress: {
             dead_code: true,
-            global_defs: {
-                DEBUG: false
-            }
+            pure_funcs: ['logger.debug', 'logger.log', 'logger.info', 'logger.error', 'logger.warn']
         }
     }),
     release: '/src/main.min.js'

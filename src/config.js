@@ -4,11 +4,12 @@ define(function() {
         action: {
             type: 'factory',
             module: 'sfr/action',
-            args: ['router', 'location', 'history', 'doc']
+            args: ['router', 'location', 'history', 'doc', 'logger']
         },
         router: {
-            type: 'value',
-            module: 'sfr/router/router'
+            type: 'factory',
+            module: 'sfr/router/router',
+            args: ['logger']
         },
         view: {
             type: 'value',
@@ -81,6 +82,10 @@ define(function() {
         history: {
             type: 'value',
             value: window.history
+        },
+        logger: {
+            type: 'value',
+            module: 'sfr/utils/logger'
         }
     };
     return config;

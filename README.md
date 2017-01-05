@@ -1,97 +1,10 @@
 # 大搜索Superframe框架
 
-官网：[http://superframe.baidu.com/][web]
+* 官网：[http://superframe.baidu.com/][web]
+* 编写 Service 可参考[起步教程][get-started]，其中的参考代码可以在[examples/](examples/)找到，使用静态HTTP服务器即可运行。
+* 下载：在[发布页面][release]选择合适的版本下载。
 
-## Get Started
-
-> [examples/](examples/)下有API使用示例与App开发示例，
-> 使用静态HTTP服务器即可运行。
-
-只需引入Superframe的Script即可让当前页面变成一个Superframe App。
-例如，在[examples/](examples/)下的`index.html`：
-
-```html
-<body>
-  <a data-sf-href="/sf">Another Page</a>
-  <script src="../../dist/sf.js"></script>
-</body>
-```
-
-### 页面路由
-
-每个页面由一个service控制，可以在入口页面中对路由进行控制。例如：
-
-```javascript
-require(['router/router','action','service/fooService','service/barService'], function(router, action, fooService, barService) {
-    router.config({
-        root: location.pathname
-    });
-
-    action.regist('/foo', new fooService());
-    action.regist('/bar', new barService());
-
-    router.start();
-    action.start();
-});
-```
-
-当访问`/foo`（通过上述的`data-sf-href`链接）时Superframe会调起`fooService`来接管页面逻辑：
-
-### Service
-
-`fooService`需要是`service`的一个实例，它的`create`, `attach`, `detach`, `destroy`等方法
-会在生命周期的各阶段被调用。
-
-例如，在创建时初始化一个视图（见下文），在加载到DOM时渲染该视图，在卸载时销毁视图。
-
-```javascript
-define(function () {
-    var service = require('service');
-    var fooView = require('fooView');
-    var fooService = service.create();
-
-    fooService.prototype.create = function() {
-        fooView.create();
-    };
-    fooService.prototype.attach = function() {
-        fooView.render('hello world!', 'This is a hello world demo page.');
-        fooView.attach();
-    };
-    fooService.prototype.destroy = function() {
-        fooView.destroy();
-    };
-    return indexService;
-})
-```
-
-### View
-
-视图用来渲染DOM和实现用户交互，通过Superframe的`view`来创建。
-比如在创建时初始化一个DOM容器，在渲染时给出HTML内容。
-
-```javascript
-define(function() {
-	var View = require('view');
-    var myView = new View();
-
-    myView.create = function() {
-        this.$container = $('<div class="container"></div>');
-        $('body').append(this.$container);
-    }
-    myView.render = function(header, body) {
-        var html = [
-            '<article>',
-                '<header>' + header + '</header>',
-                '<div>' + body + '</div>',
-            '</article>'
-        ].join('');
-        this.$container.html(html);
-	}
-	return myView;
-});
-```
-
-## 开发指南
+## 框架开发指南
 
 ### 环境准备
 
@@ -298,3 +211,5 @@ function greeting(name, greet){
 示例代码将被解析为GFM代码块。
 
 [web]: http://superframe.baidu.com/
+[get-started]: http://superframe.baidu.com/get-started/1-hello-world.md
+[release]: http://superframe.baidu.com/about/release.md

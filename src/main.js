@@ -7,7 +7,7 @@
 
     // utils
     __inline('utils/di.js');
-    __inline('utils/debug.js');
+    __inline('utils/logger.js');
     __inline('utils/http.js');
     __inline('utils/url.js');
     __inline('utils/cache.js');

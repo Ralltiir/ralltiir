@@ -4,7 +4,9 @@
  */
 
 define(function (require) {
-    var router = require('router/router');
+    var routerFactory = require('router/router');
+    var mockLogger = {};
+    var router = routerFactory(mockLogger);
     var URL = require('router/router/URL');
     var ctrl = require('router/router/controller');
 

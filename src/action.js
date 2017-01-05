@@ -12,12 +12,8 @@ define(function() {
     var Map = require('lang/map');
     var _ = require('lang/underscore');
     var URL = require('utils/url');
-    var debug = require('utils/debug');
 
-    function actionFactory(router, location, history, doc) {
-        if (DEBUG) {
-            debug.log('')
-        }
+    function actionFactory(router, location, history, doc, logger) {
         var exports = {};
         var serviceMap, backManually, indexPageUrl, isIndexPage, root, pageId;
 
@@ -63,9 +59,7 @@ define(function() {
             assert(!serviceMap.has(url), 'path already registerd');
             router.add(url, this.dispatch);
             serviceMap.set(url, service);
-            if (DEBUG) {
-                debug.log("service registered to: " + url);
-            }
+            logger.log("service registered to: " + url);
         };
 
         /*
@@ -77,9 +71,7 @@ define(function() {
             assert(serviceMap.has(url), 'path not registered');
             router.remove(url);
             serviceMap.delete(url);
-            if (DEBUG) {
-                debug.log("service unregistered from: " + url);
-            }
+            logger.log("service unregistered from: " + url);
         };
 
         /**
@@ -125,9 +117,7 @@ define(function() {
         exports.dispatch = function(current, prev) {
             assert(current, 'cannot dispatch with options:' + current);
 
-            if (DEBUG) {
-                debug.log("action dispatching to: " + current.url);
-            }
+            logger.log("action dispatching to: " + current.url);
 
             var currentService = serviceMap.get(current.pathPattern);
             var prevService = serviceMap.get(prev.pathPattern);
@@ -220,9 +210,7 @@ define(function() {
                     if (typeof cb !== 'function') return;
                     // Just stop running
                     if (thisThreadID !== threadID) return;
-                    if (DEBUG) {
-                        debug.log('calling lifecycle', cb.name);
-                    }
+                    logger.log('calling lifecycle', cb.name);
                     return cb();
                 }).catch(function(e) {
                     // throw asyncly rather than console.error(e.stack)
@@ -288,9 +276,7 @@ define(function() {
          * @param {Object} data extended data being passed to `current.options`
          * */
         exports.redirect = function(url, query, options, data) {
-            if (DEBUG) {
-                debug.log("action redirecting to: " + url);
-            }
+            logger.log("action redirecting to: " + url);
             url = resolveUrl(url);
             _.assign(stageData, data);
             options = _.assign({}, options, {
