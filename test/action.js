@@ -1,6 +1,7 @@
 define(function() {
     var Promise = require('../src/lang/promise.js');
     var actionFactory = require('../src/action');
+    var logger = require('../src/utils/logger');
 
     describe('action', function() {
         var action, fooService, barService, current, prev, location, history, router;
@@ -59,7 +60,7 @@ define(function() {
             doc = {
                 ensureAttached: sinon.spy()
             };
-            action = actionFactory(router, location, history, doc);
+            action = actionFactory(router, location, history, doc, logger);
         });
         afterEach(function() {
             action.stop();
