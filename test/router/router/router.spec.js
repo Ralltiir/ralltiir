@@ -5,8 +5,7 @@
 
 define(function (require) {
     var routerFactory = require('router/router');
-    var mockLogger = {};
-    var router = routerFactory(mockLogger);
+    var router = routerFactory(require('utils/logger'));
     var URL = require('router/router/URL');
     var ctrl = require('router/router/controller');
 
