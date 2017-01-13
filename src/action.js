@@ -130,7 +130,7 @@ define(function() {
                 current.options.src = 'back';
             }
 
-            // mark initial page out
+            // mark initial page
             if (current.options && current.options.src === 'sync') {
                 indexPageUrl = current.url || '/';
             } else {
