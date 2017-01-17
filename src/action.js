@@ -120,7 +120,11 @@ define(function() {
             logger.log("action dispatching to: " + current.url);
 
             var currentService = serviceMap.get(current.pathPattern);
+            current.service = currentService;
             var prevService = serviceMap.get(prev.pathPattern);
+            if (prev) {
+                prev.service = prevService;
+            }
 
             var data = stageData;
             stageData = {};
