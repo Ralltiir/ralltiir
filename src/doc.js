@@ -10,8 +10,15 @@ define(function() {
         doc.ensureAttached = ensureAttached;
         doc.ensureAttached();
 
-        function ensureAttached(){
-            mainDoc.body.appendChild(doc);
+        function ensureAttached() {
+            if (!contains(mainDoc, doc)) {
+                mainDoc.body.appendChild(doc);
+            }
+        }
+
+        function contains(parent, descendant) {
+            return parent == descendant ||
+                Boolean(parent.compareDocumentPosition(descendant) & 16);
         }
 
         return doc;
