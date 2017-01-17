@@ -106,6 +106,8 @@ define(function() {
                     expect(fooService.attach).to.have.been.calledWith(current, prev);
                     expect(barService.detach).to.have.been.calledWith(current, prev);
                     expect(barService.destroy).to.have.been.calledWith(current, prev);
+                    expect(current).to.have.property('service', fooService);
+                    expect(prev).to.have.property('service', barService);
                 });
             });
             it('should call doc.ensureAttached()', function(){
