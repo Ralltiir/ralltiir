@@ -122,9 +122,7 @@ define(function() {
             var currentService = serviceMap.get(current.pathPattern);
             current.service = currentService;
             var prevService = serviceMap.get(prev.pathPattern);
-            if (prev) {
-                prev.service = prevService;
-            }
+            prev.service = prevService;
 
             var data = stageData;
             stageData = {};
