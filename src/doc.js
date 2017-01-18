@@ -11,7 +11,8 @@ define(function() {
         doc.ensureAttached();
 
         function ensureAttached() {
-            if (!mainDoc.contains(doc)) {
+            var result = mainDoc.querySelector('#sfr-app');
+            if (!result) {
                 mainDoc.body.appendChild(doc);
             }
         }
