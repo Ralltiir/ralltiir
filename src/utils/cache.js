@@ -16,6 +16,8 @@ define(function() {
     var _storage = {};
 
     /*
+     * Event handler interfact used by Namespaceoptions.onRemove
+     * @name &lt;Interface&gt; onRemove(v, k, evicted)
      * @param {String} v value
      * @param {String} k key
      * @param {Boolean} evicted true if the entry is removed to make space, false otherwise
