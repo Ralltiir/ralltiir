@@ -16,6 +16,13 @@ define(function() {
     var _storage = {};
 
     /*
+     * @param {String} v value
+     * @param {String} k key
+     * @param {Boolean} evicted true if the entry is removed to make space, false otherwise
+     */
+    function onRemove(v, k, evicted) {}
+
+    /*
      * Create a LRU cache namespace.
      * @name Namespace
      * @param {String} name The namespace identifier
@@ -27,7 +34,7 @@ define(function() {
         this.list = [];
         this.options = _.assign({
             limit: 3,
-            onRemove: function() {}
+            onRemove: onRemove
         }, options);
     }
     Namespace.prototype = {
@@ -57,7 +64,7 @@ define(function() {
 
             if (this.list.length === this.options.limit) {
                 var dropped = this.list.shift();
-                this.options.onRemove(dropped.value, dropped.key);
+                this.options.onRemove(dropped.value, dropped.key, true);
             }
             this.list.push({
                 key: key,
@@ -100,7 +107,7 @@ define(function() {
             var idx = this._findIndexByKey(key);
             if (idx > -1) {
                 var item = this.list[idx];
-                this.options.onRemove(item.value, item.key);
+                this.options.onRemove(item.value, item.key, false);
                 this.list.splice(idx, 1);
             }
             return this;
