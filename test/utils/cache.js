@@ -88,19 +88,19 @@ define(['../src/utils/cache'], function(cache) {
                     expect(onRemove).to.not.have.been.called;
                     cache.set('name', 'key3', 'val3');
                     expect(onRemove).to.have.been.firstCall;
-                    expect(onRemove).to.have.been.calledWith('val1', 'key1');
+                    expect(onRemove).to.have.been.calledWith('val1', 'key1', true);
                     cache.set('name', 'key4', 'val4');
                     expect(onRemove).to.have.been.secondCall;
-                    expect(onRemove).to.have.been.calledWith('val2', 'key2');
+                    expect(onRemove).to.have.been.calledWith('val2', 'key2', true);
                 });
                 it('should update the position onece accessed', function() {
                     cache.set('name', 'key1', 'val1');
                     cache.set('name', 'key2', 'val2');
                     cache.get('name', 'key1');
                     cache.set('name', 'key3', 'val3');
-                    expect(onRemove).to.have.been.calledWith('val2', 'key2');
+                    expect(onRemove).to.have.been.calledWith('val2', 'key2', true);
                     cache.set('name', 'key4', 'val4');
-                    expect(onRemove).to.have.been.calledWith('val2', 'key2');
+                    expect(onRemove).to.have.been.calledWith('val2', 'key2', true);
                 });
             });
         });
@@ -120,8 +120,7 @@ define(['../src/utils/cache'], function(cache) {
             });
             it('should call onRemove()', function() {
                 cache.remove('name', 'key');
-                cache.get('name', 'key');
-                expect(onRemove).to.have.been.calledWith('val', 'key');
+                expect(onRemove).to.have.been.calledWith('val', 'key', false);
             });
             it('should not be silent when key not exist', function() {
                 expect(function() {
