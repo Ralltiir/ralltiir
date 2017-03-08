@@ -6,6 +6,8 @@
     "doc": "make doc",
     "test": "make test",
     "test-reports": "make test-reports",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags",
     "clean": "make clean",
     "build": "make build",
     "test-watch": "make test-watch",

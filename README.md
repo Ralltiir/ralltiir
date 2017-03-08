@@ -65,6 +65,34 @@ npm run test-reports
 # ./build/test-reports/coverage
 ```
 
+### 发布版本
+
+所有发布的版本维护在 Superframe 官网：http://superframe.baidu.com/about/release.md
+Push 代码即可触发构建，但官网的 release 文档需要手动更新。发布版本请遵循以下步骤：
+
+1. 切换到 master
+
+    ```bash
+    git checkout master
+    ```
+
+2. 确保已合并所有改动
+
+    ```bash
+    git merge dev
+    ```
+
+3. 发布版本
+
+    ```bash
+    # 发布 patch 版本
+    npm version patch
+    # 发布小版本
+    npm version minor
+    # 发布大版本
+    npm version major
+    ```
+
 ### 生成API文档
 
 将你的源码和文档文件映射添加到Makefile中，然后执行：
