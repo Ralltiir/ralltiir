@@ -2,9 +2,10 @@ define(function() {
     var Promise = require('../src/lang/promise.js');
     var actionFactory = require('../src/action');
     var logger = require('../src/utils/logger');
+    var Emitter = require('../src/utils/emitter');
 
     describe('action', function() {
-        var action, fooService, barService, current, prev, location, history, router;
+        var action, fooService, barService, current, prev, location, history, router, doc;
 
         beforeEach(function() {
             router = {
@@ -60,7 +61,7 @@ define(function() {
             doc = {
                 ensureAttached: sinon.spy()
             };
-            action = actionFactory(router, location, history, doc, logger);
+            action = actionFactory(router, location, history, doc, logger, Emitter);
         });
         afterEach(function() {
             action.stop();
@@ -110,7 +111,7 @@ define(function() {
                     expect(prev).to.have.property('service', barService);
                 });
             });
-            it('should call doc.ensureAttached()', function(){
+            it('should call doc.ensureAttached()', function() {
                 return action.dispatch(current, prev).then(function() {
                     expect(doc.ensureAttached).to.have.been.called;
                 });
@@ -309,6 +310,26 @@ define(function() {
                     fn();
                 } catch (e) {}
                 expect(location.replace).to.have.been.calledWith('/not-defined-service');
+            });
+            it('should emit "redirected" event with url', function(done) {
+                var url = 'xx',
+                    query = 'bb',
+                    options = {};
+                action.once('redirected', function(_url) {
+                    expect(_url).to.equal(url);
+                    done();
+                });
+                action.redirect(url, query, options);
+            });
+            it('should "redirect failed" event with url', function(done) {
+                function fn() {
+                    action.redirect('/not-defined-service', {}, {});
+                }
+                action.once('redirect failed', function(url) {
+                    expect(url).to.equal('/not-defined-service');
+                    done();
+                });
+                expect(fn).to.throw(/service not found/);
             });
         });
         describe('.reset()', function() {
