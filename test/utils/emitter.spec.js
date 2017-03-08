@@ -55,6 +55,16 @@ define(function(require) {
                     );
                 });
 
+                it('should pass multiple arguments', function(done) {
+                    var emitter = new Emitter();
+                    emitter.on('foo', function(first, second){
+                        expect(first).to.equal('one');
+                        expect(second).to.equal('two');
+                        done();
+                    });
+                    emitter.emit('foo', 'one', 'two');
+                });
+
                 it('.setMaxListeners(number)', function() {
                     var done = false;
                     var emitter = new Emitter();

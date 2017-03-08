@@ -13,8 +13,8 @@ define(function() {
     var _ = require('lang/underscore');
     var URL = require('utils/url');
 
-    function actionFactory(router, location, history, doc, logger) {
-        var exports = {};
+    function actionFactory(router, location, history, doc, logger, Emitter) {
+        var exports = new Emitter();
         var serviceMap, backManually, indexPageUrl, isIndexPage, root, pageId;
 
         // The state data JUST for the next dispatch
@@ -60,6 +60,7 @@ define(function() {
             router.add(url, this.dispatch);
             serviceMap.set(url, service);
             logger.log("service registered to: " + url);
+            exports.emit('registered', url, service);
         };
 
         /*
@@ -70,8 +71,10 @@ define(function() {
             assert(url, 'illegal action url');
             assert(serviceMap.has(url), 'path not registered');
             router.remove(url);
+            var svc = serviceMap.get(url);
             serviceMap.delete(url);
             logger.log("service unregistered from: " + url);
+            exports.emit('unregistered', url, svc);
         };
 
         /**
@@ -289,8 +292,10 @@ define(function() {
             } catch (e) {
                 url = URL.resolve(root, url);
                 location.replace(url);
+                exports.emit('redirect failed', url);
                 throw e;
             }
+            exports.emit('redirected', url);
         };
 
         function resolveUrl(url) {
