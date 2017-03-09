@@ -142,10 +142,6 @@ define(function(require) {
                 throw new Error('can not find route for: ' + path);
             }
 
-            if (options.title) {
-                document.title = options.title;
-            }
-
             var curState = {
                 path: path,
                 pathPattern: handler.raw,
