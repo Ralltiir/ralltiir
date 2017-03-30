@@ -34,7 +34,7 @@ define(['../src/utils/di'], function(DI) {
         });
         describe('#resolve()', function() {
             it('should throw when name not found', function() {
-                expect(_ => di.resolve('foo')).to.throw(/not found/);
+                expect(function (_) { return di.resolve('foo'); }).to.throw(/not found/);
             });
             it('should resolve value typed AMD module', function() {
                 expect(di.resolve('man')).to.equal('hey man');
