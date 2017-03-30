@@ -3,9 +3,12 @@ require(['../src/doc'], function(docFactory) {
         var doc;
 
         beforeEach(function() {
-            document.querySelectorAll('#sfr-app').forEach(function (div) {
-                div.remove();
-            });
+            var els = document.querySelectorAll('#sfr-app');
+            if (els) {
+                for (var i = els.length - 1; i >= 0; i--) {
+                    els[i].remove();
+                }
+            }
         });
 
         it('should create div#sfr-app if not exist', function() {
