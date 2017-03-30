@@ -3,7 +3,9 @@ require(['../src/doc'], function(docFactory) {
         var doc;
 
         beforeEach(function() {
-            document.querySelectorAll('#sfr-app').forEach(div => div.remove());
+            document.querySelectorAll('#sfr-app').forEach(function (div) {
+                div.remove();
+            });
         });
 
         it('should create div#sfr-app if not exist', function() {

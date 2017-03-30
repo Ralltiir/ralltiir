@@ -1,0 +1,10 @@
+cache:
+    paths:
+        - node_modules/
+test:
+    variables:
+        BROWSER: PhantomJS
+    script:
+        - npm install
+        - npm install karma-phantomjs-launcher
+        - npm run test-reports
