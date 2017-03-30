@@ -181,13 +181,15 @@ define(['../src/lang/promise'], function(Promise) {
         });
         describe('.mapSeries()', function() {
             it('should resolve when all resolved', function() {
-                var p = Promise.mapSeries(['first', 'second', 'third'],
-                    item => Promise.resolve(item));
+                var p = Promise.mapSeries(['first', 'second', 'third'], function (item) {
+                    return Promise.resolve(item);
+                });
                 return expect(p).to.eventually.deep.equal(['first', 'second', "third"]);
             });
-            it('should reject with the error that first callback rejected', () => {
-                var p = Promise.mapSeries(['first', 'second'],
-                    item => Promise.reject(item));
+            it('should reject with the error that first callback rejected', function () {
+                var p = Promise.mapSeries(['first', 'second'], function (item) {
+                    return Promise.reject(item);
+                });
                 return expect(p).to.rejectedWith('first');
             });
             it('should resolve in series', function() {
@@ -196,28 +198,35 @@ define(['../src/lang/promise'], function(Promise) {
                 return Promise
                     .mapSeries(
                         ['first', 'second'],
-                        (item, idx) => new Promise(function(resolve, reject) {
-                            if (idx === 0) {
-                                setTimeout(function() {
-                                    spy1();
-                                    resolve('first cb');
-                                }, 10);
-                            } else {
-                                spy2();
-                                resolve('foo');
-                            }
-                        }))
-                    .then(() => expect(spy2).to.have.been.calledAfter(spy1));
-            });
-            it('should not call rest of callbacks once rejected', () => {
-                var spy = sinon.spy();
-                return Promise.mapSeries(['first', 'second'], (item, idx) => {
-                        if (idx > 0) {
-                            spy();
+                        function (item, idx) {
+                            return new Promise(function(resolve, reject) {
+                                if (idx === 0) {
+                                    setTimeout(function() {
+                                        spy1();
+                                        resolve('first cb');
+                                    }, 10);
+                                } else {
+                                    spy2();
+                                    resolve('foo');
+                                }
+                            });
                         }
-                        return Promise.reject(new Error(item));
-                    })
-                    .catch(() => expect(spy).to.not.have.been.called);
+                    )
+                    .then(function () {
+                        expect(spy2).to.have.been.calledAfter(spy1)
+                    });
+            });
+            it('should not call rest of callbacks once rejected', function () {
+                var spy = sinon.spy();
+                return Promise.mapSeries(['first', 'second'], function (item, idx) {
+                    if (idx > 0) {
+                        spy();
+                    }
+                    return Promise.reject(new Error(item));
+                })
+                .catch(function () {
+                    expect(spy).to.not.have.been.called
+                });
             });
         });
         describe('unhandledrejection', function() {
