@@ -369,7 +369,7 @@ define(function () {
                 a = document.createElement('a');
                 a.setAttribute('data-sf-href', 'foo');
                 a.setAttribute('data-sf-options', JSON.stringify(options));
-                document.body.append(a);
+                document.body.appendChild(a);
                 sinon.stub(action, 'config');
                 action.init();
             });
