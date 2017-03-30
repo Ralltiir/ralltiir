@@ -9,7 +9,7 @@
     "clean": "make clean",
     "build": "make build",
     "test-watch": "make test-watch",
-    "test-coverage": "make test-coverage",
+    "test-reports": "make test-reports",
     "dist": "make dist"
   },
   "devDependencies": {
