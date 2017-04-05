@@ -11,7 +11,9 @@
 /* eslint-disable no-var */
 /* eslint-disable no-console */
 
+// eslint-disable-next-line
 var path = require('path');
+// eslint-disable-next-line
 var fs = require('fs');
 var file = process.argv[2];
 
