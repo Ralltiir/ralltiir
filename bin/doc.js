@@ -1,9 +1,15 @@
 #!/usr/bin/env node
 
-/*
+/**
+ * @file doc.js generates Markdown API doc for source files
+ * @author harttle<yangjvn@126.com>
  * Usage:
- * node bin/doc.js src/utils/promise.js
+ *   node bin/doc.js src/utils/promise.js
+ *
  */
+
+/* eslint-disable no-var */
+/* eslint-disable no-console */
 
 var path = require('path');
 var fs = require('fs');
@@ -12,16 +18,18 @@ var file = process.argv[2];
 var src = fs.readFileSync(file, 'utf8');
 
 var moduleName = path.basename(file, '.js');
-moduleName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1)
+moduleName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
 console.log('#', moduleName, 'API\n');
 
-/*
+/**
  * parsers for each tag
  */
 var tagParsers = {
-    /*
+
+    /**
      * Parse the return descriptor from comment string
-     * @param {String} comment The comment string
+     *
+     * @param {string} comment The comment string
      * @return {Object} The return descriptor
      * @example
      * {
@@ -29,61 +37,81 @@ var tagParsers = {
      *     description: 'A thenable.'
      * }
      */
-    'return': function(comment) {
+    'return'(comment) {
         var match = /^{(\w+)}?\s*((?:.|\n)*)$/.exec(comment);
-        if (!match) return {};
+        if (!match) {
+            return {};
+        }
         return {
             type: inlineCode(match[1]),
-            description: trimComment(match[2]),
+            description: trimComment(match[2])
         };
     },
-    'private': c => true,
-    'inner': c => true,
-    'static': c => true,
-    'constructor': c => true,
-    'name': c => c,
-    'class': c => c,
-    /*
+    'private'() {
+        return true;
+    },
+    'inner'() {
+        return true;
+    },
+    'static'() {
+        return true;
+    },
+    'constructor'() {
+        return true;
+    },
+    'name'(c) {
+        return c;
+    },
+    'class'(c) {
+        return c;
+    },
+
+    /**
      * Parse the param descriptor from comment string
-     * @param {String} comment The comment string
+     *
+     * @param {string} comment The comment string
      * @return {Object}
-     * @example 
+     * @example
      * {
      *     type: 'Function',
      *     name: 'cb',
      *     description: 'The callback to be called'
      * }
      */
-    param: function(comment) {
+    param(comment) {
         var match = /{([^}]+)}?\s*([\.\w]+)\s+((?:.|\n)*?)$/.exec(comment);
-        if (!match) return {};
+        if (!match) {
+            return {};
+        }
         return {
             type: inlineCode(match[1]),
             name: match[2].replace(/\|/g, '&#124;'),
             description: trimComment(match[3]).replace(/\|/g, '&#124;')
         };
     },
-    description: function(comment) {
+    description(comment) {
         return trimComment(comment);
     },
-    example: function(comment) {
+    example(comment) {
         return fencedCode(trimComment(comment));
     }
 };
 
 var result = parseFileDesc(src);
 src = result.remaining;
-if(result.filedesc){
+if (result.filedesc) {
     var desc = trimComment(result.filedesc);
     console.log(desc + '\n');
 }
 
-/*
+/**
  * call parse and render GFM
  */
 parseBlocks(src)
-    .forEach(function(o) {
-        if (o.hasOwnProperty('private') || (o.hasOwnProperty('inner'))) return;
+    .forEach(function (o) {
+        if (o.hasOwnProperty('private') || (o.hasOwnProperty('inner'))) {
+            return;
+        }
 
         printName(o);
 
@@ -92,7 +120,7 @@ parseBlocks(src)
             console.log(`**Parameters**\n`);
             console.log('Name | Type | Description');
             console.log('---  | ---  | ---');
-            o.params.forEach(function(param) {
+            o.params.forEach(function (param) {
                 console.log(param.name, '|', param.type, '|', param.description);
             });
             console.log();
@@ -108,58 +136,71 @@ parseBlocks(src)
         console.log('\n');
     });
 
-
-function printName(o){
-    if (o.hasOwnProperty('name')){
+function printName(o) {
+    if (o.hasOwnProperty('name')) {
         console.log(`## ${o.name}\n`);
         return;
     }
-    var cls = o['class'] || moduleName;
+    var cls = o.class || moduleName;
     if (o.hasOwnProperty('static')) {
         console.log(`## ${cls}.${o.signature}\n`);
-    } else if (o.hasOwnProperty('constructor')) {
+    }
+    else if (o.hasOwnProperty('constructor')) {
         console.log(`## new ${o.signature}\n`);
-    } else {
+    }
+    else {
         console.log(`## ${cls}#${o.signature}\n`);
     }
 }
 
-/*
+/**
  * Parse the function signature
- * @param {String} code The code block containing the function signature
- * @return {String} The function signature
- * @example 
+ *
+ * @param {string} code The code block containing the function signature
+ * @return {string} The function signature
+ * @example
  * parseSignature('function foo(bar){}');   // returns foo(bar)
  */
 function parseSignature(code) {
     var firstChar = code.match(/\S/);
     // there's no source code
-    if(!firstChar) return '';
+    if (!firstChar) {
+        return '';
+    }
 
     var blankPrefix = code.substr(0, firstChar.index);
     // more than one \n before actual source code
-    if(blankPrefix.split('\n').length > 2) return '';
+    if (blankPrefix.split('\n').length > 2) {
+        return '';
+    }
 
     // function foo(bar){}
     // foo = function(bar){}
     var functionRegExp = /(?:function\s+(\w+)\s*\(((?:.|\n)*?)\)|(\w+)\s*(?:=|:)\s*function\s*\(((?:.|\n)*?)\))/;
     var match = functionRegExp.exec(code);
-    if (!match) return "";
+    if (!match) {
+        return '';
+    }
 
     var name = match[1] || match[3] || '';
     // private
-    if(name[0] === '_') return '';
+    if (name[0] === '_') {
+        return '';
+    }
 
     var params = match[2] || match[4] || '';
     return name.trim() + '(' + params + ')';
 }
 
-/*
+/**
  * file description top of the file
+ *
+ * @param {string} src The source description string
+ * @return {Object} file descriptor
  */
 function parseFileDesc(src) {
     var match = src.match(/^\s*\/\*/);
-    if(!match){
+    if (!match) {
         return {
             remaining: src
         };
@@ -172,24 +213,28 @@ function parseFileDesc(src) {
     };
 }
 
-/*
+/**
  * Parse comment blocks from the given source file.
- * @param {String} src A string which contains the source file.
+ *
+ * @param {string} src A string which contains the source file.
  * @return {Array} An array contains commented code blocks.
  */
 function parseBlocks(src) {
-    var blocks = [],
-        begin, end;
+    var blocks = [];
+    var begin;
+    var end;
     while ((begin = src.indexOf('/*')) > -1) {
         end = src.indexOf('*/');
-        if (end === -1) break;
+        if (end === -1) {
+            break;
+        }
 
         var comment = src.slice(begin + 2, end);
         var tags = parseComment(comment);
 
         src = src.slice(end + 2);
         var until = src.indexOf('/*');
-        if(until === -1){
+        if (until === -1) {
             until = src.length;
         }
         var signature = parseSignature(src.slice(0, until));
@@ -201,9 +246,10 @@ function parseBlocks(src) {
     return blocks;
 }
 
-/*
+/**
  * Parse comment string into a set of tags.
- * @param {String} comment The comment string.
+ *
+ * @param {string} comment The comment string.
  * @return {Object} The set of tags.
  * @example
  * {
@@ -218,7 +264,8 @@ function parseBlocks(src) {
  * }
  */
 function parseComment(comment) {
-    var match, tags = [{
+    var match;
+    var tags = [{
         name: 'description',
         content: ''
     }];
@@ -240,7 +287,7 @@ function parseComment(comment) {
     var ret = {
         params: []
     };
-    tags.forEach(function(tag) {
+    tags.forEach(function (tag) {
         if (!tagParsers.hasOwnProperty(tag.name)) {
             console.warn(`[warn] Tag ${tag.name} not recognized`);
             return;
@@ -248,7 +295,8 @@ function parseComment(comment) {
         tag.descriptor = tagParsers[tag.name](trimComment(tag.content));
         if (tag.name === 'param') {
             ret.params.push(tag.descriptor);
-        } else {
+        }
+        else {
             ret[tag.name] = tag.descriptor;
         }
     });
@@ -256,22 +304,19 @@ function parseComment(comment) {
 }
 
 function inlineCode(code) {
-    code = code.replace(/\|/g, '&#124;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    if (code.indexOf('&') > -1) {
-        return `<code>${code}</code>`;
-    } else {
-        return '`' + code + '`';
-    }
+    code = code.replace(/\|/g, '&#124;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return (code.indexOf('&') > -1) ?  `<code>${code}</code>` : '`' + code + '`';
 }
 
 function fencedCode(code) {
     return '```\n' + code + '\n```';
 }
 
-/*
+/**
  * Trim the comment string, remove trailing blanks, and leading " * "
- * @param {String} comment The comment string to be trimed.
- * @return {String} The result string
+ *
+ * @param {string} comment The comment string to be trimed.
+ * @return {string} The result string
  */
 function trimComment(comment) {
     return comment
