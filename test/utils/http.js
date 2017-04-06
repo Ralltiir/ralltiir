@@ -1,109 +1,123 @@
-/*
- * @author yangjun14(yangjvn@126.com)
+/**
+ * @author harttle<yangjun14@baidu.com>
  * @file 测试src/utils/http.js
  */
 
-define(['../src/utils/http'], function(http) {
-    describe('http', function() {
+/* eslint-env mocha */
+
+/* eslint max-nested-callbacks: ["error", 5] */
+
+/* globals sinon: true */
+
+define(['../src/utils/http'], function (http) {
+    describe('http', function () {
         this.timeout(5000);
 
-        var xhr, fake, timeout;
-        before(function() {
+        var xhr;
+        var fake;
+        var timeout;
+        before(function () {
             fake = sinon.useFakeXMLHttpRequest();
-            fake.onCreate = function(_xhr) {
-                xhr = _xhr;
+            fake.onCreate = function (x) {
+                xhr = x;
             };
         });
 
-        after(function() {
+        after(function () {
             fake.restore();
         });
 
-        beforeEach(function() {
-            timeout = setTimeout(function() {
-                if (!xhr) return;
+        beforeEach(function () {
+            timeout = setTimeout(function () {
+                if (!xhr) {
+                    return;
+                }
+
                 if (xhr.url === 'http://harttle.com') {
                     xhr.respond(200, {
                         'Content-Type': 'text/plain'
                     }, 'okay');
-                } else if (xhr.url === 'http://baidu.com') {
+                }
+                else if (xhr.url === 'http://baidu.com') {
                     xhr.respond(400, {
                         'Content-Type': 'text/plain'
                     }, 'bad');
-                } else if (xhr.url === 'http://json.com') {
+                }
+                else if (xhr.url === 'http://json.com') {
                     xhr.respond(200, {
                         'Content-Type': 'application/json',
                         'cache-control': 'no-cache'
                     }, '{"foo": "bar"}');
                 }
+
             }, 100);
         });
 
-        afterEach(function() {
+        afterEach(function () {
             clearTimeout(timeout);
         });
 
-        describe('.ajax()', function() {
-            it('should return a thenable', function() {
+        describe('.ajax()', function () {
+            it('should return a thenable', function () {
                 var p = http.ajax('http://harttle.com');
                 expect(p.then).to.be.a('function');
             });
-            it('should use correct url', function() {
+            it('should use correct url', function () {
                 http.ajax('http://harttle.com');
                 expect(xhr.url).to.equal('http://harttle.com');
             });
-            it('should default method to GET', function() {
+            it('should default method to GET', function () {
                 http.ajax('http://harttle.com');
                 expect(xhr.method).to.equal('GET');
             });
-            it('should respect to port', function() {
+            it('should respect to port', function () {
                 http.ajax('http://www.baidu.com:3000');
                 expect(xhr.url).to.equal('http://www.baidu.com:3000');
             });
-            it('should resolve when 200', function(done) {
+            it('should resolve when 200', function (done) {
                 http.ajax('http://harttle.com')
-                    .then(function(xhr) {
+                    .then(function (xhr) {
                         expect(xhr.status).to.equal(200);
                         expect(xhr.responseText).to.equal('okay');
                         expect(xhr.data).to.equal('okay');
                         done();
                     }).catch(done);
             });
-            it('should reject when 400', function() {
+            it('should reject when 400', function () {
                 return http.ajax('http://baidu.com')
-                    .catch(function(xhr) {
+                    .catch(function (xhr) {
                         expect(xhr.responseText).to.equal('bad');
                         expect(xhr.status).to.equal(400);
                     });
             });
-            it('should parse JSON for JSON MIME type', function() {
+            it('should parse JSON for JSON MIME type', function () {
                 return http.ajax('http://json.com')
-                    .then(function(xhr) {
+                    .then(function (xhr) {
                         expect(xhr.data).to.deep.equal({
                             foo: 'bar'
                         });
                     });
             });
-            it('should parse response headers', function() {
+            it('should parse response headers', function () {
                 return http.ajax('http://json.com')
-                    .then(function(xhr) {
+                    .then(function (xhr) {
                         var h = xhr.responseHeaders;
                         expect(h['Content-Type']).to.equal('application/json');
                         expect(h['cache-control']).to.equal('no-cache');
                     });
             });
-            it('should support xhrFields', function() {
+            it('should support xhrFields', function () {
                 return http
                     .ajax('http://json.com', {
                         xhrFields: {
                             withCredentials: true
                         }
                     })
-                    .then(function() {
+                    .then(function () {
                         expect(xhr.withCredentials).to.equal(true);
                     });
             });
-            it('should urlencode request body by default', function() {
+            it('should urlencode request body by default', function () {
                 return http
                     .ajax('http://json.com', {
                         method: 'POST',
@@ -114,67 +128,67 @@ define(['../src/utils/http'], function(http) {
                             withCredentials: true
                         }
                     })
-                    .then(function() {
-                        expect(xhr.requestBody).to.equal("foo=bar");
+                    .then(function () {
+                        expect(xhr.requestBody).to.equal('foo=bar');
                     });
             });
-            it('should JSON encode when contentType set to application/json', function() {
+            it('should JSON encode when contentType set to application/json', function () {
                 return http.ajax({
-                        method: 'POST',
-                        url: 'http://json.com',
-                        data: {
-                            foo: 'bar'
-                        },
-                        headers: {
-                            'content-type': 'application/json'
-                        }
-                    })
-                    .then(function() {
+                    method: 'POST',
+                    url: 'http://json.com',
+                    data: {
+                        foo: 'bar'
+                    },
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                })
+                    .then(function () {
                         expect(xhr.requestBody).to.equal('{"foo":"bar"}');
                     });
             });
         });
-        describe('.get()', function() {
-            it('should perform GET', function() {
+        describe('.get()', function () {
+            it('should perform GET', function () {
                 return http.get('http://harttle.com')
-                    .then(function(_xhr) {
+                    .then(function (x) {
                         expect(xhr.method).to.equal('GET');
-                        expect(_xhr.data).to.equal('okay');
+                        expect(x.data).to.equal('okay');
                     });
             });
         });
-        describe('.post()', function() {
-            it('should perform POST', function() {
+        describe('.post()', function () {
+            it('should perform POST', function () {
                 return http.post('http://harttle.com')
-                    .then(function(_xhr) {
+                    .then(function (x) {
                         expect(xhr.method).to.equal('POST');
-                        expect(_xhr.data).to.equal('okay');
+                        expect(x.data).to.equal('okay');
                     });
             });
-            it('should attach post data', function() {
+            it('should attach post data', function () {
                 return http.post('http://harttle.com', {
-                        foo: 'bar'
-                    })
-                    .then(function() {
+                    foo: 'bar'
+                })
+                    .then(function () {
                         expect(xhr.requestBody).to.equal('foo=bar');
                     });
             });
         });
-        describe('.put()', function() {
-            it('should perform PUT', function() {
+        describe('.put()', function () {
+            it('should perform PUT', function () {
                 return http.put('http://harttle.com')
-                    .then(function(_xhr) {
+                    .then(function (x) {
                         expect(xhr.method).to.equal('PUT');
-                        expect(_xhr.data).to.equal('okay');
+                        expect(x.data).to.equal('okay');
                     });
             });
         });
-        describe('.delete()', function() {
-            it('should perform DELETE', function() {
+        describe('.delete()', function () {
+            it('should perform DELETE', function () {
                 return http.delete('http://harttle.com')
-                    .then(function(_xhr) {
+                    .then(function (x) {
                         expect(xhr.method).to.equal('DELETE');
-                        expect(_xhr.data).to.equal('okay');
+                        expect(x.data).to.equal('okay');
                     });
             });
         });
