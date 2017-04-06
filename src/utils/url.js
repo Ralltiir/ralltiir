@@ -3,12 +3,12 @@
  * @author treelite(c.xinle@gmail.com)
  */
 
-define(function(require) {
+define(function (require) {
 
     var URI = require('./uri/URI');
     var _ = require('../lang/underscore');
     var Path = require('./uri/component/Path');
-    var URIParser = require('./uri/util/uri-parser');
+    var uRIParser = require('./uri/util/uri-parser');
 
     /**
      * 创建URI对象
@@ -21,7 +21,6 @@ define(function(require) {
         return new URI(data);
     }
 
-
     /**
      * 解析URI字符串
      *
@@ -29,8 +28,8 @@ define(function(require) {
      * @param {string} str URI字符串
      * @return {Object} The URL Object
      */
-    url.parse = function(str) {
-        return URIParser(str);
+    url.parse = function (str) {
+        return uRIParser(str);
     };
 
     /**
@@ -41,23 +40,27 @@ define(function(require) {
      * @param {string=} to 目标路径
      * @return {string}
      */
-    url.resolve = function(from, to) {
+    url.resolve = function (from, to) {
         return Path.resolve(from, to);
     };
 
-    /*
+    /**
      * Format a plain object into query string.
+     *
      * @static
      * @param {Object} obj The object to be formated.
-     * @return {String} The result query string.
+     * @return {string} The result query string.
      * @example
      * param({foo:'bar ', bar: 'foo'});     // yields "foo=bar%20&bar=foo"
      */
-    url.param = function(obj) {
-        if (!_.isObject(obj)) return obj;
-        return _.map(obj, function(v, k) {
-                return encodeURIComponent(k) + '=' + encodeURIComponent(v);
-            })
+    url.param = function (obj) {
+        if (!_.isObject(obj)) {
+            return obj;
+        }
+
+        return _.map(obj, function (v, k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(v);
+        })
             .join('&');
     };
 
