@@ -1,4 +1,8 @@
-define(function() {
+/**
+ * @file config.js DI assembly configuration
+ * @author harttle<yangjun14@baidu.com>
+ */
+define(function () {
     var config = {
         // core
         action: {
@@ -54,6 +58,7 @@ define(function() {
             type: 'value',
             module: 'sfr/lang/assert'
         },
+        // eslint-disable-next-line
         _: {
             type: 'value',
             module: 'sfr/lang/underscore'

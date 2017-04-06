@@ -3,6 +3,12 @@
  * @author treelite(c.xinle@gmail.com)
  */
 
+/* eslint-env mocha */
+
+/* eslint-disable max-nested-callbacks */
+
+/* globals sinon: true */
+
 define(function (require) {
     var routerFactory = require('router/router');
     var router = routerFactory(require('utils/logger'));
@@ -146,8 +152,6 @@ define(function (require) {
                 router.redirect('/product/100?type=n');
 
                 expect(fn).to.have.been.called;
-                var params = fn.args[0];
-                var state = params[0];
                 expect(fn).to.have.been.calledWithMatch({
                     query: {
                         type: 'n'
@@ -167,12 +171,10 @@ define(function (require) {
                 router.redirect('/sf_baike/item/%E5%88%98%E5%BE%B7%E5%8D%8E/114923?adapt=1&fr=aladdin');
 
                 expect(fn).to.have.been.called;
-                var params = fn.args[0];
-                var state = params[0];
                 expect(fn).to.have.been.calledWithMatch({
                     query: {
                         fr: 'aladdin',
-                        adapt: "1"
+                        adapt: '1'
                     },
                     params: {
                         id: '114923',
@@ -370,7 +372,7 @@ define(function (require) {
                 }, 400);
             });
 
-            it ('only wait for the last route', function (done) {
+            it('only wait for the last route', function (done) {
                 var fn1 = function (state, prevState, done) {
                     setTimeout(done, 300);
                 };

@@ -1,7 +1,13 @@
-define(function() {
+/**
+ * @file view.js View prototype for service implementations
+ * @author harttle<yangjun14@baidu.com>
+ */
 
-    /*
+define(function () {
+
+    /**
      * Create a new view instance
+     *
      * @constructor
      */
     var View = function () {
@@ -9,61 +15,65 @@ define(function() {
     };
 
     View.prototype = {
+        constructor: View,
 
-        _init: function() {},
+        // eslint-disable-next-line
+        _init: function () {},
 
         /**
          * Initialize properties
          * */
-        set: function() {},
-        
-        /*
+        set: function () {},
+
+        /**
          * Get properties
          */
-        get: function() {},
+        get: function () {},
 
-        /*
+        /**
          * Called when view created
          */
-        create: function() {},
+        create: function () {},
 
         /**
          *  Render the DOM, called when render requested. Override this to render your HTML
          * */
-        render: function() {},
+        render: function () {},
 
         /**
          *  Update the view, called when update requested. Override this to update or re-render your HTML.
          * */
-        update : function() {},
+        update: function () {},
 
-        /*
+        /**
          * Callback when view attached to DOM
          */
-        attach: function() {},
+        attach: function () {},
 
-        /*
+        /**
          * Callback when view detached from DOM
          */
-        detach : function() {},
+        detach: function () {},
 
         /**
          * Destroy the view, called when destroy requested.
          * */
-        destroy: function() {},
+        destroy: function () {},
 
         /**
          * Bind an event to the view.
-         * @param {String} name The name of the event
+         *
+         * @param {string} name The name of the event
          * @param {Function} callback The callback when the event triggered
          * */
-        on: function(name, callback) {},
+        on: function (name, callback) {},
 
         /**
          * Unbind the given event
-         * @param {String} name The event name to unbind
+         *
+         * @param {string} name The event name to unbind
          * */
-        off: function(name) {}
+        off: function (name) {}
     };
 
     return View;
