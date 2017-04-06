@@ -3,6 +3,12 @@
  * @author treelite(c.xinle@gmail.com)
  */
 
+/* eslint-env mocha */
+
+/* eslint max-nested-callbacks: ["error", 6] */
+
+/* globals sinon: true */
+
 define(function (require) {
     var Host = require('utils/uri/component/Host');
 

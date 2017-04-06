@@ -1,10 +1,29 @@
-define(function () {
+/**
+* @file test/action.js test suite for action.js
+* @author harttle<yanjun14@baidu.com>
+*/
+
+/* eslint-env mocha */
+
+/* eslint-disable max-nested-callbacks */
+
+/* globals sinon: true */
+
+define(function (require) {
     var Promise = require('../src/lang/promise.js');
     var actionFactory = require('../src/action');
     var logger = require('../src/utils/logger');
 
     describe('action', function () {
-        var action, fooService, barService, current, prev, location, history, router;
+        var action;
+        var fooService;
+        var barService;
+        var current;
+        var prev;
+        var location;
+        var history;
+        var router;
+        var doc;
 
         beforeEach(function () {
             router = {
@@ -248,14 +267,14 @@ define(function () {
             });
             it('should set options.src to "back"', function () {
                 action.back({});
-                var current = { options: {} };
+                var current = {options: {}};
                 action.dispatch(current, {});
                 expect(current.options.src).to.equal('back');
             });
             it('should set options.src to "back" only once', function () {
                 action.back();
-                var second = { options: {} };
-                action.dispatch({ options: {} }, {});
+                var second = {options: {}};
+                action.dispatch({options: {}}, {});
                 action.dispatch(second, {});
                 expect(second.options.src).to.not.equal('back');
             });
@@ -277,15 +296,15 @@ define(function () {
                 });
             });
             it('should call router with correct arguments', function () {
-                var url = 'xx',
-                    query = 'bb',
-                    options = {};
+                var url = 'xx';
+                var query = 'bb';
+                var options = {};
                 action.redirect(url, query, options);
                 expect(router.redirect).to.have.been.calledWithMatch(url, query, {});
             });
             it('should pass stage data to next dispatch', function () {
-                action.redirect('/foo', 'bb', {}, { foo: 'bar' });
-                return action.dispatch({ pathPattern: '/foo' }, {}).then(function () {
+                action.redirect('/foo', 'bb', {}, {foo: 'bar'});
+                return action.dispatch({pathPattern: '/foo'}, {}).then(function () {
                     expect(fooService.create.args[0][2]).to.deep.equal({
                         foo: 'bar'
                     });
@@ -309,8 +328,8 @@ define(function () {
                 });
             });
             it('should not pass stage data to further dispatches', function () {
-                action.redirect('/foo', 'bb', {}, { foo: 'bar' });
-                var current = { pathPattern: '/foo' };
+                action.redirect('/foo', 'bb', {}, {foo: 'bar'});
+                var current = {pathPattern: '/foo'};
                 return action.dispatch(current, {}).then(function () {
                     fooService.create.reset();
                     return action.dispatch(current, {});
@@ -325,7 +344,8 @@ define(function () {
                 expect(fn).to.throw(/service not found/);
                 try {
                     fn();
-                } catch (e) {}
+                }
+                catch (e) {}
                 expect(location.replace).to.have.been.calledWith('/not-defined-service');
             });
         });
@@ -335,23 +355,23 @@ define(function () {
                 action.regist('/bar', barService);
             });
             it('should call router with correct arguments', function () {
-                var url = 'xx',
-                    query = 'bb',
-                    options = {};
+                var url = 'xx';
+                var query = 'bb';
+                var options = {};
                 action.reset(url, query, options);
                 expect(router.reset).to.have.been.calledWith(url, query, options);
             });
             it('should pass stage data to next dispatch', function () {
-                action.reset('/foo', 'bb', {}, { foo: 'bar' });
-                return action.dispatch({ pathPattern: '/foo' }, {}).then(function () {
+                action.reset('/foo', 'bb', {}, {foo: 'bar'});
+                return action.dispatch({pathPattern: '/foo'}, {}).then(function () {
                     expect(fooService.create.args[0][2]).to.deep.equal({
                         foo: 'bar'
                     });
                 });
             });
             it('should not pass stage data to further dispatches', function () {
-                action.reset('/foo', 'bb', {}, { foo: 'bar' });
-                var current = { pathPattern: '/foo' };
+                action.reset('/foo', 'bb', {}, {foo: 'bar'});
+                var current = {pathPattern: '/foo'};
                 return action.dispatch(current, {}).then(function () {
                     fooService.create.reset();
                     return action.dispatch(current, {});
@@ -416,21 +436,16 @@ define(function () {
                 action.start();
                 expect(action.config).to.have.not.been.called;
             });
-            it("should call .config() when there's arguments given", function () {
-                var opts = { root: '/bar' };
+            it('should call .config() when there\'s arguments given', function () {
+                var opts = {root: '/bar'};
                 action.start(opts);
                 expect(action.config).to.have.been.calledWith(opts);
             });
         });
+
         describe('.config()', function () {
-            beforeEach(function () {
-                //sinon.stub(router, 'config');
-            });
-            afterEach(function () {
-                //router.config.restore();
-            });
             it('should call router.config', function () {
-                var opts = { root: '/foo' };
+                var opts = {root: '/foo'};
                 action.config(opts);
                 expect(router.config).to.have.been.calledWith(opts);
             });
