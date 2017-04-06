@@ -1,8 +1,12 @@
-define(function(require) {
+/**
+ * @file 路由管理
+ * @author treelite(c.xinle@gmail.com), Firede(firede@firede.us)
+ */
+
+define(function (require) {
     var extend = require('../lang/underscore').extend;
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
-    var URL = require('../utils/url');
 
     function routerFactory(logger) {
         var router = {};
@@ -32,11 +36,12 @@ define(function(require) {
             var index = -1;
 
             path = path.toString();
-            rules.some(function(item, i) {
+            rules.some(function (item, i) {
                 // toString是为了判断正则是否相等
                 if (item.raw.toString() === path) {
                     index = i;
                 }
+
                 return index !== -1;
             });
 
@@ -70,7 +75,7 @@ define(function(require) {
          *
          * @type {boolean}
          */
-        var pending = false;
+        var isPending = false;
 
         /**
          * 等待调用处理器的参数
@@ -85,14 +90,14 @@ define(function(require) {
          * @inner
          * @param {URL} url url对象
          * @param {Object} options 参数
-         * @param {String} options.title 页面标题
+         * @param {string} options.title 页面标题
          */
         function apply(url, options) {
-            logger.log("router apply: " + url);
+            logger.log('router apply: ' + url);
             options = options || {};
 
             // 只保存最后一次的待调用信息
-            if (pending) {
+            if (isPending) {
                 waitingRoute = {
                     url: url,
                     options: options
@@ -101,7 +106,7 @@ define(function(require) {
             }
 
             function finish() {
-                pending = false;
+                isPending = false;
                 if (waitingRoute) {
                     var route = extend({}, waitingRoute);
                     waitingRoute = null;
@@ -109,7 +114,7 @@ define(function(require) {
                 }
             }
 
-            pending = true;
+            isPending = true;
 
             var handler;
             var defHandler;
@@ -117,13 +122,14 @@ define(function(require) {
             var params = {};
             var path = url.getPath();
 
-            rules.some(function(item) {
+            rules.some(function (item) {
                 if (item.path instanceof RegExp) {
                     if (item.path.test(path)) {
                         handler = item;
                         params = getParamsFromPath(path, item);
                     }
-                } else if (url.equalPath(item.path)) {
+                }
+                else if (url.equalPath(item.path)) {
                     handler = item;
                 }
 
@@ -138,7 +144,7 @@ define(function(require) {
 
             if (!handler) {
                 waitingRoute = null;
-                pending = false;
+                isPending = false;
                 throw new Error('can not find route for: ' + path);
             }
 
@@ -156,10 +162,11 @@ define(function(require) {
 
             if (handler.fn.length > args.length) {
                 args.push(finish);
-                logger.log("router calling handler: " + handler.name);
+                logger.log('router calling handler: ' + handler.name);
                 handler.fn.apply(handler.thisArg, args);
-            } else {
-                logger.log("router calling handler: " + handler.name);
+            }
+            else {
+                logger.log('router calling handler: ' + handler.name);
                 handler.fn.apply(handler.thisArg, args);
                 finish();
             }
@@ -178,7 +185,7 @@ define(function(require) {
                 params: []
             };
 
-            res.path = path.replace(/:([^/]+)/g, function($0, $1) {
+            res.path = path.replace(/:([^/]+)/g, function ($0, $1) {
                 res.params.push($1);
                 return '([^/]+)';
             });
@@ -204,8 +211,8 @@ define(function(require) {
                 thisArg: thisArg
             };
 
-            if (!(path instanceof RegExp) &&
-                path.indexOf(':') >= 0
+            if (!(path instanceof RegExp)
+                && path.indexOf(':') >= 0
             ) {
                 rule = extend(rule, restful(path));
             }
@@ -217,12 +224,12 @@ define(function(require) {
          * 重置当前的URL
          *
          * @public
-         * @param {String} url 路径
+         * @param {string} url 路径
          * @param {Object} query 查询条件
          * @param {Object} options 选项
-         * @param {Boolean} options.silent 是否静默重置，静默重置只重置URL，不加载action
+         * @param {boolean} options.silent 是否静默重置，静默重置只重置URL，不加载action
          */
-        router.reset = function(url, query, options) {
+        router.reset = function (url, query, options) {
             controller.reset(url, query, options);
         };
 
@@ -231,20 +238,22 @@ define(function(require) {
          *
          * @public
          * @param {Object} options 配置信息
-         * @param {String} options.path 默认路径
-         * @param {String} options.index index文件名称
-         * @param {String} options.mode 路由模式，可选async、page，默认为async
+         * @param {string} options.path 默认路径
+         * @param {string} options.index index文件名称
+         * @param {string} options.mode 路由模式，可选async、page，默认为async
          */
-        router.config = function(options) {
+        router.config = function (options) {
             options = options || {};
             // 修正root，添加头部的`/`并去掉末尾的'/'
             var root = options.root;
             if (root && root.charAt(root.length - 1) === '/') {
                 root = options.root = root.substring(0, root.length - 1);
             }
+
             if (root && root.charAt(0) !== '/') {
                 options.root = '/' + root;
             }
+
             extend(globalConfig, options);
         };
 
@@ -256,10 +265,11 @@ define(function(require) {
          * @param {function(path, query)} fn 路由处理函数
          * @param {Object} thisArg 路由处理函数的this指针
          */
-        router.add = function(path, fn, thisArg) {
+        router.add = function (path, fn, thisArg) {
             if (indexOfHandler(path) >= 0) {
                 throw new Error('path already exist');
             }
+
             addRule(path, fn, thisArg);
         };
 
@@ -269,11 +279,12 @@ define(function(require) {
          * @public
          * @param {string} path 路径
          */
-        router.remove = function(path) {
+        router.remove = function (path) {
             var i = indexOfHandler(path);
             if (i >= 0) {
                 rules.splice(i, 1);
             }
+
         };
 
         /**
@@ -281,8 +292,9 @@ define(function(require) {
          *
          * @public
          * @param {string} path 路径
+         * @return {boolean} 是否存在
          */
-        router.exist = function(path) {
+        router.exist = function (path) {
             return indexOfHandler(path) >= 0;
         };
 
@@ -291,7 +303,7 @@ define(function(require) {
          *
          * @public
          */
-        router.clear = function() {
+        router.clear = function () {
             rules = [];
         };
 
@@ -302,12 +314,12 @@ define(function(require) {
          * @param {string} url 路径
          * @param {?Object} query 查询条件
          * @param {Object} options 跳转参数
-         * @param {String} options.title 跳转后页面的title
-         * @param {Boolean} options.force 是否强制跳转
-         * @param {Boolean} options.silent 是否静默跳转（不改变URL）
+         * @param {string} options.title 跳转后页面的title
+         * @param {boolean} options.force 是否强制跳转
+         * @param {boolean} options.silent 是否静默跳转（不改变URL）
          */
-        router.redirect = function(url, query, options) {
-            logger.log("router redirecting to: " + url);
+        router.redirect = function (url, query, options) {
+            logger.log('router redirecting to: ' + url);
             controller.redirect(url, query, options);
         };
 
@@ -317,7 +329,7 @@ define(function(require) {
          * @public
          * @param {Object} options 配置项
          */
-        router.start = function(options) {
+        router.start = function (options) {
             router.config(options);
             controller.init(apply);
         };
@@ -327,7 +339,7 @@ define(function(require) {
          *
          * @public
          */
-        router.stop = function() {
+        router.stop = function () {
             controller.dispose();
             router.clear();
             waitingRoute = null;
@@ -341,14 +353,16 @@ define(function(require) {
          * @public
          * @param {Object} implement 路由控制器
          */
-        router.controller = function(implement) {
+        router.controller = function (implement) {
             controller = implement;
         };
 
         /**
          * 获取当前状态
+         *
+         * @return {Object} 返回上一次调度后的状态
          */
-        router.getState = function() {
+        router.getState = function () {
             return prevState;
         };
 

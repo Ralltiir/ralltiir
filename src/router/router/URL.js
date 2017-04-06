@@ -32,8 +32,9 @@ define(function (require) {
         var match = URIRegExp.exec(str);
         // ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
         //  12            3  4          5       6  7        8 9
-        if(!match){
-            console.warn('URI not valid:')
+        if (!match) {
+            // eslint-disable-next-line
+            console.warn('URI not valid:');
         }
 
         var token = this.token = options.token || DEFAULT_TOKEN;
@@ -41,6 +42,7 @@ define(function (require) {
         if (root.charAt(root.length - 1) === '/') {
             root = root.substring(0, root.length - 1);
         }
+
         this.root = root;
 
         str = str.split('#');

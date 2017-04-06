@@ -1,10 +1,12 @@
-/*
- * Superframe Debug Utility
+/**
+ * @file logger.js Superframe Debug Utility
+ * @author harttle<yangjun14@baidu.com>
  */
 
-define(function() {
-    var match, server;
-    
+define(function () {
+    var match;
+    var server;
+
     match = location.search.match(/(?:^\?|&)debug=true/i);
     window.DEBUG = match ? 'superframe' : window.DEBUG;
 
@@ -23,13 +25,14 @@ define(function() {
         var now = Date.now();
         var duration = (now - timeOffset) / 1000;
 
-        var msg = '[' + duration + '(+' + (now - lastTime) + ')] ' + msg;
+        msg = '[' + duration + '(+' + (now - lastTime) + ')] ' + msg;
         doLog(msg);
 
         lastTime = now;
     }
 
     function doLog(msg) {
+        // eslint-disable-next-line
         console.log(msg);
         // Log to remote server
         if (server) {

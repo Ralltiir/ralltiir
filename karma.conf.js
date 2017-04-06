@@ -9,24 +9,6 @@ module.exports = function(config) {
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: 'build/',
 
-        // Important: 所有插件必须在此声明
-        plugins: [
-            // frameworks
-            'karma-mocha',
-            'karma-chai',
-            'karma-chai-as-promised',
-            //'karma-sinon',
-            'karma-chai-sinon',
-
-            // reporters
-            'karma-mocha-reporter',
-            'karma-coverage',
-            'karma-html-reporter',
-
-            // launchers
-            'karma-chrome-launcher'
-        ],
-
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         // Important: 下列数组中文件将『逆序载入』
@@ -53,9 +35,9 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            // source files, that you wanna generate coverage for 
-            // do not include tests or libraries 
-            // (these files will be instrumented by Istanbul) 
+            // source files, that you wanna generate coverage for
+            // do not include tests or libraries
+            // (these files will be instrumented by Istanbul)
             'src/**/*.js': ['coverage']
         },
 
@@ -93,7 +75,7 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome'],
+        browsers: [process.env.BROWSER || 'Chrome'],
 
 
         // Continuous Integration mode

@@ -1,0 +1,11 @@
+cache:
+    paths:
+        - node_modules/
+test:
+    variables:
+        BROWSER: PhantomJS
+    script:
+        - npm install
+        - npm install karma-phantomjs-launcher
+        - npm run test-reports
+        - "cat build/test-reports/coverage/*/index.html | grep '<span class=\"strong\">' | head -n 1 | perl -nle '/(\\d+.\\d+\\%)/ && print \"Coverage: \" . $1'"

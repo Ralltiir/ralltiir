@@ -1,15 +1,18 @@
-/*
- * IoC Dependency Injector
+/**
+ * @file IoC Dependency Injector
  *   * only support sync AMD modules
  *   * cyclic dependencies are not handled
  *   * entities returned by factories are always cached
+ * @author harttle<yangjun14@baidu.com>
  */
-define(function() {
+define(function (require) {
     var assert = require('../lang/assert');
     var _ = require('../lang/underscore.js');
 
-    /*
+    /**
      * Create a IoC container
+     *
+     * @constructor
      * @param {Object} config The dependency tree configuration
      * @param {Function} require Optional, the require used by DI, defaults to `window.require`
      */
@@ -19,7 +22,7 @@ define(function() {
         this.container = Object.create(null);
     }
 
-    DI.prototype.resolve = function(name) {
+    DI.prototype.resolve = function (name) {
         var decl = this.config[name];
         assert(decl, 'module declaration not found: ' + name);
 
@@ -43,28 +46,30 @@ define(function() {
             default:
                 throw new Error('DI type ' + decl.type + ' not recognized');
         }
-    }
+    };
 
-    DI.prototype.inject = function(factory, deps) {
+    DI.prototype.inject = function (factory, deps) {
         // Note: cyclic dependencies are not detected, avoid this!
-        var args = deps.map(function(name) {
+        var args = deps.map(function (name) {
             return this.resolve(name);
         }, this);
 
         return factory.apply(null, args);
     };
 
-    DI.prototype.normalize = function(config) {
-        _.forOwn(config, function(decl, key) {
+    DI.prototype.normalize = function (config) {
+        _.forOwn(config, function (decl, key) {
             if (decl.cache === undefined) {
                 decl.cache = true;
             }
+
             if (decl.type === undefined) {
                 decl.type = 'value';
             }
+
         });
         return config;
-    }
+    };
 
     return DI;
 });
