@@ -7,8 +7,11 @@
     "test": "make test",
     "test-reports": "make test-reports",
     "clean": "make clean",
-    "lint": "fecs check src",
+    "lint": "fecs check src, test",
     "build": "make build",
+    "preversion": "npm run lint && npm test",
+    "version": "npm run dist",
+    "postversion": "git push && git push --tags",
     "test-watch": "make test-watch",
     "test-reports": "make test-reports",
     "dist": "make dist"
