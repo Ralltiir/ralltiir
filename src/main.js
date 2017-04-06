@@ -1,4 +1,8 @@
-! function() {
+/**
+ * @file main.js inline all modules
+ * @author harttle<yangjun14@baidu.com>
+ */
+(function () {
     // router
     __inline('router/router/URL.js');
     __inline('router/router/config.js');
@@ -42,21 +46,20 @@
     __inline('doc.js');
     __inline('config.js');
 
-
-    require(['sfr/utils/di', 'sfr/config'], function(DI, config) {
+    require(['sfr/utils/di', 'sfr/config'], function (DI, config) {
         var amdModuleList = Object.keys(config)
-            .filter(function(key) {
+            .filter(function (key) {
                 return config[key].module;
             })
-            .map(function(key) {
+            .map(function (key) {
                 return config[key].module;
             });
 
-        define('sfr', amdModuleList, function() {
+        define('sfr', amdModuleList, function () {
             var di = new DI(config);
 
             Object.keys(config).forEach(di.resolve, di);
             return di.container;
         });
     });
-}();
+})();
