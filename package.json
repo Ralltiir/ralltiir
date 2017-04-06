@@ -1,21 +1,18 @@
 {
   "name": "sfr",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc": "make doc",
     "test": "make test",
     "test-reports": "make test-reports",
-    "preversion": "npm test",
+    "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags",
     "clean": "make clean",
     "lint": "fecs check src, test",
     "build": "make build",
-    "preversion": "npm run lint && npm test",
     "version": "npm run dist",
-    "postversion": "git push && git push --tags",
     "test-watch": "make test-watch",
-    "test-reports": "make test-reports",
     "dist": "make dist"
   },
   "devDependencies": {
