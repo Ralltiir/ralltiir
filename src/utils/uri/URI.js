@@ -27,7 +27,7 @@ define(function (require) {
     /**
      * URI
      *
-     * @contructor
+     * @constructor
      * @param {string|Object} data URL
      */
     function URI(data) {

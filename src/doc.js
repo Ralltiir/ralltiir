@@ -1,4 +1,9 @@
-define(function() {
+/**
+ * @file doc.js Root document container for all SF pages
+ * @author harttle<yangjun14@baidu.com>
+ */
+
+define(function () {
 
     function docFactory(mainDoc) {
         var doc = mainDoc.querySelector('#sfr-app');

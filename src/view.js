@@ -1,6 +1,6 @@
 /**
  * @file view.js View prototype for service implementations
- * @author harttle<yangjvn@126.com>
+ * @author harttle<yangjun14@baidu.com>
  */
 
 define(function () {

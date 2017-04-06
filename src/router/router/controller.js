@@ -108,24 +108,6 @@ define(function (require) {
         callHandler(url, options);
     }
 
-    /**
-     * 获取元素的本页跳转地址
-     *
-     * @inner
-     * @param {HTMLElement} ele DOM元素
-     * @return {!string}
-     */
-    function getLink(ele) {
-        var target = ele.getAttribute('target');
-        var href = ele.getAttribute('href');
-
-        if (!href || (target && target !== '_self')) {
-            return;
-        }
-
-        return href.charAt(0) !== '#' && href.indexOf(':') < 0 && href;
-    }
-
     var exports = {};
 
     /**

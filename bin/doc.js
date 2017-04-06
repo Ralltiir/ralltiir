@@ -49,24 +49,6 @@ var tagParsers = {
             description: trimComment(match[2])
         };
     },
-    'private'() {
-        return true;
-    },
-    'inner'() {
-        return true;
-    },
-    'static'() {
-        return true;
-    },
-    'constructor'() {
-        return true;
-    },
-    'name'(c) {
-        return c;
-    },
-    'class'(c) {
-        return c;
-    },
 
     /**
      * Parse the param descriptor from comment string
@@ -119,7 +101,7 @@ parseBlocks(src)
 
         console.log(`${o.description}\n`);
         if (o.params.length) {
-            console.log(`**Parameters**\n`);
+            console.log('**Parameters**\n');
             console.log('Name | Type | Description');
             console.log('---  | ---  | ---');
             o.params.forEach(function (param) {
@@ -139,16 +121,15 @@ parseBlocks(src)
     });
 
 function printName(o) {
-    if (o.hasOwnProperty('name')) {
-        console.log(`## ${o.name}\n`);
-        return;
-    }
     var cls = o.class || moduleName;
     if (o.hasOwnProperty('static')) {
         console.log(`## ${cls}.${o.signature}\n`);
     }
     else if (o.hasOwnProperty('constructor')) {
         console.log(`## new ${o.signature}\n`);
+    }
+    else if (o.hasOwnProperty('interface')) {
+        console.log(`## &lt;Interface&gt; ${o.signature}\n`);
     }
     else {
         console.log(`## ${cls}#${o.signature}\n`);
@@ -290,11 +271,8 @@ function parseComment(comment) {
         params: []
     };
     tags.forEach(function (tag) {
-        if (!tagParsers.hasOwnProperty(tag.name)) {
-            console.warn(`[warn] Tag ${tag.name} not recognized`);
-            return;
-        }
-        tag.descriptor = tagParsers[tag.name](trimComment(tag.content));
+        var parser = tagParsers.hasOwnProperty(tag.name) ? tagParsers[tag.name] : x => x;
+        tag.descriptor = parser(trimComment(tag.content));
         if (tag.name === 'param') {
             ret.params.push(tag.descriptor);
         }
