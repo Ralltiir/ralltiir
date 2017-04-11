@@ -470,22 +470,24 @@ define(function (require) {
                 options.silent = true;
             }
 
-            var prevUrl = location.href.replace(/.*\/([^/]+$)/, '/$1');
+            // TODO: refactor url parser to apply here
+            var prevUrl = router.ignoreRoot(location.pathname + location.search + location.hash);
+            var currentUrl = router.ignoreRoot(url);
+            var currentPath = (currentUrl || '').replace(/\?.*/, '');
 
-            var currentPath = location.pathname.replace(/.*\/([^/]+$)/, '/$1');
-
+            var pathPattern = router.pathPattern(url);
             var routerOptions = router.getState();
 
-            if (!serviceMap.has(currentPath)) {
+            if (!serviceMap.has(pathPattern)) {
                 throw new Error('service not found:' + currentPath);
             }
-            var service = serviceMap.get(currentPath);
+            var service = serviceMap.get(pathPattern);
             var transition = {
                 from: {
                     url: prevUrl
                 },
                 to: {
-                    url: url,
+                    url: currentUrl,
                     path: currentPath
                 },
                 extra: data

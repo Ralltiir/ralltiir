@@ -4,7 +4,6 @@
  */
 
 define(function (require) {
-
     var extend = require('../../lang/underscore').extend;
     var URL = require('./URL');
     var config = require('./config');
@@ -207,6 +206,7 @@ define(function (require) {
 
     exports.ignoreRoot = ignoreRoot;
 
-    return exports;
+    exports.createURL = createURL;
 
+    return exports;
 });

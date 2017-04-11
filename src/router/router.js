@@ -7,6 +7,7 @@ define(function (require) {
     var extend = require('../lang/underscore').extend;
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
+    var _ = require('../lang/underscore.js');
 
     function routerFactory(logger) {
         var router = {};
@@ -117,35 +118,19 @@ define(function (require) {
             isPending = true;
 
             var handler;
-            var defHandler;
             var query = extend({}, url.getQuery());
             var params = {};
             var path = url.getPath();
 
-            rules.some(function (item) {
-                if (item.path instanceof RegExp) {
-                    if (item.path.test(path)) {
-                        handler = item;
-                        params = getParamsFromPath(path, item);
-                    }
-                }
-                else if (url.equalPath(item.path)) {
-                    handler = item;
-                }
-
-                if (!item.path) {
-                    defHandler = item;
-                }
-
-                return !!handler;
-            });
-
-            handler = handler || defHandler;
-
+            handler = findHandler(url);
             if (!handler) {
                 waitingRoute = null;
                 isPending = false;
                 throw new Error('can not find route for: ' + path);
+            }
+
+            if (handler.path instanceof RegExp && handler.path.test(path)) {
+                params = getParamsFromPath(path, handler);
             }
 
             var curState = {
@@ -170,6 +155,36 @@ define(function (require) {
                 handler.fn.apply(handler.thisArg, args);
                 finish();
             }
+        }
+
+        /**
+         * Find handler object by Url Object
+         *
+         * @private
+         * @param {Object} url The url object
+         * @return {Object} the corresponding handler for the given url
+         */
+        function findHandler(url) {
+            var handler;
+            var defHandler;
+            var path = url.getPath();
+            rules.some(function (item) {
+                if (item.path instanceof RegExp) {
+                    if (item.path.test(path)) {
+                        handler = item;
+                    }
+                }
+                else if (url.equalPath(item.path)) {
+                    handler = item;
+                }
+
+                if (!item.path) {
+                    defHandler = item;
+                }
+
+                return !!handler;
+            });
+            return handler || defHandler;
         }
 
         /**
@@ -219,6 +234,22 @@ define(function (require) {
 
             rules.push(rule);
         }
+
+        /**
+         * Find registered path pattern by url
+         *
+         * @param {string} url The url string
+         * @return {Object} The handler object associated with the given url
+         */
+        router.pathPattern = function (url) {
+            url = controller.ignoreRoot(url);
+            var urlObj = controller.createURL(url);
+            var handler = findHandler(urlObj);
+            if (!handler) {
+                return null;
+            }
+            return handler.raw;
+        };
 
         /**
          * 重置当前的URL
@@ -349,12 +380,19 @@ define(function (require) {
         /**
          * 更换控制器
          * 仅用于单元测试及自定义控制器的调试
+         * TODO: re-implement this via DI
          *
          * @public
          * @param {Object} implement 路由控制器
          */
         router.controller = function (implement) {
+            var tmp = controller;
             controller = implement;
+            _.forOwn(tmp, function (v, k) {
+                if (!controller.hasOwnProperty(k)) {
+                    controller[k] = v;
+                }
+            });
         };
 
         /**
@@ -365,6 +403,8 @@ define(function (require) {
         router.getState = function () {
             return prevState;
         };
+
+        router.ignoreRoot = controller.ignoreRoot;
 
         return router;
     }

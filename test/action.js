@@ -19,11 +19,11 @@ define(function (require) {
         var action;
         var fooService;
         var barService;
+        var router;
         var current;
         var prev;
         var location;
         var history;
-        var router;
         var doc;
 
         beforeEach(function () {
@@ -39,6 +39,12 @@ define(function (require) {
                     return {};
                 }),
                 clear: sinon.spy(),
+                ignoreRoot: function (url) {
+                    return url.replace(/^\/root/, '');
+                },
+                pathPattern: function (url) {
+                    return '/foo';
+                },
                 redirect: sinon.spy(function (url) {
                     if (url === '/not-defined-service') {
                         throw new Error('service not found');
@@ -485,8 +491,11 @@ define(function (require) {
                 expect(router.reset).to.have.been.called;
             });
             it('should call serviceObject.update()', function () {
-                location.pathname = '/root/bar/foo';
-                location.href = 'http://foo.com/root/bar/foo';
+                location.href = 'http://foo.com/root/foo?foo=foo#bar';
+                location.pathname = '/root/foo';
+                location.search = '?foo=foo';
+                location.hash = '#bar';
+
                 var options = {
                     foo: 'bar'
                 };
@@ -494,15 +503,15 @@ define(function (require) {
                     container: 'container',
                     view: 'view'
                 };
-                return action.update('url', 'query', options, extra).then(function () {
+                return action.update('/root/foo?foo=bar', {}, options, extra).then(function () {
                     expect(fooService.update).to.have.been.called;
                     expect(fooService.update).to.have.been.calledWithMatch({}, {
                         from: {
-                            url: '/foo'
+                            url: '/foo?foo=foo#bar'
                         },
                         to: {
                             path: '/foo',
-                            url: 'url'
+                            url: '/foo?foo=bar'
                         },
                         extra: extra
                     });
