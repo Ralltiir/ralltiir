@@ -41,7 +41,7 @@ define(function (require) {
 
         describe('start/stop', function () {
 
-            it('should init controller and dipose controller', function () {
+            it('should init controller and dispose controller', function () {
                 sinon.spy(controller, 'init');
                 sinon.spy(controller, 'dispose');
 
