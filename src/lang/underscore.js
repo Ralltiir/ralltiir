@@ -220,6 +220,22 @@ define(function (require) {
     }
 
     /**
+     * Uses indexOf internally, if list is an Array. Use fromIndex to start your search at a given index.
+     * http://underscorejs.org/#contains
+     *
+     * @param {Array|string} list the list of items in which to find
+     * @param {any} value the value to find
+     * @param {number} fromIndex Optional, default to 0
+     * @return {number} Returns true if the value is present in the list, false otherwise.
+     */
+    function contains(list, value, fromIndex) {
+        if (fromIndex === undefined) {
+            fromIndex = 0;
+        }
+        return list.indexOf(value, fromIndex) > -1;
+    }
+
+    /**
      * Checks if value is classified as a RegExp object.
      *
      * @param {any} value The value to check.
@@ -457,6 +473,7 @@ define(function (require) {
     exports.isObject = isObject;
     exports.isRegExp = isRegExp;
     exports.inherits = inherits;
+    exports.contains = contains;
 
     /**
      * Function Related

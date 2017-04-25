@@ -72,20 +72,6 @@ define(function (require) {
         }
 
         /**
-         * 是否正在等待处理器执行
-         *
-         * @type {boolean}
-         */
-        var isPending = false;
-
-        /**
-         * 等待调用处理器的参数
-         *
-         * @type {!Object}
-         */
-        var waitingRoute;
-
-        /**
          * 根据URL调用处理器
          *
          * @inner
@@ -97,26 +83,6 @@ define(function (require) {
             logger.log('router apply: ' + url);
             options = options || {};
 
-            // 只保存最后一次的待调用信息
-            if (isPending) {
-                waitingRoute = {
-                    url: url,
-                    options: options
-                };
-                return;
-            }
-
-            function finish() {
-                isPending = false;
-                if (waitingRoute) {
-                    var route = extend({}, waitingRoute);
-                    waitingRoute = null;
-                    apply(route.url, route.options);
-                }
-            }
-
-            isPending = true;
-
             var handler;
             var query = extend({}, url.getQuery());
             var params = {};
@@ -124,8 +90,6 @@ define(function (require) {
 
             handler = findHandler(url);
             if (!handler) {
-                waitingRoute = null;
-                isPending = false;
                 throw new Error('can not find route for: ' + path);
             }
 
@@ -145,16 +109,8 @@ define(function (require) {
             var args = [curState, prevState];
             prevState = curState;
 
-            if (handler.fn.length > args.length) {
-                args.push(finish);
-                logger.log('router calling handler: ' + handler.name);
-                handler.fn.apply(handler.thisArg, args);
-            }
-            else {
-                logger.log('router calling handler: ' + handler.name);
-                handler.fn.apply(handler.thisArg, args);
-                finish();
-            }
+            logger.log('router calling handler: ' + handler.name);
+            handler.fn.apply(handler.thisArg, args);
         }
 
         /**
@@ -168,6 +124,7 @@ define(function (require) {
             var handler;
             var defHandler;
             var path = url.getPath();
+            logger.log('finding handlers for', url, 'in rules:', rules);
             rules.some(function (item) {
                 if (item.path instanceof RegExp) {
                     if (item.path.test(path)) {
@@ -210,30 +167,6 @@ define(function (require) {
             return res;
         }
 
-        /**
-         * 添加路由规则
-         *
-         * @inner
-         * @param {string} path 路径
-         * @param {Function} fn 路由处理函数
-         * @param {Object} thisArg 路由处理函数的this指针
-         */
-        function addRule(path, fn, thisArg) {
-            var rule = {
-                raw: path,
-                path: path,
-                fn: fn,
-                thisArg: thisArg
-            };
-
-            if (!(path instanceof RegExp)
-                && path.indexOf(':') >= 0
-            ) {
-                rule = extend(rule, restful(path));
-            }
-
-            rules.push(rule);
-        }
 
         /**
          * Find registered path pattern by url
@@ -301,7 +234,18 @@ define(function (require) {
                 throw new Error('path already exist');
             }
 
-            addRule(path, fn, thisArg);
+            var rule = {
+                raw: path,
+                path: path,
+                fn: fn,
+                thisArg: thisArg
+            };
+
+            if (_.isString(path) && _.contains(path, ':')) {
+                rule = extend(rule, restful(path));
+            }
+
+            rules.push(rule);
         };
 
         /**
@@ -315,7 +259,6 @@ define(function (require) {
             if (i >= 0) {
                 rules.splice(i, 1);
             }
-
         };
 
         /**
@@ -373,7 +316,6 @@ define(function (require) {
         router.stop = function () {
             controller.dispose();
             router.clear();
-            waitingRoute = null;
             prevState = {};
         };
 
