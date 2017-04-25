@@ -470,7 +470,6 @@ define(function (require) {
                 options.silent = true;
             }
 
-            // TODO: refactor url parser to apply here
             var prevUrl = router.ignoreRoot(location.pathname + location.search + location.hash);
             var currentUrl = router.ignoreRoot(url);
             var currentPath = (currentUrl || '').replace(/\?.*/, '');

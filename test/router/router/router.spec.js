@@ -337,69 +337,6 @@ define(function (require) {
                     options: {}
                 });
             });
-
         });
-
-        describe('support async handler', function () {
-
-            beforeEach(function () {
-                router.start();
-            });
-
-            afterEach(function () {
-                router.stop();
-                router.clear();
-            });
-
-            it('will call waiting route', function (done) {
-                var fn1 = function (state, prevState, done) {
-                    setTimeout(done, 300);
-                };
-
-                var fn2 = sinon.spy();
-
-                router.add('/', fn1);
-                router.add('/new', fn2);
-
-                router.redirect('/');
-                router.redirect('/new');
-
-                expect(fn2).to.not.have.been.called;
-
-                setTimeout(function () {
-                    expect(fn2).to.have.been.called;
-                    done();
-                }, 400);
-            });
-
-            it('only wait for the last route', function (done) {
-                var fn1 = function (state, prevState, done) {
-                    setTimeout(done, 300);
-                };
-
-                var fn2 = sinon.spy();
-                var fn3 = sinon.spy();
-
-                router.add('/', fn1);
-                router.add('/new', fn2);
-                router.add('/detail', fn3);
-
-                router.redirect('/');
-                router.redirect('/new');
-                router.redirect('/detail');
-
-                expect(fn2).to.not.have.been.called;
-                expect(fn3).to.not.have.been.called;
-
-                setTimeout(function () {
-                    expect(fn2).to.not.have.been.called;
-                    expect(fn3).to.have.been.called;
-                    done();
-                }, 400);
-            });
-
-        });
-
     });
-
 });
