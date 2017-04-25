@@ -174,7 +174,13 @@ define(function () {
         if (listeners) {
             listeners = listeners.slice(0);
             for (i = 0; i < listeners.length; i++) {
-                listeners[i].apply(this, args);
+                try {
+                    listeners[i].apply(this, args);
+                }
+                catch (e) {
+                    // eslint-disable-next-line
+                    console.error(e);
+                }
             }
         }
 

@@ -59,6 +59,18 @@ define(function (require) {
                     );
                 });
 
+                it('life should continue when one handler throws', function () {
+                    var emitter = new Emitter();
+                    var spy = sinon.spy();
+                    emitter.on('foo', function () {
+                        throw new Error('intended');
+                    });
+                    emitter.on('foo', spy);
+                    emitter.emit('foo');
+
+                    expect(spy).to.have.been.called;
+                });
+
                 it('should pass multiple arguments', function (done) {
                     var emitter = new Emitter();
                     emitter.on('foo', function (first, second) {
