@@ -70,20 +70,8 @@ clean:
 dist-clean: clean
 	rm -rf ./dist/
 
-
-# Test Related
-
 test: build-dev
 	$(TEST) start --reporters mocha
 
 test-reports: build-dev
 	$(TEST) start --reporters mocha,html,coverage
-
-test-watch: build-dev
-	$(TEST) start --auto-watch --no-single-run
-
-test-listen: build-dev
-	$(TEST) start --browsers --no-single-run
-
-test-run:
-	$(TEST) run

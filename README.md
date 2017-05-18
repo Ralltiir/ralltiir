@@ -38,26 +38,11 @@ npm run dist
 npm test
 ```
 
-Karma测试环境可监测文件变化，现由于测试ESL模块需要先进行构建，需要手动build。
-可先启动Karma监测build/dist目录（此时会立即运行一次测试）：
-
-```bash
-npm run test-watch
-```
-
-保持Karma处于运行状态，手动 Build 即可触发测试的执行：
- 
-```bash
-npm run build
-```
-
 ### 测试报告
 
 生成测试结果（HTML格式）报告和覆盖率报告：
 
 ```bash
-npm run test-coverage
-# 或
 npm run test-reports
 # 测试结果报告
 # ./build/test-reports/result

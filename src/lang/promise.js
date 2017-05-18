@@ -221,7 +221,7 @@ define(function (require) {
     };
 
     /**
-     * The Promise/A+ .catch, register a callback on either resolve or reject. See: https://promisesaplus.com/
+     * Register a callback on either resolve or reject. See: https://promisesaplus.com/
      *
      * @param {Function} cb The callback to be registered.
      * @return {Promise} A thenable.
