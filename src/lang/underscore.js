@@ -362,13 +362,7 @@ define(function (require) {
      * @return {Function} Returns the new partially applied function.
      */
     function partial(func) {
-        var placeholders = slice(arguments);
-        return function () {
-            var spliceArgs = [0, 0];
-            spliceArgs.push(placeholders);
-            var args = arrayProto.splice.apply(arguments, spliceArgs);
-            return func.apply(null, args);
-        };
+        return func.bind.apply(func, slice(arguments));
     }
 
     /**

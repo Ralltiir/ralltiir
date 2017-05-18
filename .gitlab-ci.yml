@@ -6,6 +6,5 @@ test:
         BROWSER: PhantomJS
     script:
         - npm install
-        - npm install karma-phantomjs-launcher
         - npm run lint
         - npm run test-reports
