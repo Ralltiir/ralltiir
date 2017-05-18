@@ -1,6 +1,6 @@
 /**
  * @file action.js
- * @author harttle<yangjvn@126.com>
+ * @author harttle<yangjun14@baidu.com>
  * A Service Management Singleton
  *
  * Accepts service registration and provides service switch,
@@ -34,7 +34,7 @@ define(function (require) {
          * @private
          */
         exports.init = function () {
-            serviceMap = new Map();
+            exports.serviceMap = serviceMap = new Map();
             backManually = false;
             root = '/';
             indexPageUrl = '/';
