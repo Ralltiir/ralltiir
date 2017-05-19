@@ -6,6 +6,7 @@
     "doc": "make doc",
     "test": "make test",
     "test-reports": "make test-reports",
+    "release": "curl http://cq01-rdqa-dev074.cq01.baidu.com:8001/sf-push",
     "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags",
     "clean": "make clean",
