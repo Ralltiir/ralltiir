@@ -6,6 +6,7 @@
     "doc": "make doc",
     "test": "make test",
     "test-reports": "make test-reports",
+    "release": "curl ***REMOVED***",
     "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags",
     "clean": "make clean",
