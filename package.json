@@ -10,6 +10,7 @@
     "postversion": "git push && git push --tags",
     "clean": "make clean",
     "lint": "fecs check src, test",
+    "deploy": "curl ***REMOVED***",
     "build": "make build",
     "version": "npm run dist",
     "test-watch": "make test-watch",
