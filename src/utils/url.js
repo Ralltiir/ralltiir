@@ -1,6 +1,7 @@
 /**
- * @file URI main file
+ * @file URL url parse utility
  * @author treelite(c.xinle@gmail.com)
+ * @module url
  */
 
 define(function (require) {
@@ -13,7 +14,8 @@ define(function (require) {
     /**
      * 创建URI对象
      *
-     * @public
+     * @constructor
+     * @alias module:url
      * @param {...string|Object} data uri
      * @return {Object}
      */

@@ -1,6 +1,7 @@
 /**
  * @file http http utility
  * @author harttle<yangjun14@baidu.com>
+ * @module http
  */
 
 define(function (require) {
