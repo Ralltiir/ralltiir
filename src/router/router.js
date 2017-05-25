@@ -1,6 +1,7 @@
 /**
- * @file 路由管理
- * @author treelite(c.xinle@gmail.com), Firede(firede@firede.us)
+ * @file Router Frontend router via popstate and pushstate.
+ * @author treelite<c.xinle@gmail.com>, Firede<firede@firede.us>
+ * @module Router
  */
 
 define(function (require) {
@@ -10,6 +11,10 @@ define(function (require) {
     var _ = require('../lang/underscore.js');
 
     function routerFactory(logger) {
+        /**
+         * @constructor
+         * @alias module:Router
+         */
         var router = {};
 
         /**

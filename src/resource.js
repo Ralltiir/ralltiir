@@ -1,6 +1,7 @@
 /**
  * @file resource.js REST resource CRUD utility
  * @author harttle<yangjun14@baidu.com>
+ * @module resource
  */
 define(['utils/http', 'lang/underscore'], function (http, _) {
 
@@ -8,6 +9,7 @@ define(['utils/http', 'lang/underscore'], function (http, _) {
      * The REST resource CRUD utility
      *
      * @constructor
+     * @alias module:resource
      * @param {string} url The RESTful url pattern
      */
     function Resource(url) {

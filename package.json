@@ -21,6 +21,7 @@
     "fecs": "^1.2.2",
     "fis3-hook-amd": "^0.2.0",
     "fis3-hook-commonjs": "^0.1.25",
+    "jsdoc-to-markdown": "^3.0.0",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
     "karma-chai-as-promised": "^0.1.2",
