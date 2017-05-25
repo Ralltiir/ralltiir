@@ -1,13 +1,15 @@
 /**
  * @file action.js
  * @author harttle<yangjun14@baidu.com>
- * A Service Management Singleton
- *
- * Accepts service registration and provides service switch,
- * which is triggered by the Router
  */
 
 define(function (require) {
+    /**
+     * A Service Management Singleton
+     * Accepts service registration and provides service switch,
+     * which is triggered by the Router
+     * @module action
+     */
 
     var Promise = require('lang/promise');
     var assert = require('lang/assert');

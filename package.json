@@ -1,6 +1,6 @@
 {
   "name": "sfr",
-  "version": "2.5.8",
+  "version": "2.5.9",
   "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc": "make doc",
@@ -11,6 +11,7 @@
     "postversion": "git push && git push --tags",
     "clean": "make clean",
     "lint": "fecs check src, test",
+    "deploy": "curl ***REMOVED***",
     "build": "make build",
     "version": "npm run dist",
     "test-watch": "make test-watch",
@@ -22,6 +23,7 @@
     "fecs": "^1.2.2",
     "fis3-hook-amd": "^0.2.0",
     "fis3-hook-commonjs": "^0.1.25",
+    "jsdoc-to-markdown": "^3.0.0",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
     "karma-chai-as-promised": "^0.1.2",

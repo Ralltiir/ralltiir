@@ -6,7 +6,7 @@
 export PORT=9877
 export KARMA_BIN=./node_modules/karma/bin/karma
 export TEST=$(KARMA_BIN) --port $(PORT)
-export DOC=./bin/doc.js
+export DOC=./node_modules/.bin/jsdoc2md
 export NAME=$(shell node -p 'require("./package.json").name')
 export VERSION=$(shell node -p 'require("./package.json").version')
 export DESCRIPTION=$(shell node -p 'require("./package.json").description')
@@ -54,6 +54,7 @@ doc:
 	$(DOC) src/lang/underscore.js > docs/underscore.md
 	$(DOC) src/utils/http.js > docs/http.md
 	$(DOC) src/utils/cache.js > docs/cache.md
+	$(DOC) src/utils/cache-namespace.js > docs/cache-namespace.md
 	$(DOC) src/utils/emitter.js > docs/emitter.md
 	$(DOC) src/utils/url.js > docs/url.md
 	$(DOC) src/resource.js > docs/resource.md

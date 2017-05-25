@@ -1,6 +1,7 @@
 /**
  * @file view.js View prototype for service implementations
- * @author harttle<yangjun14@baidu.com>
+ * @author harttle <yangjun14@baidu.com>
+ * @module view
  */
 
 define(function () {
@@ -8,6 +9,7 @@ define(function () {
     /**
      * Create a new view instance
      *
+     * @alias module:view
      * @constructor
      */
     var View = function () {

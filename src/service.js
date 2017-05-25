@@ -1,10 +1,17 @@
 /**
  * @file service.js service base class, service base lifecycle
  * @author taoqingqian01
+ * @module service
  */
 
 define(function () {
 
+    /**
+     * a base/sample  service instance
+     *
+     * @constructor
+     * @alias module:service
+     */
     var service = function () {};
 
     /**

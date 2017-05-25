@@ -1,7 +1,8 @@
 /**
- * @file  Event Emitter
+ * @file emitter
  * @author  Firede(firede@firede.us)
- * example:
+ * @module Emitter
+ * @example
  *
  * ```javascript
  * var emitter = new Emitter();
@@ -16,10 +17,10 @@
 define(function () {
 
     /**
-     * Emitter
+     * Create a emitter instance
      *
-     * @exports Emitter
      * @constructor
+     * @alias module:Emitter
      */
     function Emitter() {}
 

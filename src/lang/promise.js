@@ -1,8 +1,9 @@
 /**
  * @file promise.js A Promise Implementation
- * @author harttle<yangjun14@baidu.com>
  *
  * This implementation conforms to Promise/A+ spec. see: https://promisesaplus.com/
+ * @author harttle <yangjun14@baidu.com>
+ * @module Promise
  */
 
 /* eslint-disable no-extend-native */
@@ -27,6 +28,7 @@ define(function (require) {
      *
      * @param {Function} cb The resolver callback.
      * @constructor
+     * @alias module:Promise
      * @example
      * var p = new Promise(function(resolve, reject){
      *     true ? resolve('foo') : reject('bar');
