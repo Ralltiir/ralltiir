@@ -1,27 +1,24 @@
 /**
  * @author harttle(yangjvn@126.com)
- * @file 通用工具：包括字符串工具、对象工具、函数工具、语言增强等。
- *      设计原则：
- *          1. 与 Lodash 重合的功能与其保持接口一致，
- *             文档: https://github.com/exports/exports
- *          2. Lodash 中不包含的部分，如有需要可联系 yangjvn14 (Hi)
- *             文档：本文件中函数注释。
+ * @file underscore.js
  */
 
 // eslint-disable-next-line
 define(function (require) {
-    var assert = require('./assert');
-
     /**
-     * 变量定义
+     * A lightweight underscore implementation.
+     * 包括字符串工具、对象工具、函数工具、语言增强等。设计原则：
+     * 1. 与 Lodash 重合的功能与其保持接口一致，
+     *     文档: https://github.com/exports/exports
+     * 2. Lodash 中不包含的部分，如有需要可联系 yangjvn14 (Hi)
+     *     文档：本文件中函数注释。
+     * @namespace underscore
      */
-    var exports = {};
+
+    var assert = require('./assert');
     var arrayProto = Array.prototype;
     var stringProto = String.prototype;
-
-    /**
-     * 私有函数
-     */
+    var exports = {};
 
     /**
      * Parse arguments into Array
@@ -45,6 +42,7 @@ define(function (require) {
      *
      * @param {Object} object The object to query.
      * @return {Array} Returns the array of property names.
+     * @memberof underscore
      */
     function keysIn(object) {
         return Object.keys(object);
@@ -58,6 +56,7 @@ define(function (require) {
      * @param {Object} object The object to iterate over.
      * @param {Function} iteratee The function invoked per iteration.
      * @return {Object} Returs object.
+     * @memberof underscore
      */
     function forOwn(object, iteratee) {
         object = object || {};
@@ -76,6 +75,7 @@ define(function (require) {
      *
      * @param {any} value The value to convert.
      * @return {Array} Returns the converted array.
+     * @memberof underscore
      */
     function toArray(value) {
         if (!value) {
@@ -91,6 +91,7 @@ define(function (require) {
      * @param {Array|Object} collection The collection to iterate over.
      * @param {Function} iteratee The function invoked per iteration.
      * @return {undefined} Just like Array.prototype.forEach
+     * @memberof underscore
      */
     function forEach(collection, iteratee) {
         var args = getArgs(arguments);
@@ -104,6 +105,7 @@ define(function (require) {
      * @param {Array|Object} collection The collection to iterate over.
      * @param {Function} iteratee The function invoked per iteration.
      * @return {Array} Returns the new mapped array.
+     * @memberof underscore
      */
     function map(collection, iteratee) {
         if (isObject(collection)) {
@@ -124,6 +126,7 @@ define(function (require) {
      * @param {number} start The start position.
      * @param {number} end The end position.
      * @return {Array} Returns the slice of array.
+     * @memberof underscore
      */
     function slice(collection, start, end) {
         var args = getArgs(arguments);
@@ -135,6 +138,7 @@ define(function (require) {
      *
      * @param {Collection} collection the collection to be spliced
      * @return {Array} the spliced result
+     * @memberof underscore
      */
     function splice(collection) {
         var args = getArgs(arguments);
@@ -146,6 +150,7 @@ define(function (require) {
      *
      * @param {string} str the string to be splited.
      * @return {Array} Returns the string segments.
+     * @memberof underscore
      */
     function split(str) {
         var args = getArgs(arguments);
@@ -159,6 +164,7 @@ define(function (require) {
      * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @param {number} [fromIndex=0] The index to search from.
      * @return {number} Returns the index of the found element, else -1.
+     * @memberof underscore
      */
     function findIndex(array, predicate, fromIndex) {
         for (var i = fromIndex || 0; i < array.length; i++) {
@@ -174,6 +180,7 @@ define(function (require) {
      *
      * @param {string} fmt The format string (can only contain "%s")
      * @return {string} The result string.
+     * @memberof underscore
      * @example
      * format("foo%sfoo", "bar");   // returns "foobarfoo"
      */
@@ -191,6 +198,7 @@ define(function (require) {
      *
      * @param {Object} object The destination object.
      * @param {...Object} sources The source objects.
+     * @memberof underscore
      * @return {Object} Returns object.
      */
     function defaults() {
@@ -203,6 +211,7 @@ define(function (require) {
      *
      * @param {any} value The value to check.
      * @return {boolean} Returns true if value is an object, else false.
+     * @memberof underscore
      */
     function isObject(value) {
         return '[object Object]'
@@ -214,6 +223,7 @@ define(function (require) {
      *
      * @param {any} value The value to check.
      * @return {boolean} Returns true if value is a string, else false.
+     * @memberof underscore
      */
     function isString(value) {
         return value instanceof String || typeof value === 'string';
@@ -227,6 +237,7 @@ define(function (require) {
      * @param {any} value the value to find
      * @param {number} fromIndex Optional, default to 0
      * @return {number} Returns true if the value is present in the list, false otherwise.
+     * @memberof underscore
      */
     function contains(list, value, fromIndex) {
         if (fromIndex === undefined) {
@@ -240,6 +251,7 @@ define(function (require) {
      *
      * @param {any} value The value to check.
      * @return {boolean} Returns true if value is a RegExp, else false.
+     * @memberof underscore
      */
     function isRegExp(value) {
         return value instanceof RegExp;
@@ -255,6 +267,7 @@ define(function (require) {
      * @param {Object} object The destination object.
      * @param {...Object} source The source objects.
      * @return {Object} Returns object.
+     * @memberof underscore
      */
     function assign(object, source) {
         object = object == null ? {} : object;
@@ -293,6 +306,7 @@ define(function (require) {
      * @param {Object} object The destination object.
      * @param {...Object} sources The source objects.
      * @return {Object} Returns object.
+     * @memberof underscore
      */
     function defaultsDeep() {
         var ret = {};
@@ -308,6 +322,7 @@ define(function (require) {
      *
      * @param {Array} pairs The key-value pairs.
      * @return {Object} Returns the new object.
+     * @memberof underscore
      */
     function fromPairs(pairs) {
         var object = {};
@@ -324,6 +339,7 @@ define(function (require) {
      *
      * @param {any} value The value to check.
      * @return {boolean} Returns true if value is an array, else false.
+     * @memberof underscore
      */
     function isArray(value) {
         return value instanceof Array;
@@ -335,6 +351,7 @@ define(function (require) {
      *
      * @param {any} value The value to check.
      * @return {boolean} Returns true if value is an array, else false.
+     * @memberof underscore
      */
     function isEmpty(value) {
         return isArray(value) ? value.length === 0 : !value;
@@ -346,6 +363,7 @@ define(function (require) {
      *
      * @param {Function} predicate The predicate to negate.
      * @return {Function} Returns the new negated function.
+     * @memberof underscore
      */
     function negate(predicate) {
         return function () {
@@ -360,6 +378,7 @@ define(function (require) {
      * @param {Function} func  The function to partially apply arguments to.
      * @param {...any} partials The arguments to be partially applied.
      * @return {Function} Returns the new partially applied function.
+     * @memberof underscore
      */
     function partial(func) {
         return func.bind.apply(func, slice(arguments));
@@ -371,6 +390,7 @@ define(function (require) {
      * @param {Function} func  The function to partially apply arguments to.
      * @param {...any} partials The arguments to be partially applied.
      * @return {Function} Returns the new partially applied function.
+     * @memberof underscore
      */
     function partialRight(func) {
         var placeholders = slice(arguments);
@@ -390,6 +410,7 @@ define(function (require) {
      * @param  {*}        value    The value to wrap.
      * @param  {Function} wrapper  The wrapper function.
      * @return {Function}          Returns the new function.
+     * @memberof underscore
      */
     function wrap(value, wrapper) {
         assert((typeof wrapper === 'function'), 'wrapper should be a function');
@@ -406,6 +427,7 @@ define(function (require) {
      * @param {Function} subClass 子类构造器
      * @param {Function} superClass 父类构造器
      * @return {Function}
+     * @memberof underscore
      */
     function inherits(subClass, superClass) {
 
@@ -430,9 +452,7 @@ define(function (require) {
         return subClass;
     }
 
-    /**
-     * objectect Related
-     */
+    // objectect Related
     exports.keysIn = keysIn;
     exports.forOwn = forOwn;
     exports.assign = assign;
@@ -442,9 +462,7 @@ define(function (require) {
     exports.defaultsDeep = defaultsDeep;
     exports.fromPairs = fromPairs;
 
-    /**
-     * Array Related
-     */
+    // Array Related
     exports.slice = slice;
     exports.splice = splice;
     exports.forEach = forEach;
@@ -452,15 +470,11 @@ define(function (require) {
     exports.toArray = toArray;
     exports.findIndex = findIndex;
 
-    /**
-     * String Related
-     */
+    // String Related
     exports.split = split;
     exports.format = format;
 
-    /**
-     * Lang Related
-     */
+    // Lang Related
     exports.isArray = isArray;
     exports.isEmpty = isEmpty;
     exports.isString = isString;
@@ -469,9 +483,7 @@ define(function (require) {
     exports.inherits = inherits;
     exports.contains = contains;
 
-    /**
-     * Function Related
-     */
+    // Function Related
     exports.partial = partial;
     exports.partialRight = partialRight;
     exports.negate = negate;
