@@ -25,7 +25,7 @@ define(function (require) {
         }
         describe('.keysIn()', function () {
             it('should return array of keys', function () {
-                expect(_.keysIn(obj)).to.deep.equal(['foo', 'bar']);
+                expect(_.keysIn(obj)).to.deep.equal(['foo', 'bar', 'coo']);
             });
         });
         describe('.get()', function () {
