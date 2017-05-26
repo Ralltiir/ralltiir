@@ -13,7 +13,11 @@ define(function (require) {
     describe('underscore', function () {
         var obj = {
             foo: 'bar',
-            bar: false
+            bar: false,
+            coo: {
+                doo: 'cool',
+                eww: ['wow']
+            }
         };
 
         function func(a, b, c) {
@@ -22,6 +26,23 @@ define(function (require) {
         describe('.keysIn()', function () {
             it('should return array of keys', function () {
                 expect(_.keysIn(obj)).to.deep.equal(['foo', 'bar']);
+            });
+        });
+        describe('.get()', function () {
+            it('should get direct property', function () {
+                expect(_.get(obj, 'foo')).to.equal('bar');
+            });
+            it('should get deep property', function () {
+                expect(_.get(obj, 'coo.doo')).to.equal('cool');
+            });
+            it('should get array property', function () {
+                expect(_.get(obj, 'coo.eww.0')).to.equal('wow');
+            });
+            it('should return undefined if not exist', function () {
+                expect(_.get(obj, 'doo')).to.be.undefined;
+            });
+            it('should return undefined if deep property not exist', function () {
+                expect(_.get(obj, 'coo.eww.2')).to.be.undefined;
             });
         });
         describe('.contains()', function () {

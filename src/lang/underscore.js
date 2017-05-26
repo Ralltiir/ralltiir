@@ -21,6 +21,19 @@ define(function (require) {
     var exports = {};
 
     /**
+     * Get deep property by path
+     * @param {Object} obj The object to query with
+     * @param {string} path A dot-delimited path string
+     */
+    function get(obj, path) {
+        var ret;
+        (path || '').split('.').forEach(function (key) {
+            ret = ret ? ret[key] : undefined;
+        });
+        return ret;
+    }
+
+    /**
      * Parse arguments into Array
      *
      * @private
@@ -454,6 +467,7 @@ define(function (require) {
 
     // objectect Related
     exports.keysIn = keysIn;
+    exports.get = get;
     exports.forOwn = forOwn;
     exports.assign = assign;
     exports.merge = assign;
