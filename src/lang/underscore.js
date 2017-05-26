@@ -26,7 +26,7 @@ define(function (require) {
      * @param {string} path A dot-delimited path string
      */
     function get(obj, path) {
-        var ret;
+        var ret = obj;
         (path || '').split('.').forEach(function (key) {
             ret = ret ? ret[key] : undefined;
         });
