@@ -15,6 +15,7 @@
     __inline('utils/http.js');
     __inline('utils/url.js');
     __inline('utils/cache.js');
+    __inline('utils/cache-namespace.js');
     __inline('utils/emitter.js');
 
     // lang
