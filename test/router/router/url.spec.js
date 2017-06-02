@@ -185,7 +185,7 @@ define(function (require) {
 
         describe('#getQuery()', function () {
 
-            it('should return query data', function ()  {
+            it('should return query data', function () {
                 var url = new URL('work?kw=' + encodeURIComponent('中文') + '&t=10&t=11');
 
                 var query = url.getQuery(url);
