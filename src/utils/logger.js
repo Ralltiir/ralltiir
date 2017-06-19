@@ -23,11 +23,22 @@ define(function () {
         }
 
         var stack = (new Error('logger track')).stack || '';
-        var line = stack.split('\n')[4];
-        var match = /at ([\w\d]+)/.exec(line);
-        var funcName = match ? match[1] : 'anonymous';
-        args.unshift('[' + funcName + ']');
+        var line = stack.split('\n')[3] || '';
+        var match;
+        var location = '';
 
+        match = /at\s+\(?(.*):\d+:\d+\)?$/.exec(line) || [];
+        var url = match[1];
+
+        match = /([^/?#]+)([?#]|$)/.exec(url) || [];
+        var fileName = match[1];
+        location += fileName ? fileName + ':' : '';
+
+        match = /at ([\w\d.]+)\s*\(/.exec(line) || [];
+        var funcName = match[1] || 'anonymous';
+        location += funcName;
+
+        args.unshift('[' + location + ']');
         return args;
     }
 
