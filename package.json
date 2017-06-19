@@ -6,7 +6,7 @@
     "doc": "make doc",
     "test": "make test",
     "test-reports": "make test-reports",
-    "release": "http://gzhxy-bfw-pwa1.gzhxy.baidu.com:8001/sf-push",
+    "release": "curl http://gzhxy-bfw-pwa1.gzhxy.baidu.com:8001/sf-push",
     "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags",
     "clean": "make clean",
