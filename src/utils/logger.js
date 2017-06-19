@@ -51,7 +51,8 @@ define(function () {
     }
 
     function send(impl, args) {
-        impl.apply(console, args);
+        var fn = new Function('impl', 'args', 'impl.apply(console, args);');
+        fn(impl, args);
         if (server) {
             var img = new Image();
             var msg = args.join(' ').replace(/\s+/g, ' ').trim();
