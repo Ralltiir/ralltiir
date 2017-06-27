@@ -1,4 +1,6 @@
-# 大搜索Superframe框架
+# Superframe
+
+[![Build Status](https://travis-ci.org/searchfe/superframe.svg?branch=master)](https://travis-ci.org/searchfe/superframe) [![Coverage Status](https://coveralls.io/repos/github/searchfe/superframe/badge.svg?branch=master)](https://coveralls.io/github/searchfe/superframe?branch=master)
 
 * 官网：[http://superframe.baidu.com/][web]
 * 编写 Service 可参考[起步教程][get-started]，其中的参考代码可以在[examples/](examples/)找到，使用静态HTTP服务器即可运行。
