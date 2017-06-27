@@ -32,7 +32,7 @@ npm run dist
 
 ### 运行测试
 
-本仓库使用Karma作为Test Runner。关于Karma测试环境，请移步<http://***REMOVED***/psfe/karma-testing>，运行一次测试：
+本仓库使用Karma作为Test Runner。运行一次测试：
 
 ```bash
 npm test
