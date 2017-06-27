@@ -75,3 +75,6 @@ test: build-dev
 
 test-reports: build-dev
 	$(TEST) start --reporters mocha,html,coverage
+
+test-reports-ci: build-dev
+	$(TEST) start --reporters mocha,html,coverage,coveralls
