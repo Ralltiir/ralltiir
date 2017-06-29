@@ -7,7 +7,7 @@ define(function (require) {
 
     var UNDEFINED;
 
-    var extend = require('../../../lang/underscore').extend;
+    var _ = require('../../../lang/underscore');
 
     /**
      * 标准化URI数据
@@ -81,7 +81,7 @@ define(function (require) {
         // 必定没有scheme
         if (res) {
             str = str.split('/');
-            extend(data, parseAuthority(str.shift()));
+            _.extend(data, parseAuthority(str.shift()));
             if (str.length > 0) {
                 data.path = '/' + str.join('/');
             }
@@ -149,7 +149,7 @@ define(function (require) {
             }
             else {
                 str = str.split('/');
-                extend(res, parseAuthority(str.shift()));
+                _.extend(res, parseAuthority(str.shift()));
                 if (str.length > 0) {
                     res.path = '/' + str.join('/');
                 }
@@ -187,10 +187,7 @@ define(function (require) {
      * @return {Object}
      */
     return function (data) {
-
-        if (typeof data === 'string'
-            || data instanceof String
-        ) {
+        if (_.isString(data)) {
             data = parse(data);
         }
 

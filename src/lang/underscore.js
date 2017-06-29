@@ -22,8 +22,10 @@ define(function (require) {
 
     /**
      * Get deep property by path
+     *
      * @param {Object} obj The object to query with
      * @param {string} path A dot-delimited path string
+     * @return {any} the value assiciated with path
      */
     function get(obj, path) {
         var ret = obj;
@@ -227,8 +229,8 @@ define(function (require) {
      * @memberof underscore
      */
     function isObject(value) {
-        return '[object Object]'
-            === Object.prototype.toString.call(value);
+        var type = typeof value;
+        return value != null && (type === 'object' || type === 'function');
     }
 
     /**
