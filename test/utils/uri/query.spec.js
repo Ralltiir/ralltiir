@@ -138,6 +138,11 @@ define(function (require) {
                 expect(query.toString()).to.deep.equal('?name&age&sex=&normal=10');
             });
 
+            it('should parse x-www-form-urlencoded', function () {
+                var query = new Query({name: 'Jun+Yang'});
+                expect(query.toString()).to.deep.equal('?name=Jun%20Yang');
+            });
+
             it('should add defualt prefix when had data', function () {
                 var query = new Query('name=treelite&age=10');
                 expect(query.toString()).to.deep.equal('?name=treelite&age=10');
