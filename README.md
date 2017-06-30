@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/searchfe/superframe.svg?branch=master)](https://travis-ci.org/searchfe/superframe) [![Coverage Status](https://coveralls.io/repos/github/searchfe/superframe/badge.svg?branch=master)](https://coveralls.io/github/searchfe/superframe?branch=master)
 
-## Superframe
+## 概述
 
 Superframe是一个页面异步解决方案。
 
