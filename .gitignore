@@ -1,12 +1,18 @@
+# platform related
 .DS_Store
 ._.DS_Store
+*.log
+
+# editor related
 .idea
 *.swp
 *.~
-build/
-dist/
-node_modules/
-*.log
-docs/
 .*.un~
 .vimrc
+
+# build related
+build/
+dist/
+docs/_book/
+docs/api/
+node_modules/

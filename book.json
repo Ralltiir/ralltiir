@@ -1,0 +1,20 @@
+{
+  "title": "Superframe 文档",
+  "description": "Superframe 相关教程、设计和 API",
+  "author": "Superframe 团队",
+  "language": "zh-hans",
+  "plugins": [
+    "expandable-chapters",
+    "splitter",
+    "atoc",
+    "editlink",
+    "-sharing"
+  ],
+  "pluginsConfig": {
+    "editlink": {
+      "base": "https://github.com/searchfe/superframe/docs/edit/master/",
+      "label": "编辑此页",
+      "multilingual": false
+    }
+  }
+}
