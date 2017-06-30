@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+    - node
+env:
+    - BROWSER=PhantomJS
+cache:
+  directories:
+    - "node_modules"
+script:
+    - npm run lint
+    - make test-reports-ci

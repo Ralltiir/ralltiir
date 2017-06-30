@@ -18,10 +18,10 @@ export DESCRIPTION=$(shell node -p 'require("./package.json").description')
 
 build-prepare:
 	rm -rf ./build/
-	[ -d ./build ] || mkdir ./build 
+	[ -d ./build ] || mkdir ./build
 
 build-dev: build-prepare
-	fis3 release -d ./build
+	./node_modules/.bin/fis3 release -d ./build
 
 build/banner.js: build-prepare
 	echo '/*' > $@
@@ -33,9 +33,7 @@ build/banner.js: build-prepare
 	echo ' */' >> $@
 
 build-prod: build-prepare
-	fis3 release prod -d ./build
-
-dist-prepare: 
+	./node_modules/.bin/fis3 release prod -d ./build
 	[ -d ./dist ] || mkdir ./dist
 
 # use `npm run dist` instead!
@@ -75,3 +73,6 @@ test: build-dev
 
 test-reports: build-dev
 	$(TEST) start --reporters mocha,html,coverage
+
+test-reports-ci: build-dev
+	$(TEST) start --reporters mocha,html,coverage,coveralls

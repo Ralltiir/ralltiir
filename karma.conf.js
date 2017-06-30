@@ -52,6 +52,9 @@ module.exports = function (config) {
                     dir: 'test-reports/coverage' // relative to basePath
                 }, {
                     type: 'text-summary'
+                }, {
+                    type: 'lcov',
+                    dir: 'test-reports/coverage'
                 }
             ]
         },
