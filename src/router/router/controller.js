@@ -4,7 +4,7 @@
  */
 
 define(function (require) {
-    var extend = require('../../lang/underscore').extend;
+    var _ = require('../../lang/underscore');
     var URL = require('./URL');
     var config = require('./config');
     var applyHandler;
@@ -93,6 +93,10 @@ define(function (require) {
     function monitor(e, isSync) {
         e = e || {};
 
+        if (_.get(e, 'state.disableServiceDispatch')) {
+            return;
+        }
+
         var url = ignoreRoot(location.pathname);
         if (location.search.length > 1) {
             url += location.search;
@@ -103,7 +107,7 @@ define(function (require) {
             return outOfControl(url.toString(), true);
         }
 
-        var options = isSync ? {src: 'sync'} : extend({}, e.state, {src: 'history'});
+        var options = isSync ? {src: 'sync'} : _.extend({}, e.state, {src: 'history'});
         callHandler(url, options);
     }
 

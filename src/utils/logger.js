@@ -4,14 +4,9 @@
  */
 
 define(function () {
-    var match;
-    var server;
-
-    match = location.search.match(/(?:^\?|&)debug=true/i);
-    window.DEBUG = match ? 'superframe' : window.DEBUG;
-
-    match = location.search.match(/(?:^\?|&)debug-server=([^&]*)/i);
-    server = match ? decodeURIComponent(match[1]) : false;
+    var timing = !!location.search.match(/logger-timming/i);
+    var match = location.search.match(/logger-server=([^&]*)/i);
+    var server = match ? decodeURIComponent(match[1]) : false;
 
     var timeOffset = Date.now();
     var lastTime = timeOffset;
@@ -20,30 +15,65 @@ define(function () {
         lastTime = timeOffset = Date.now();
     }
 
-    function log() {
-        var msg = Array.prototype.slice.call(arguments).join(' ');
-        var now = Date.now();
-        var duration = (now - timeOffset) / 1000;
+    function assemble() {
+        var args = Array.prototype.slice.call(arguments);
 
-        msg = '[' + duration + '(+' + (now - lastTime) + ')] ' + msg;
-        doLog(msg);
+        if (timing) {
+            args.unshift('[' + getTiming() + ']');
+        }
 
-        lastTime = now;
+        var stack = (new Error('logger track')).stack || '';
+        var line = stack.split('\n')[3] || '';
+        var match;
+        var location = '';
+
+        match = /at\s+\(?(.*):\d+:\d+\)?$/.exec(line) || [];
+        var url = match[1];
+
+        match = /([^/?#]+)([?#]|$)/.exec(url) || [];
+        var fileName = match[1];
+        location += fileName ? fileName + ':' : '';
+
+        match = /at ([\w\d.]+)\s*\(/.exec(line) || [];
+        var funcName = match[1] || 'anonymous';
+        location += funcName;
+
+        args.unshift('[' + location + ']');
+        return args;
     }
 
-    function doLog(msg) {
-        // eslint-disable-next-line
-        console.log(msg);
-        // Log to remote server
+    function getTiming() {
+        var now = Date.now();
+        var duration = (now - timeOffset) / 1000;
+        var ret = duration + '(+' + (now - lastTime) + ')';
+        lastTime = now;
+        return ret;
+    }
+
+    function send(impl, args) {
+        var fn = new Function('impl', 'args', 'impl.apply(console, args);');
+        fn(impl, args);
         if (server) {
             var img = new Image();
-            msg = msg.replace(/\s+/g, ' ').trim();
+            var msg = args.join(' ').replace(/\s+/g, ' ').trim();
             img.src = server + '/sfr/log/' + msg;
         }
     }
 
+    function logFactory(level, impl) {
+        return function () {
+            var args = assemble.apply(null, arguments);
+            send(impl, args);
+        };
+    }
+
     return {
-        log: log,
+        /* eslint-disable no-console */
+        log: logFactory('log', console.log),
+        debug: logFactory('debug', console.log),
+        info: logFactory('info', console.info),
+        warn: logFactory('warn', console.warn),
+        error: logFactory('error', console.error),
         reset: reset
     };
 });

@@ -34,8 +34,6 @@ build/banner.js: build-prepare
 
 build-prod: build-prepare
 	./node_modules/.bin/fis3 release prod -d ./build
-
-dist-prepare:
 	[ -d ./dist ] || mkdir ./dist
 
 # use `npm run dist` instead!

@@ -98,7 +98,7 @@ define(function (require) {
          * */
         function isService(value) {
             // duck test...
-            return typeof value === 'object'
+            return _.isObject(value)
                 && value.create
                 && value.attach
                 && value.detach

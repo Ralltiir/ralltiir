@@ -103,16 +103,21 @@ define(function (require) {
     function decodeValue(value) {
         if (Array.isArray(value)) {
             value = value.map(function (k) {
-                return decodeURIComponent(k || '');
+                return decodeComponent(k);
             });
         }
-        else if (!value && !_.isString(value)) {
+        else if (value === null || value === undefined) {
             value = null;
         }
         else {
-            value = decodeURIComponent(value);
+            value = decodeComponent(value);
         }
         return value;
+    }
+
+    function decodeComponent(value) {
+        value = String(value).replace(/\+/g, ' ');
+        return decodeURIComponent(value);
     }
 
     /**
