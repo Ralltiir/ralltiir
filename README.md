@@ -10,7 +10,7 @@ Superframe是一个页面异步解决方案。
 
 我们期望通过Superframe让Web的页面跳转也像Native App一样流畅。
 
-了解更多信息，访问[Superframe Docs](https://searchfe.github.com/superframe)
+了解更多信息，访问[Superframe Docs](https://searchfe.github.io/superframe)
 
 ## 开发指南
 
