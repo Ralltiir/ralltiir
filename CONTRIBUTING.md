@@ -38,3 +38,41 @@ Superframe 以开放的心态接纳外部贡献，请按以下方法做出你的
 - 在 GitHub 上发起 Pull Request，描述你的修改，并使用 `#XX` 链接到你的 Issue
 - 在 GitHub GUI 上检查你的 CI 报告和测试覆盖率报告
   - 若 CI 不通过或覆盖率不满足要求，PR 可能被直接关闭
+
+## 文档发布
+
+文档目录位于 `/docs`，使用 Gitbook 生成。
+其中 API 文档自动生成，在 `Makefile` 中配置文件到文档名的映射。
+使用 npm 脚本进行文档预览：
+
+```bash
+npm run doc-start
+```
+
+文档发布也使用 npm 脚本（文档托管于 Github Pages，10 分钟内生效）：
+
+```bash
+npm run doc-deploy
+```
+
+## 软件发布
+
+使用 `npm version` 发布软件版本，通过 Git Tag 与 Github 同步：
+
+```bash
+# Bugfix
+npm version patch
+# Feature
+npm version minor
+# Breaking Changes
+npm version major
+```
+
+发布后可以在 [Github Tags][tags] 页面添加 Release Notes。为方便编写 Release Notes，
+可以使用 `git log` 查看版本间差异，比如：
+
+```bash
+git log v2.5.11..v2.5.12
+```
+
+[tags]: https://github.com/searchfe/superframe/tags
