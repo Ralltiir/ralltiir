@@ -67,14 +67,11 @@ doc: doc-api
 	gitbook build docs
 
 doc-deploy: doc
-	if [ -n "$$(git status --porcelain)" ]; then \
-		echo "there are changes, commit first" && exit 1; \
-	fi
-	git add -f docs/_book
-	git commit -m 'doc publish'
-	git push origin `git subtree split --prefix docs/_book`:gh-pages --force
-	git reset docs/_book
-	git reset HEAD^
+	cd docs/_book; \
+	git init; \
+	git add *; \
+	git commit -m 'doc publish'; \
+	git push -u git@github.com:searchfe/superframe.git master:gh-pages --force
 
 doc-api:
 	rm -rf ./docs/api && mkdir ./docs/api
