@@ -5,11 +5,9 @@
   "scripts": {
     "doc-start": "gitbook serve --port 8883 docs",
     "doc-deploy": "make doc-deploy",
-
     "test": "make test",
     "test-watch": "make test-watch",
     "test-reports": "make test-reports",
-
     "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags",
     "clean": "make clean",

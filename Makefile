@@ -35,6 +35,9 @@ build-prod: build-prepare
 	./node_modules/.bin/fis3 release prod -d ./build
 	[ -d ./dist ] || mkdir ./dist
 
+dist-prepare: 
+	[ -d ./dist ] || mkdir ./dist
+
 dist: build-prod dist-prepare build/banner.js
 	cat build/banner.js > dist/$(NAME).js
 	cat build/src/main.js >> dist/$(NAME).js
