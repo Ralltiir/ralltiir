@@ -26,7 +26,7 @@ define(function () {
             item = item.split('=');
             key = item[0];
             value = item.length >= 2
-                ? decodeURIComponent(item[1])
+                ? decodeValue(item[1])
                 : null;
 
             if (res[key]) {
@@ -41,6 +41,11 @@ define(function () {
         });
 
         return res;
+    }
+
+    function decodeValue(value) {
+        value = String(value).replace(/\+/g, '%20');
+        return decodeURIComponent(value);
     }
 
     return parse;

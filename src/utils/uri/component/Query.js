@@ -116,7 +116,7 @@ define(function (require) {
     }
 
     function decodeComponent(value) {
-        value = String(value).replace(/\+/g, ' ');
+        value = String(value).replace(/\+/g, '%20');
         return decodeURIComponent(value);
     }
 
@@ -179,8 +179,8 @@ define(function (require) {
             var query = arguments[0];
             if (_.isObject(query)) {
                 var data = this.data = {};
-                Object.keys(query).forEach(function (key) {
-                    data[key] = decodeValue(query[key]);
+                _.forOwn(query, function (val, key) {
+                    data[key] = decodeValue(val);
                 });
             }
             else {
