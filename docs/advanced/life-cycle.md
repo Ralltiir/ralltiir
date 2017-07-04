@@ -1,11 +1,11 @@
 # 生命周期概述
 
-Superframe Service、View都提供了生命周期的托管。
+Ralltiir Service、View都提供了生命周期的托管。
 其中View的生命周期由Service自行调用。本文主要介绍Service的生命周期。
 
 ## 声明周期回调
 
-在创建Service实例时，需要继承自Superframe提供的Service基类。
+在创建Service实例时，需要继承自Ralltiir提供的Service基类。
 该基类提供了生命周期回调接口（实现为空函数）。子类可实现其中任何一个的行为。包括：
 
 1. `create`：该回调发生在切换到一个Service时。建议此时进行入场动画，以及启动异步数据获取。
