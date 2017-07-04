@@ -255,12 +255,24 @@ define(['../src/lang/promise'], function (Promise) {
                         type: 'unhandledrejection'
                     });
                     done();
-                }, 1000);
+                }, 500);
             });
             it('should not throw when error handled', function (done) {
                 Promise.reject('foo').catch(function () {});
                 setTimeout(function () {
                     expect(handler).to.have.not.been.calledWithMatch({
+                        reason: 'foo',
+                        type: 'unhandledrejection'
+                    });
+                    done();
+                }, 100);
+            });
+            it('should throw when error re-throwed', function (done) {
+                Promise.reject('foo').catch(function (e) {
+                    throw e;
+                });
+                setTimeout(function () {
+                    expect(handler).to.have.been.calledWithMatch({
                         reason: 'foo',
                         type: 'unhandledrejection'
                     });
