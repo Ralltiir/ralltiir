@@ -361,6 +361,17 @@ define(function (require) {
     }
 
     /**
+     * Checks if value is classified as a Function.
+     *
+     * @param {any} value The value to check.
+     * @return {boolean} Returns true if value is a function, else false.
+     * @memberof underscore
+     */
+    function isFunction(value) {
+        return typeof value === 'function';
+    }
+
+    /**
      * Checks if value is an empty object, collection, map, or set.
      * Objects are considered empty if they have no own enumerable string keyed properties.
      *
@@ -492,6 +503,7 @@ define(function (require) {
 
     // Lang Related
     exports.isArray = isArray;
+    exports.isFunction = isFunction;
     exports.isEmpty = isEmpty;
     exports.isString = isString;
     exports.isObject = isObject;

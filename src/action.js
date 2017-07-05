@@ -19,7 +19,8 @@ define(function (require) {
 
     function actionFactory(router, location, history, doc, logger, Emitter) {
         var exports = new Emitter();
-        var serviceMap;
+        var services;
+        var pages;
         var backManually;
         var indexPageUrl;
         var isIndexPage;
@@ -36,7 +37,15 @@ define(function (require) {
          * @private
          */
         exports.init = function () {
-            exports.serviceMap = serviceMap = new Map();
+            exports.services = services = new Map();
+            exports.pages = pages = new Cache('pages', {
+                onRemove: function (page, url, evicted) {
+                    if (_.isFunction(page.onRemove)) {
+                        page.onRemove(url, evicted);
+                    }
+                },
+                limit: 32
+            });
             backManually = false;
             root = '/';
             indexPageUrl = '/';
@@ -66,11 +75,11 @@ define(function (require) {
          *  action.regist(/^person\/\d+/, new Service());
          * */
         exports.regist = function (url, service) {
-            assert(url, 'illegal action url');
-            assert(isService(service), 'illegal service, make sure to extend from sfr/service');
-            assert(!serviceMap.has(url), 'path already registerd');
+            assert(url, 'invalid url pattern');
+            assert(isService(service), 'invalid service, make sure to extend sfr/service');
+            assert(!services.has(url), 'url already registerd');
             router.add(url, this.dispatch);
-            serviceMap.set(url, service);
+            services.set(url, service);
             logger.log('service registered to: ' + url);
             exports.emit('registered', url, service);
         };
@@ -81,11 +90,11 @@ define(function (require) {
          * @param {string|RestFul|RegExp} url The path of the service
          */
         exports.unregist = function (url) {
-            assert(url, 'illegal action url');
-            assert(serviceMap.has(url), 'path not registered');
+            assert(url, 'invalid url pattern');
+            assert(services.has(url), 'url not registered');
             router.remove(url);
-            var svc = serviceMap.get(url);
-            serviceMap.delete(url);
+            var svc = services.get(url);
+            services.delete(url);
             logger.log('service unregistered from: ' + url);
             exports.emit('unregistered', url, svc);
         };
@@ -133,9 +142,18 @@ define(function (require) {
 
             logger.log('action dispatching to: ' + current.url);
 
-            var currentService = serviceMap.get(current.pathPattern);
+            var currentService = services.get(current.pathPattern);
             current.service = currentService;
-            var prevService = serviceMap.get(prev.pathPattern);
+
+            if (!pages.contains(current.url)) {
+                pages.set(current.url, {
+                    id: pageId,
+                    isIndex: isIndexPage
+                });
+            }
+            current.page = pages.get(current.url);
+
+            var prevService = services.get(prev.pathPattern);
             prev.service = prevService;
 
             var data = stageData;
@@ -268,7 +286,7 @@ define(function (require) {
          *  @return {any} the return value of Map#delete
          * */
         exports.remove = function (name) {
-            return serviceMap.delete(name);
+            return services.delete(name);
         };
 
         /**
@@ -279,7 +297,7 @@ define(function (require) {
          *  @return {boolean} Returns true if it has been registered, else false.
          * */
         exports.exist = function (name) {
-            return serviceMap.has(name);
+            return services.has(name);
         };
 
         /**
@@ -301,7 +319,7 @@ define(function (require) {
          *  @static
          * */
         exports.clear = function () {
-            serviceMap.clear();
+            services.clear();
             router.clear();
         };
 
@@ -479,10 +497,10 @@ define(function (require) {
             var pathPattern = router.pathPattern(url);
             var routerOptions = router.getState();
 
-            if (!serviceMap.has(pathPattern)) {
+            if (!services.has(pathPattern)) {
                 throw new Error('service not found:' + currentPath);
             }
-            var service = serviceMap.get(pathPattern);
+            var service = services.get(pathPattern);
             var transition = {
                 from: {
                     url: prevUrl

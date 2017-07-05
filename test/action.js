@@ -97,19 +97,19 @@ define(function (require) {
             it('should throw with undefined key', function () {
                 expect(function () {
                     return action.regist();
-                }).to.throw(/illegal action url/);
+                }).to.throw(/invalid url pattern/);
             });
-            it('should throw with illegal service', function () {
+            it('should throw with invalid service', function () {
                 expect(function () {
                     return action.regist('key', {});
-                }).to.throw(/illegal service/);
+                }).to.throw(/invalid service/);
             });
-            it('should throw upon illegal url', function () {
+            it('should throw upon invalid url', function () {
                 expect(function () {
                     return action.regist();
-                }).to.throw(/illegal action url/);
+                }).to.throw(/invalid url pattern/);
             });
-            it('should not regist illegal service', function () {
+            it('should not regist invalid service', function () {
                 action.regist('key', fooService);
                 expect(action.exist('key')).to.be.true;
             });
@@ -121,12 +121,12 @@ define(function (require) {
             it('should throw with undefined key', function () {
                 expect(function () {
                     return action.unregist();
-                }).to.throw(/illegal action url/);
+                }).to.throw(/invalid url pattern/);
             });
             it('should throw not when registered', function () {
                 expect(function () {
                     return action.unregist('not-registered');
-                }).to.throw(/path not registered/);
+                }).to.throw(/url not registered/);
             });
             it('should un-register', function () {
                 action.unregist('key');
