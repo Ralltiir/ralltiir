@@ -1,7 +1,7 @@
 {
-  "title": "Superframe 文档",
+  "title": "Ralltiir 项目文档",
   "description": "Superframe 相关教程、设计和 API",
-  "author": "Superframe 团队",
+  "author": "Ralltiir 团队",
   "language": "zh-hans",
   "plugins": [
     "expandable-chapters",
@@ -12,7 +12,7 @@
   ],
   "pluginsConfig": {
     "editlink": {
-      "base": "https://github.com/searchfe/superframe/docs/edit/master/",
+      "base": "https://github.com/Ralltiir/ralltiir/docs/edit/master/",
       "label": "编辑此页",
       "multilingual": false
     }
