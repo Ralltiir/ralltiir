@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/Ralltiir/ralltiir.svg?branch=master)](https://travis-ci.org/Ralltiir/ralltiir) [![Coverage Status](https://coveralls.io/repos/github/Ralltiir/ralltiir/badge.svg?branch=master)](https://coveralls.io/github/Ralltiir/ralltiir?branch=master)
 
+文档：<https://ralltiir.github.io/ralltiir/>
+
 ## 概述
 
 Ralltiir是一个Web页面异步解决方案。
