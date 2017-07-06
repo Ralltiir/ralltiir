@@ -45,6 +45,39 @@ define(function (require) {
                 expect(_.get(obj, 'coo.eww.2')).to.be.undefined;
             });
         });
+        describe('.isArrayLike()', function () {
+            it('should return false for undefined', function () {
+                expect(_.isArrayLike(undefined)).to.be.false;
+            });
+            it('should return false for null', function () {
+                expect(_.isArrayLike(null)).to.be.false;
+            });
+            it('should return false for functions', function () {
+                expect(_.isArrayLike(function () {})).to.be.false;
+            });
+            it('should return true for array', function () {
+                expect(_.isArrayLike([])).to.be.true;
+            });
+            it('should return true for array-like object', function () {
+                expect(_.isArrayLike({
+                    length: 2
+                })).to.be.true;
+            });
+        });
+        describe('.isLength()', function () {
+            it('should return false for -1', function () {
+                expect(_.isLength(-1)).to.be.false;
+            });
+            it('should return true for 0', function () {
+                expect(_.isLength(0)).to.be.true;
+            });
+            it('should return false for overflowed integer (which is treated as float)', function () {
+                expect(_.isLength(99999999999999999999999999999999999999999999)).to.be.false;
+            });
+            it('should return false for float number', function () {
+                expect(_.isLength(1.1)).to.be.false;
+            });
+        });
         describe('.contains()', function () {
             it('should return false when not exist in string', function () {
                 expect(_.contains('abc', 'd')).to.be.false;

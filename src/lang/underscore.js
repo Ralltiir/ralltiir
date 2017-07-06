@@ -19,6 +19,7 @@ define(function (require) {
     var arrayProto = Array.prototype;
     var stringProto = String.prototype;
     var exports = {};
+    var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
 
     /**
      * Get deep property by path
@@ -123,15 +124,15 @@ define(function (require) {
      * @memberof underscore
      */
     function map(collection, iteratee) {
-        if (isObject(collection)) {
-            var ret = [];
-            forOwn(collection, function () {
-                ret.push(iteratee.apply(null, arguments));
-            });
-            return ret;
+        if (isArrayLike(collection)) {
+            var args = getArgs(arguments);
+            return arrayProto.map.apply(collection || [], args);
         }
-        var args = getArgs(arguments);
-        return arrayProto.map.apply(collection || [], args);
+        var ret = [];
+        forOwn(collection, function () {
+            ret.push(iteratee.apply(null, arguments));
+        });
+        return ret;
     }
 
     /**
@@ -231,6 +232,29 @@ define(function (require) {
     function isObject(value) {
         var type = typeof value;
         return value != null && (type === 'object' || type === 'function');
+    }
+
+    /**
+     * Checks if value is a valid array-like length.
+     *
+     * @param {any} value the value to be checked
+     * @return {boolean} true if value is length, false otherwise
+     */
+    function isLength(value) {
+        return typeof value === 'number'
+            && value > -1
+            && value % 1 === 0
+            && value <= MAX_SAFE_INTEGER;
+    }
+
+    /**
+     * Checks if value is array-like
+     *
+     * @param {any} value the value to be checked
+     * @return {boolearn} true if value is array-like, false otherwise
+     */
+    function isArrayLike(value) {
+        return value != null && isLength(value.length) && !isFunction(value);
     }
 
     /**
@@ -507,9 +531,12 @@ define(function (require) {
     exports.isEmpty = isEmpty;
     exports.isString = isString;
     exports.isObject = isObject;
+    exports.isArrayLike = isArrayLike;
+    exports.isLength = isLength;
     exports.isRegExp = isRegExp;
     exports.inherits = inherits;
     exports.contains = contains;
+    exports.noop = function () {};
 
     // Function Related
     exports.partial = partial;
