@@ -35,10 +35,10 @@ define(function (require) {
                 remove: sinon.spy(),
                 config: sinon.spy(),
                 start: sinon.spy(),
+                clear: sinon.spy(),
                 getState: sinon.spy(function () {
                     return {};
                 }),
-                clear: sinon.spy(),
                 ignoreRoot: function (url) {
                     return url.replace(/^\/root/, '');
                 },
@@ -64,6 +64,7 @@ define(function (require) {
                 attach: sinon.spy(),
                 detach: sinon.spy(),
                 destroy: sinon.spy(),
+                partialUpdate: sinon.spy(),
                 update: sinon.spy()
             };
             barService = {
@@ -91,7 +92,7 @@ define(function (require) {
             action = actionFactory(router, location, history, doc, logger, Emitter);
         });
         afterEach(function () {
-            action.stop();
+            action.destroy();
         });
         describe('.regist()', function () {
             it('should throw with undefined key', function () {
@@ -150,6 +151,12 @@ define(function (require) {
                     expect(prev).to.have.property('service', barService);
                 });
             });
+            it('should contain page instance in current.page', function () {
+                return action.dispatch(current, prev).then(function () {
+                    var args = fooService.create.args[0];
+                    expect(args[0].page.id).to.have.match(/\d+/);
+                });
+            });
             it('should call doc.ensureAttached()', function () {
                 return action.dispatch(current, prev).then(function () {
                     expect(doc.ensureAttached).to.have.been.called;
@@ -189,7 +196,7 @@ define(function (require) {
                     expect(barService.attach).to.have.been.calledOnce;
                 });
             });
-            it('should await when create returns a promise', function () {
+            it('should wait when create returns a promise', function () {
                 var createdSpy = sinon.spy();
                 fooService.create = function () {
                     return new Promise(function (resolve) {
@@ -248,7 +255,7 @@ define(function (require) {
         });
         describe('.isIndexPage()', function () {
             beforeEach(function () {
-                action.init();
+                // action.init();
                 action.regist('/foo', fooService);
                 action.regist('/bar', barService);
             });
@@ -295,7 +302,7 @@ define(function (require) {
         });
         describe('.redirect()', function () {
             beforeEach(function () {
-                action.init();
+                // action.init();
                 action.regist('/foo', fooService);
                 action.regist('/bar', barService);
                 action.start({
@@ -418,7 +425,7 @@ define(function (require) {
                 a.setAttribute('data-sf-options', JSON.stringify(options));
                 document.body.appendChild(a);
                 sinon.stub(action, 'config');
-                action.init();
+                // action.init();
             });
             afterEach(function () {
                 a.remove();
@@ -487,14 +494,15 @@ define(function (require) {
             });
             it('should call router.reset()', function () {
                 location.pathname = '/root/foo';
+                location.search = '';
+                location.hash = '';
                 action.update('/foo');
                 expect(router.reset).to.have.been.called;
             });
             it('should call serviceObject.update()', function () {
                 location.href = 'http://foo.com/root/foo?foo=foo#bar';
                 location.pathname = '/root/foo';
-                location.search = '?foo=foo';
-                location.hash = '#bar';
+                location.search = '?a=b';
 
                 var options = {
                     foo: 'bar'
@@ -503,18 +511,18 @@ define(function (require) {
                     container: 'container',
                     view: 'view'
                 };
+                action.dispatch(current, prev);
                 return action.update('/root/foo?foo=bar', {}, options, extra).then(function () {
-                    expect(fooService.update).to.have.been.called;
-                    expect(fooService.update).to.have.been.calledWithMatch({}, {
-                        from: {
-                            url: '/foo?foo=foo#bar'
-                        },
-                        to: {
-                            path: '/foo',
-                            url: '/foo?foo=bar'
-                        },
-                        extra: extra
-                    });
+                    expect(fooService.partialUpdate).to.have.been.called;
+                    var args = fooService.partialUpdate.args[0];
+                    expect(args[0]).to.equal('/root/foo?foo=bar');
+                    expect(args[1]).to.be.an.object;
+                    expect(args[1].replace).to.be.true;
+                    expect(args[1].page).to.be.an.object;
+                    expect(args[1].transition.from.url).to.equal('/foo?a=b');
+                    expect(args[1].transition.to.url).to.equal('/foo?foo=bar');
+                    expect(args[1].transition.to.path).to.equal('/foo');
+                    expect(args[1].transition.extra).to.deep.equal(extra);
                 });
             });
         });

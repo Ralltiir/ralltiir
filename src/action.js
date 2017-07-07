@@ -11,6 +11,7 @@ define(function (require) {
      * @module action
      */
 
+    var cache = require('utils/cache');
     var Promise = require('lang/promise');
     var assert = require('lang/assert');
     var Map = require('lang/map');
@@ -38,7 +39,7 @@ define(function (require) {
          */
         exports.init = function () {
             exports.services = services = new Map();
-            exports.pages = pages = new Cache('pages', {
+            exports.pages = pages = cache.create('pages', {
                 onRemove: function (page, url, evicted) {
                     if (_.isFunction(page.onRemove)) {
                         page.onRemove(url, evicted);
@@ -314,16 +315,6 @@ define(function (require) {
         };
 
         /**
-         *  Clear all registered service
-         *
-         *  @static
-         * */
-        exports.clear = function () {
-            services.clear();
-            router.clear();
-        };
-
-        /**
          * Redirect to another page, and change to next state
          *
          * @static
@@ -469,6 +460,18 @@ define(function (require) {
         exports.stop = function () {
             document.body.removeEventListener('click', onAnchorClick);
             router.stop();
+            router.clear();
+        };
+
+        /**
+         * Destroy the action, eliminate side effects:
+         * DOM event listeners, cache namespaces, external states
+         */
+        exports.destroy = function () {
+            exports.stop();
+            cache.destroy('pages');
+            exports.pages = pages = undefined;
+            services.clear();
         };
 
         /**
@@ -482,7 +485,6 @@ define(function (require) {
          *  @return {Object} the action object
          * */
         exports.update = function (url, query, options, data) {
-
             options = options ? options : {};
 
             // use silent mode
@@ -490,17 +492,11 @@ define(function (require) {
                 options.silent = true;
             }
 
-            var prevUrl = router.ignoreRoot(location.pathname + location.search + location.hash);
+            var prevUrl = router.ignoreRoot(location.pathname + location.search);
             var currentUrl = router.ignoreRoot(url);
             var currentPath = (currentUrl || '').replace(/\?.*/, '');
-
-            var pathPattern = router.pathPattern(url);
             var routerOptions = router.getState();
 
-            if (!services.has(pathPattern)) {
-                throw new Error('service not found:' + currentPath);
-            }
-            var service = services.get(pathPattern);
             var transition = {
                 from: {
                     url: prevUrl
@@ -513,10 +509,48 @@ define(function (require) {
             };
             router.reset(url, query, options);
 
-            return Promise.resolve().then(function () {
-                return service.update(routerOptions, transition, data);
+            return exports.partialUpdate(url, {
+                replace: true,
+                state: routerOptions,
+                transition: transition
             });
         };
+
+        /**
+         * Update partial content
+         *
+         * @param {string} [url=null] The url to update to, do not change url if null
+         * @param {string} [options=] Update options
+         * @param {string} [options.fromSel=] The selector of the container element in the DOM of the retrieved HTML
+         * @param {string} [options.toSel=] The selector of the container element in the current DOM
+         * @param {string} [options.fromUrl=url] The url of the HTML to be retrieved
+         * @param {boolean} [options.replace=false] Whether or not to replace the contents of container element
+         * @return {Promise} A promise resolves when update finished successfully, rejected otherwise
+         */
+        exports.partialUpdate = function (url, options) {
+            options = _.assign({}, {
+                fromUrl: url,
+                replace: false,
+                page: pages.get(url)
+            }, options);
+
+            var prevUrl = router.ignoreRoot(location.pathname + location.search);
+            pages.rename(prevUrl, url);
+
+            var service = getServiceByUrl(url);
+            var pending = service.partialUpdate(url, options);
+            // postpone URL change until fetch request is sent
+            router.reset(url || location.href, null, {silent: true});
+            return Promise.resolve(pending);
+        };
+
+        function getServiceByUrl(url) {
+            var pathPattern = router.pathPattern(url);
+            if (!services.has(pathPattern)) {
+                throw new Error('service not found for:' + url);
+            }
+            return services.get(pathPattern);
+        }
 
         exports.init();
 
