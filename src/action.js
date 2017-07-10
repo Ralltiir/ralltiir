@@ -385,6 +385,12 @@ define(function (require) {
             if (isIndexPage) {
                 indexPageUrl = url;
             }
+
+            var prevUrl = router.ignoreRoot(location.pathname + location.search);
+            var currUrl = router.createURL(url, query).toString();
+            logger.log('[reset] renaming, prev:', prevUrl, 'curr:', currUrl);
+            pages.rename(prevUrl, currUrl);
+
             _.assign(stageData, data);
             router.reset(url, query, options);
         };
@@ -507,12 +513,12 @@ define(function (require) {
                 },
                 extra: data
             };
-            router.reset(url, query, options);
-
             return exports.partialUpdate(url, {
                 replace: true,
                 state: routerOptions,
-                transition: transition
+                transition: transition,
+                query: query,
+                options: options
             });
         };
 
@@ -531,16 +537,22 @@ define(function (require) {
             options = _.assign({}, {
                 fromUrl: url,
                 replace: false,
+                routerOptions: {},
                 page: pages.get(url)
             }, options);
 
             var prevUrl = router.ignoreRoot(location.pathname + location.search);
+            var currUrl = router.createURL(url, options.query).toString();
+            logger.log('[patialUpdate] renaming, prev:', prevUrl, 'curr:', currUrl);
             pages.rename(prevUrl, url);
 
             var service = getServiceByUrl(url);
             var pending = service.partialUpdate(url, options);
+            options.routerOptions.silent = true;
+
             // postpone URL change until fetch request is sent
-            router.reset(url || location.href, null, {silent: true});
+            router.reset(url || location.href, options.query, options.routerOptions);
+
             return Promise.resolve(pending);
         };
 

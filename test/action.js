@@ -35,6 +35,13 @@ define(function (require) {
                 remove: sinon.spy(),
                 config: sinon.spy(),
                 start: sinon.spy(),
+                createURL: function (url, query) {
+                    return {
+                        toString: function () {
+                            return url;
+                        }
+                    };
+                },
                 clear: sinon.spy(),
                 getState: sinon.spy(function () {
                     return {};
@@ -57,7 +64,9 @@ define(function (require) {
             location = {
                 href: window.location.href,
                 pathname: window.location.pathname,
-                replace: sinon.spy()
+                replace: sinon.spy(),
+                search: '',
+                hash: ''
             };
             fooService = {
                 create: sinon.spy(),
@@ -387,6 +396,7 @@ define(function (require) {
             beforeEach(function () {
                 action.regist('/foo', fooService);
                 action.regist('/bar', barService);
+                action.dispatch({url: location.pathname}, {});
             });
             it('should call router with correct arguments', function () {
                 var url = 'xx';
