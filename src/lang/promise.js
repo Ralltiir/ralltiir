@@ -75,6 +75,10 @@ define(function (require) {
         this._state = REJECTED;
         this._errorPending = true;
         this._flush();
+
+        setTimeout(function () {
+            this._checkUnHandledRejection();
+        }.bind(this));
     };
 
     Promise.prototype._resolve = function (result) {
@@ -122,9 +126,6 @@ define(function (require) {
             called = true;
             self._reject(err);
         }
-        setTimeout(function () {
-            this._checkUnHandledRejection();
-        }.bind(this));
     };
 
     Promise.prototype._checkUnHandledRejection = function () {

@@ -257,6 +257,21 @@ define(['../src/lang/promise'], function (Promise) {
                     done();
                 }, 500);
             });
+            it('should throw PromiseRejectionEvent for defered rejection', function (done) {
+                var err = new Error('intended');
+                new Promise(function (resolve, reject) {
+                    setTimeout(resolve, 100);
+                }).then(function () {
+                    throw err;
+                });
+                setTimeout(function () {
+                    expect(handler).to.have.been.called;
+                    var arg = handler.args[0][0];
+                    expect(arg.reason).to.equal(err);
+                    expect(arg.type).to.equal('unhandledrejection');
+                    done();
+                }, 500);
+            });
             it('should not throw when error handled', function (done) {
                 Promise.reject('foo').catch(function () {});
                 setTimeout(function () {
