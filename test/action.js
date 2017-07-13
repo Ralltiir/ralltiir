@@ -518,7 +518,6 @@ define(function (require) {
                     foo: 'bar'
                 };
                 var extra = {
-                    container: 'container',
                     view: 'view'
                 };
                 action.dispatch(current, prev);

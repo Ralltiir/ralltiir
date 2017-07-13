@@ -517,6 +517,7 @@ define(function (require) {
                 replace: true,
                 state: routerOptions,
                 transition: transition,
+                to: data && data.container && data.container.get(0),
                 query: query,
                 options: options
             });
@@ -527,24 +528,24 @@ define(function (require) {
          *
          * @param {string} [url=null] The url to update to, do not change url if null
          * @param {string} [options=] Update options
-         * @param {string} [options.fromSel=] The selector of the container element in the DOM of the retrieved HTML
-         * @param {string} [options.toSel=] The selector of the container element in the current DOM
+         * @param {string} [options.from=] The container element or the selector of the container element in the DOM of the retrieved HTML
+         * @param {string} [options.to=] The container element or the selector of the container element in the current DOM
          * @param {string} [options.fromUrl=url] The url of the HTML to be retrieved
          * @param {boolean} [options.replace=false] Whether or not to replace the contents of container element
          * @return {Promise} A promise resolves when update finished successfully, rejected otherwise
          */
         exports.partialUpdate = function (url, options) {
+            var prevUrl = router.ignoreRoot(location.pathname + location.search);
+            var currUrl = router.createURL(url, options.query).toString();
+            logger.log('[patialUpdate] renaming, prev:', prevUrl, 'curr:', currUrl);
+            pages.rename(prevUrl, currUrl);
+
             options = _.assign({}, {
                 fromUrl: url,
                 replace: false,
                 routerOptions: {},
-                page: pages.get(url)
+                page: pages.get(currUrl)
             }, options);
-
-            var prevUrl = router.ignoreRoot(location.pathname + location.search);
-            var currUrl = router.createURL(url, options.query).toString();
-            logger.log('[patialUpdate] renaming, prev:', prevUrl, 'curr:', currUrl);
-            pages.rename(prevUrl, url);
 
             var service = getServiceByUrl(url);
             var pending = service.partialUpdate(url, options);
