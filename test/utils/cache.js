@@ -25,6 +25,13 @@ define(['../src/utils/cache'], function (cache) {
                 c.set('key', 'val');
                 expect(c.get('key')).to.equal('val');
             });
+            it('should return false when namespace not exist', function () {
+                expect(cache.has('name')).to.be.false;
+            });
+            it('should return true when namespace exist', function () {
+                cache.create('name');
+                expect(cache.has('name')).to.be.true;
+            });
         });
         describe('.get()', function () {
             it('should throw when namespace undefined', function () {
