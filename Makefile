@@ -20,7 +20,7 @@ build-prepare:
 	[ -d ./build ] || mkdir ./build
 
 build-dev: build-prepare
-	./node_modules/.bin/fis3 release -d ./build
+	fis3 release -d ./build
 
 build/banner.js: build-prepare
 	echo '/*' > $@
@@ -32,19 +32,18 @@ build/banner.js: build-prepare
 	echo ' */' >> $@
 
 build-prod: build-prepare
-	./node_modules/.bin/fis3 release prod -d ./build
+	fis3 release prod -d ./build
 	[ -d ./dist ] || mkdir ./dist
 
 dist-prepare: 
 	[ -d ./dist ] || mkdir ./dist
 
 dist: build-prod dist-prepare build/banner.js
+	which fis3
 	cat build/banner.js > dist/$(NAME).js
 	cat build/src/main.js >> dist/$(NAME).js
 	cat build/banner.js > dist/$(NAME).min.js
 	cat build/src/main.min.js >> dist/$(NAME).min.js
-	cp dist/$(NAME).js dist/$(NAME)-$(VERSION).js
-	cp dist/$(NAME).min.js dist/$(NAME)-$(VERSION).min.js
 
 clean:
 	rm -rf ./build/
