@@ -182,7 +182,11 @@ define(function (require) {
                     }
                     return currentService.attach(current, prev, data);
                 }
-            ]).exec();
+            ]).exec(function currAbort() {
+                if (currentService && currentService.abort) {
+                    currentService.abort(current, prev, data);
+                }
+            });
         };
 
         /**
@@ -212,7 +216,8 @@ define(function (require) {
             var queue = [];
             var exports = {
                 reset: reset,
-                exec: exec
+                exec: exec,
+                aborted: false
             };
 
             /**
@@ -232,9 +237,10 @@ define(function (require) {
              * When exec called, current queue is executed in serial,
              * and a promise for the results of the functions is returned.
              *
+             * @param {Function} abortCallback The callback to be called when dispatch aborted
              * @return {Promise} The promise to be resolved when all tasks completed
              */
-            function exec() {
+            function exec(abortCallback) {
                 // Record the thread ID for current thread
                 // To ensure there's ONLY ONE thread running.
                 var thisThreadID = threadID;
@@ -244,6 +250,10 @@ define(function (require) {
                     }
                     // Just stop running
                     if (thisThreadID !== threadID) {
+                        if (abortCallback) {
+                            abortCallback();
+                            abortCallback = null;
+                        }
                         return;
                     }
                     logger.log('calling lifecycle', cb.name);
