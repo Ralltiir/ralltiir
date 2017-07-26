@@ -1,6 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.5.14",
+  "version": "2.5.15",
   "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc-start": "gitbook serve --port 8883 docs",
@@ -16,7 +16,10 @@
     "version": "npm run dist",
     "dist": "make dist"
   },
-  "files": ["dist/ralltiir.js", "dist/ralltiir.min.js"],
+  "files": [
+    "dist/ralltiir.js",
+    "dist/ralltiir.min.js"
+  ],
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
