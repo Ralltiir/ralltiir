@@ -234,6 +234,19 @@ define(function (require) {
     }
 
     /**
+     * Checks if value is classified as a Function object.
+     *
+     * @param {any} value The value to check.
+     * @return {boolean} Returns true if value is a function, else false.
+     * @memberof underscore
+     */
+    function isFunction(value) {
+        // safari 9 bug is omited, since it's not a mobile browser
+        var type = typeof value;
+        return type  === 'function';
+    }
+
+    /**
      * Checks if value is classified as a String primitive or object.
      *
      * @param {any} value The value to check.
@@ -495,6 +508,7 @@ define(function (require) {
     exports.isEmpty = isEmpty;
     exports.isString = isString;
     exports.isObject = isObject;
+    exports.isFunction = isFunction;
     exports.isRegExp = isRegExp;
     exports.inherits = inherits;
     exports.contains = contains;

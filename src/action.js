@@ -213,6 +213,7 @@ define(function (require) {
             var MAX_THREAD_COUNT = 10000;
             // This is the ID of the currently running thread
             var threadID = 0;
+            var lastAbortCallback;
             var queue = [];
             var exports = {
                 reset: reset,
@@ -244,16 +245,16 @@ define(function (require) {
                 // Record the thread ID for current thread
                 // To ensure there's ONLY ONE thread running.
                 var thisThreadID = threadID;
+                if (_.isFunction(lastAbortCallback)) {
+                    lastAbortCallback();
+                }
+                lastAbortCallback = abortCallback;
                 return Promise.mapSeries(queue, function (cb) {
                     if (typeof cb !== 'function') {
                         return;
                     }
                     // Just stop running
                     if (thisThreadID !== threadID) {
-                        if (abortCallback) {
-                            abortCallback();
-                            abortCallback = null;
-                        }
                         return;
                     }
                     logger.log('calling lifecycle', cb.name);
@@ -264,6 +265,8 @@ define(function (require) {
                     setTimeout(function () {
                         throw e;
                     });
+                }).then(function () {
+                    lastAbortCallback = null;
                 });
             }
 
