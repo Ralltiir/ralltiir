@@ -137,6 +137,10 @@ define(function (require) {
         return storage[name].contains(key);
     };
 
+    exports.has = function (name) {
+        return storage.hasOwnProperty(name);
+    };
+
     /**
      * Get the cache storage for specified namespace
      *
