@@ -72,6 +72,7 @@ define(function (require) {
                 create: sinon.spy(),
                 attach: sinon.spy(),
                 detach: sinon.spy(),
+                abort: sinon.spy(),
                 destroy: sinon.spy(),
                 partialUpdate: sinon.spy(),
                 update: sinon.spy()
@@ -205,7 +206,26 @@ define(function (require) {
                     expect(barService.attach).to.have.been.calledOnce;
                 });
             });
-            it('should wait when create returns a promise', function () {
+            it('should call abort if restarted', function () {
+                barService.detach = function () {};
+                sinon.stub(barService, 'detach', function () {
+                    return new Promise(function (resolve) {
+                        return setTimeout(resolve, 100);
+                    });
+                });
+                var firstDispatch = action.dispatch(current, prev);
+                var secondDispatch = new Promise(function (resolve, reject) {
+                    setTimeout(function () {
+                        action.dispatch(prev, current).then(resolve).catch(reject);
+                    }, 10);
+                });
+                return Promise.all([firstDispatch, secondDispatch]).then(function () {
+                    // bar -> foo
+                    expect(barService.detach).to.have.been.calledOnce;
+                    expect(fooService.abort).to.have.been.calledOnce;
+                });
+            });
+            it('should await when create returns a promise', function () {
                 var createdSpy = sinon.spy();
                 fooService.create = function () {
                     return new Promise(function (resolve) {

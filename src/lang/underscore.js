@@ -258,6 +258,19 @@ define(function (require) {
     }
 
     /**
+     * Checks if value is classified as a Function object.
+     *
+     * @param {any} value The value to check.
+     * @return {boolean} Returns true if value is a function, else false.
+     * @memberof underscore
+     */
+    function isFunction(value) {
+        // safari 9 bug is omited, since it's not a mobile browser
+        var type = typeof value;
+        return type  === 'function';
+    }
+
+    /**
      * Checks if value is classified as a String primitive or object.
      *
      * @param {any} value The value to check.
@@ -382,17 +395,6 @@ define(function (require) {
      */
     function isArray(value) {
         return value instanceof Array;
-    }
-
-    /**
-     * Checks if value is classified as a Function.
-     *
-     * @param {any} value The value to check.
-     * @return {boolean} Returns true if value is a function, else false.
-     * @memberof underscore
-     */
-    function isFunction(value) {
-        return typeof value === 'function';
     }
 
     /**
