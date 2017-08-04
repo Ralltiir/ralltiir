@@ -175,8 +175,8 @@ define(function (require) {
                     silent: true
                 });
                 setTimeout(function () {
-                    expect(handler).to.have.been.calledOnce;
-                    expect(location.pathname).to.deep.equal(pathname);
+                    expect(handler).to.not.have.been.called;
+                    expect(location.pathname).to.equal('/abc');
                     done();
                 }, INTERVAL_TIME);
             });

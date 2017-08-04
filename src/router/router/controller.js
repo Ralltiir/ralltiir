@@ -164,11 +164,12 @@ define(function (require) {
             return !equalWithCurLocation(url, options) && outOfControl(url.toString());
         }
 
-        if (!curLocation.equalWithFragment(url) && !options.silent) {
+        if (!curLocation.equalWithFragment(url)) {
             history.pushState(options, options.title, url.toString());
         }
-
-        callHandler(url, options);
+        if (!options.silent) {
+            callHandler(url, options);
+        }
     };
 
     /**

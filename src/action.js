@@ -335,6 +335,9 @@ define(function (require) {
             });
             try {
                 router.redirect(url, query, options);
+                if (options.silent) {
+                    transferPageTo(url, query);
+                }
             }
             catch (e) {
                 url = URL.resolve(root, url);
@@ -386,14 +389,17 @@ define(function (require) {
                 indexPageUrl = url;
             }
 
-            var prevUrl = router.ignoreRoot(location.pathname + location.search);
-            var currUrl = router.createURL(url, query).toString();
-            logger.log('[reset] renaming, prev:', prevUrl, 'curr:', currUrl);
-            pages.rename(prevUrl, currUrl);
-
+            transferPageTo(url, query);
             _.assign(stageData, data);
             router.reset(url, query, options);
         };
+
+        function transferPageTo(url, query) {
+            var from = router.ignoreRoot(location.pathname + location.search);
+            var to = router.createURL(url, query).toString();
+            logger.log('[transfering page] from:', from, 'to:', to);
+            pages.rename(from, to);
+        }
 
         /**
          *  hijack global link href
@@ -535,11 +541,9 @@ define(function (require) {
          * @return {Promise} A promise resolves when update finished successfully, rejected otherwise
          */
         exports.partialUpdate = function (url, options) {
-            var prevUrl = router.ignoreRoot(location.pathname + location.search);
-            var currUrl = router.createURL(url, options.query).toString();
-            logger.log('[patialUpdate] renaming, prev:', prevUrl, 'curr:', currUrl);
-            pages.rename(prevUrl, currUrl);
+            transferPageTo(url, options.query);
 
+            var currUrl = router.ignoreRoot(location.pathname + location.search);
             options = _.assign({}, {
                 fromUrl: url,
                 replace: false,
