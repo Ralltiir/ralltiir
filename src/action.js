@@ -347,10 +347,10 @@ define(function (require) {
                 id: pageId++
             });
             try {
-                router.redirect(url, query, options);
                 if (options.silent) {
                     transferPageTo(url, query);
                 }
+                router.redirect(url, query, options);
             }
             catch (e) {
                 url = URL.resolve(root, url);
@@ -554,14 +554,15 @@ define(function (require) {
          * @return {Promise} A promise resolves when update finished successfully, rejected otherwise
          */
         exports.partialUpdate = function (url, options) {
+            var currUrl = router.ignoreRoot(location.pathname + location.search);
+            var page = pages.get(currUrl);
             transferPageTo(url, options.query);
 
-            var currUrl = router.ignoreRoot(location.pathname + location.search);
             options = _.assign({}, {
                 fromUrl: url,
                 replace: false,
                 routerOptions: {},
-                page: pages.get(currUrl)
+                page: page
             }, options);
 
             var service = getServiceByUrl(url);
