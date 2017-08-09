@@ -48,16 +48,7 @@ define(function (require) {
         this._fulfilledCbs = [];
         this._rejectedCbs = [];
         this._errorPending = false;
-
-        // 标准：Promises/A+ 2.2.4, see https://promisesaplus.com/
-        // In practice, this requirement ensures that
-        //   onFulfilled and onRejected execute asynchronously,
-        //   after the event loop turn in which then is called,
-        //   and with a fresh stack.
-        var self = this;
-        setTimeout(function () {
-            self._doResolve(cb);
-        }, 1);
+        this._fromResolver(cb);
     }
 
     Promise.prototype._fulfill = function (result) {
@@ -84,7 +75,7 @@ define(function (require) {
     Promise.prototype._resolve = function (result) {
         if (isThenable(result)) {
             // result.then is un-trusted
-            this._doResolve(result.then.bind(result));
+            this._fromResolver(result.then.bind(result));
         }
         else {
             this._fulfill(result);
@@ -97,33 +88,33 @@ define(function (require) {
      *
      * @param {Function} fn the reslver
      */
-    Promise.prototype._doResolve = function (fn) {
+    Promise.prototype._fromResolver = function (fn) {
         // ensure resolve/reject called once
-        var called = false;
+        var resolved = false;
         var self = this;
         try {
             fn(function (result) {
-                if (called) {
+                if (resolved) {
                     return;
                 }
 
-                called = true;
+                resolved = true;
                 self._resolve(result);
             }, function (err) {
-                if (called) {
+                if (resolved) {
                     return;
                 }
 
-                called = true;
+                resolved = true;
                 self._reject(err);
             });
         }
         catch (err) {
-            if (called) {
+            if (resolved) {
                 return;
             }
 
-            called = true;
+            resolved = true;
             self._reject(err);
         }
     };
@@ -149,7 +140,10 @@ define(function (require) {
             }
 
             if (typeof callback === 'function') {
-                callback(this._result);
+                var result = this._result;
+                setTimeout(function () {
+                    callback(result);
+                });
             }
 
         }, this);
@@ -162,7 +156,6 @@ define(function (require) {
      *
      * @param {Function} onFulfilled the callback on fulfilled
      * @param {Function} onRejected the callback on rejected
-     * @return {undefined}
      */
     Promise.prototype._done = function (onFulfilled, onRejected) {
         this._fulfilledCbs.push(onFulfilled);
@@ -179,34 +172,30 @@ define(function (require) {
      */
     Promise.prototype.then = function (onFulfilled, onRejected) {
         var self = this;
-        var ret;
         return new Promise(function (resolve, reject) {
+            var ret;
             self._done(function (result) {
-                if (typeof onFulfilled === 'function') {
-                    try {
-                        ret = onFulfilled(result);
-                    }
-                    catch (e) {
-                        return reject(e);
-                    }
-                    resolve(ret);
+                if (typeof onFulfilled !== 'function') {
+                    return resolve(result);
                 }
-                else {
-                    resolve(result);
+                try {
+                    ret = onFulfilled(result);
                 }
+                catch (e) {
+                    return reject(e);
+                }
+                resolve(ret);
             }, function (err) {
-                if (typeof onRejected === 'function') {
-                    try {
-                        ret = onRejected(err);
-                    }
-                    catch (e) {
-                        return reject(e);
-                    }
-                    resolve(ret);
+                if (typeof onRejected !== 'function') {
+                    return reject(err);
                 }
-                else {
-                    reject(err);
+                try {
+                    ret = onRejected(err);
                 }
+                catch (e) {
+                    return reject(e);
+                }
+                resolve(ret);
             });
         });
     };

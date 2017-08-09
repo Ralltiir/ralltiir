@@ -28,12 +28,13 @@
     "fis3": "^3.4.33",
     "fis3-hook-amd": "^0.2.0",
     "fis3-hook-commonjs": "^0.1.25",
+    "gitbook-cli": "^2.3.0",
     "jsdoc-to-markdown": "^3.0.0",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
     "karma-chai-as-promised": "^0.1.2",
     "karma-chai-sinon": "^0.1.5",
-    "karma-chrome-launcher": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
     "karma-coveralls": "^1.1.2",
     "karma-html-reporter": "^0.2.7",
@@ -41,7 +42,6 @@
     "karma-mocha-reporter": "^2.0.4",
     "karma-phantomjs-launcher": "^1.0.4",
     "mocha": "^3.2.0",
-    "gitbook-cli": "^2.3.0",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.8.0"
   }

@@ -243,9 +243,12 @@ define(function (require) {
                 fooService.create = function () {
                     throw 'foo';
                 };
-                return action.dispatch(current, prev).catch(function (e) {
+                return action
+                .dispatch(current, prev)
+                .catch(function (e) {
                     expect(e).to.equal('foo');
-                }).then(function () {
+                })
+                .then(function () {
                     expect(barService.destroy).to.not.have.been.called;
                 });
             });

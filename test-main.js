@@ -22,7 +22,10 @@ window.DEBUG || (window.DEBUG = false);
 var mods = TEST_FILES.map(getModuleId);
 require(mods, function(){
     console.log(mods.length + ' test modules loaded');
+    mocha.allowUncaught = true;
     window.__karma__.start();
+    // clear mocha listener, since mocha.allowUncaught() not working
+    window.onerror = null;
 });
 
 
