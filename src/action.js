@@ -15,6 +15,7 @@ define(function (require) {
     var assert = require('lang/assert');
     var Map = require('lang/map');
     var _ = require('lang/underscore');
+    var dom = require('utils/dom');
     var URL = require('utils/url');
 
     function actionFactory(router, location, history, doc, logger, Emitter) {
@@ -25,6 +26,7 @@ define(function (require) {
         var isIndexPage;
         var root;
         var pageId;
+        var visitedClassName;
 
         // The state data JUST for the next dispatch
         var stageData = {};
@@ -38,6 +40,7 @@ define(function (require) {
         exports.init = function () {
             exports.serviceMap = serviceMap = new Map();
             backManually = false;
+            visitedClassName = 'visited';
             root = '/';
             indexPageUrl = '/';
             isIndexPage = true;
@@ -289,8 +292,12 @@ define(function (require) {
          *  @static
          * */
         exports.config = function (options) {
-            if (options && options.root) {
+            options = options || {};
+            if (options.root) {
                 root = options.root;
+            }
+            if (options.visitedClassName) {
+                visitedClassName = options.visitedClassName;
             }
             router.config(options);
         };
@@ -412,6 +419,7 @@ define(function (require) {
                     anchor: targetEl
                 };
                 exports.redirect(link, null, options, extra);
+                dom.addClass(targetEl, visitedClassName);
             }
         }
 

@@ -17,6 +17,7 @@
     __inline('utils/cache.js');
     __inline('utils/cache-namespace.js');
     __inline('utils/emitter.js');
+    __inline('utils/dom.js');
 
     // lang
     __inline('lang/underscore.js');
