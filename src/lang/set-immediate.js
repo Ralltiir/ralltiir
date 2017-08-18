@@ -5,7 +5,7 @@
 
 define(function () {
     var global = getGlobal();
-    var MSG = 'setImmediate impl by MessageChannel';
+    var MSG = 'setImmediate polyfill';
 
     function immediate(cb) {
         // W3C conformant browsers
