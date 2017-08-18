@@ -23,6 +23,7 @@
     __inline('lang/promise.js');
     __inline('lang/assert.js');
     __inline('lang/map.js');
+    __inline('lang/set-immediate.js');
 
     // utils/uri
     __inline('utils/uri/URI.js');
