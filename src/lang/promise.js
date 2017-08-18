@@ -17,6 +17,7 @@ define(function (require) {
         longStackTraces: false
     };
     var assert = require('./assert');
+    var setImmediate = require('./set-immediate');
 
     /**
      * Create a new promise.
@@ -67,7 +68,7 @@ define(function (require) {
         this._errorPending = true;
         this._flush();
 
-        setTimeout(function () {
+        setImmediate(function () {
             this._checkUnHandledRejection();
         }.bind(this));
     };
@@ -141,7 +142,7 @@ define(function (require) {
 
             if (typeof callback === 'function') {
                 var result = this._result;
-                setTimeout(function () {
+                setImmediate(function () {
                     callback(result);
                 });
             }
