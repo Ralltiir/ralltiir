@@ -58,11 +58,14 @@
                 return config[key].module;
             });
 
-        define('sfr', amdModuleList, function () {
+        define('ralltiir', amdModuleList, function () {
             var di = new DI(config);
 
             Object.keys(config).forEach(di.resolve, di);
             return di.container;
+        });
+        define('sfr', ['ralltiir'], function (ralltiir) {
+            return ralltiir;
         });
     });
 })();
