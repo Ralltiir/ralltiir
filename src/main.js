@@ -49,23 +49,14 @@
     __inline('doc.js');
     __inline('config.js');
 
-    require(['sfr/utils/di', 'sfr/config'], function (DI, config) {
-        var amdModuleList = Object.keys(config)
-            .filter(function (key) {
-                return config[key].module;
-            })
-            .map(function (key) {
-                return config[key].module;
-            });
+    define('sfr', ['sfr/utils/di', 'sfr/config'], function (DI, config) {
+        var di = new DI(config);
 
-        define('ralltiir', amdModuleList, function () {
-            var di = new DI(config);
+        Object.keys(config).forEach(di.resolve, di);
+        return di.container;
+    });
 
-            Object.keys(config).forEach(di.resolve, di);
-            return di.container;
-        });
-        define('sfr', ['ralltiir'], function (ralltiir) {
-            return ralltiir;
-        });
+    define(['sfr'], function (sfr) {
+        return sfr;
     });
 })();
