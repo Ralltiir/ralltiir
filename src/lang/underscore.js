@@ -17,6 +17,8 @@ define(function (require) {
 
     var assert = require('./assert');
     var arrayProto = Array.prototype;
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
     var stringProto = String.prototype;
     var exports = {};
     var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
@@ -34,6 +36,34 @@ define(function (require) {
             ret = ret ? ret[key] : undefined;
         });
         return ret;
+    }
+
+    /**
+     * Has deep property by path
+     *
+     * @param {any} obj The object to query with
+     * @param {string} path A dot-delimited path string
+     * @return {boolean} the value assiciated with path
+     */
+    function has(obj, path) {
+        var paths = path.split('.');
+        var i = 0;
+        while (hasFunc(obj, paths[i]) && i < paths.length) {
+            obj = obj[paths[i++]];
+        }
+        return i >= paths.length;
+    }
+
+    /**
+     * Test if obj has property key
+     *
+     * @private
+     * @param {any} obj The object to query with
+     * @param {string} key The key to test
+     * @return {boolean} the value assiciated with path
+     */
+    function hasFunc(obj, key) {
+        return obj !== null && obj !== undefined && hasOwnProperty.call(obj, key);
     }
 
     /**
@@ -507,6 +537,7 @@ define(function (require) {
     // objectect Related
     exports.keysIn = keysIn;
     exports.get = get;
+    exports.has = has;
     exports.forOwn = forOwn;
     exports.assign = assign;
     exports.merge = assign;
