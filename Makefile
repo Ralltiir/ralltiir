@@ -53,13 +53,16 @@ dist-clean: clean
 
 # Test Related
 
-test: build-dev
+test:
 	$(TEST) start --reporters mocha
 
-test-reports: build-dev
+test-watch:
+	$(TEST) start --reporters mocha --auto-watch --no-single-run
+
+test-reports:
 	$(TEST) start --reporters mocha,html,coverage
 
-test-reports-ci: build-dev
+test-reports-ci:
 	$(TEST) start --reporters mocha,html,coverage,coveralls
 
 # Doc Related
