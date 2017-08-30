@@ -10,8 +10,6 @@
 define(function (require) {
     var docFactory = require('doc');
 
-    console.log('ok');
-
     describe('doc', function () {
         beforeEach(function () {
             var els = document.querySelectorAll('#sfr-app');
