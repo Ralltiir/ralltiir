@@ -9,7 +9,7 @@ var TEST_FILES = Object.keys(window.__karma__.files).filter(isTestFile);
 require.config({
     baseUrl: '/base/src',
     paths: {
-        test: '../test'
+        test: '/base/test'
     }
 });
 
@@ -25,17 +25,6 @@ require(mods, function(){
     console.log(mods.length + ' test modules loaded');
     window.__karma__.start();
 });
-
-
-// 工具函数
-function pathMap(arr) {
-    var map = {};
-    arr.forEach(function(file){
-        var mod = getModuleId(file);
-        map[mod] = file.slice(0, -3);
-    });
-    return map;
-}
 
 function isTestFile(filepath){
     return /\/base\/test\//.test(filepath);
