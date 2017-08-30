@@ -5,8 +5,6 @@
 
 define(function () {
 
-    console.log('doc')
-
     function docFactory(mainDoc) {
         var doc = mainDoc.querySelector('#sfr-app');
         if (!doc) {
