@@ -3,7 +3,9 @@
  * @author harttle<yangjun14@baidu.com>
  * @module resource
  */
-define(['utils/http', 'lang/underscore'], function (http, _) {
+define(function (require) {
+    var http = require('utils/http');
+    var _ = require('lang/underscore');
 
     /**
      * The REST resource CRUD utility

@@ -9,7 +9,7 @@
 
 /* globals sinon: true */
 
-define(['../src/lang/promise'], function (Promise) {
+define(['lang/promise'], function (Promise) {
     describe('Promise', function () {
         this.timeout(5000);
 

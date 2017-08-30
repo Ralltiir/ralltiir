@@ -8,7 +8,7 @@ define(function (require) {
     var extend = require('../lang/underscore').extend;
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
-    var _ = require('../lang/underscore.js');
+    var _ = require('../lang/underscore');
 
     function routerFactory(logger) {
         /**

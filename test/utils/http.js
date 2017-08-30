@@ -9,7 +9,7 @@
 
 /* globals sinon: true */
 
-define(['../src/utils/http'], function (http) {
+define(['utils/http'], function (http) {
     describe('http', function () {
         this.timeout(5000);
 

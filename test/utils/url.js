@@ -9,7 +9,7 @@
 
 /* globals sinon: true */
 
-define(['../src/utils/url'], function (url) {
+define(['utils/url'], function (url) {
     describe('utils/url', function () {
 
         describe('.param()', function () {

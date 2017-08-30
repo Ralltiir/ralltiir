@@ -8,7 +8,7 @@
 /* globals sinon: true */
 
 define(function (require) {
-    var _ = require('src/lang/underscore');
+    var _ = require('lang/underscore');
 
     describe('underscore', function () {
         var obj = {

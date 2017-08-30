@@ -9,7 +9,7 @@
 
 /* globals sinon: true */
 
-define(['../src/utils/cache'], function (cache) {
+define(['utils/cache'], function (cache) {
     describe('view/cache', function () {
         beforeEach(function () {
             cache.clear();

@@ -9,7 +9,7 @@
 
 /* globals sinon: true */
 
-define(['../src/resource'], function (Resource) {
+define(['resource'], function (Resource) {
     describe('resource', function () {
         this.timeout(5000);
         var xhr;

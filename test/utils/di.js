@@ -9,7 +9,7 @@
 
 /* globals sinon: true */
 
-define(['../src/utils/di'], function (DI) {
+define(['utils/di'], function (DI) {
     describe('di', function () {
         var di;
         var require;
