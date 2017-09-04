@@ -24,7 +24,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
-    "fecs": "^1.2.2",
+    "fecs": "^1.4.1",
     "fis3": "^3.4.33",
     "fis3-hook-amd": "^0.2.0",
     "fis3-hook-commonjs": "^0.1.25",
