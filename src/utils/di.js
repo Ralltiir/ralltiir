@@ -7,7 +7,7 @@
  */
 define(function (require) {
     var assert = require('../lang/assert');
-    var _ = require('../lang/underscore.js');
+    var _ = require('../lang/underscore');
 
     /**
      * Create a IoC container

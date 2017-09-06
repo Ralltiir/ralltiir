@@ -10,10 +10,10 @@
 /* globals sinon: true */
 
 define(function (require) {
-    var Promise = require('../src/lang/promise.js');
-    var actionFactory = require('../src/action');
-    var logger = require('../src/utils/logger');
-    var Emitter = require('../src/utils/emitter');
+    var Promise = require('lang/promise');
+    var actionFactory = require('action');
+    var logger = require('utils/logger');
+    var Emitter = require('utils/emitter');
 
     describe('action', function () {
         var action;

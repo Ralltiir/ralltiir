@@ -7,7 +7,9 @@
 
 /* globals sinon: true */
 
-require(['../src/doc'], function (docFactory) {
+define(function (require) {
+    var docFactory = require('doc');
+
     describe('doc', function () {
         beforeEach(function () {
             var els = document.querySelectorAll('#sfr-app');

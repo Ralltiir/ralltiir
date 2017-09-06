@@ -6,7 +6,7 @@
 /* eslint-env mocha */
 /* eslint max-nested-callbacks: ["error", 6] */
 
-define(['../src/utils/dom'], function (dom) {
+define(['utils/dom'], function (dom) {
     describe('utils/dom', function () {
         describe('.hasClass()', function () {
             it('should return false when className empty', function () {

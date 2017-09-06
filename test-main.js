@@ -6,10 +6,11 @@
 var TEST_FILES = Object.keys(window.__karma__.files).filter(isTestFile);
 
 // 依赖配置
-var paths = pathMap(TEST_FILES);
 require.config({
     baseUrl: '/base/src',
-    paths: paths
+    paths: {
+        test: '/base/test'
+    }
 });
 
 // 启动测试
@@ -27,17 +28,6 @@ require(mods, function(){
     // clear mocha listener, since mocha.allowUncaught() not working
     window.onerror = null;
 });
-
-
-// 工具函数
-function pathMap(arr) {
-    var map = {};
-    arr.forEach(function(file){
-        var mod = getModuleId(file);
-        map[mod] = file.slice(0, -3);
-    });
-    return map;
-}
 
 function isTestFile(filepath){
     return /\/base\/test\//.test(filepath);

@@ -9,7 +9,7 @@
 
 /* globals sinon: true */
 
-define(['../src/lang/map'], function (Map) {
+define(['lang/map'], function (Map) {
     describe('Map', function () {
         var map;
         beforeEach(function () {
