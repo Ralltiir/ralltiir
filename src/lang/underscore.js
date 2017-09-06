@@ -91,7 +91,23 @@ define(function (require) {
      * @memberof underscore
      */
     function keysIn(object) {
-        return Object.keys(object);
+        var ret = [];
+        // eslint-disable-next-line
+        for (var key in object) {
+            ret.push(key);
+        }
+        return ret;
+    }
+
+    /**
+     * Creates an array of the own enumerable property names of object.
+     *
+     * @param {Object} object The object to query.
+     * @return {Array} Returns the array of property names.
+     * @memberof underscore
+     */
+    function keys(object) {
+        return Object.keys(Object(object));
     }
 
     /**
@@ -162,6 +178,39 @@ define(function (require) {
         forOwn(collection, function () {
             ret.push(iteratee.apply(null, arguments));
         });
+        return ret;
+    }
+
+    /**
+     * Reduce array or object.
+     * The iteratee is invoked with three arguments: (prev, curr, index|key, collection).
+     *
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @param {any} init The initial value.
+     * @return {Array} Returns the new mapped array.
+     * @memberof underscore
+     */
+    function reduce(collection, iteratee, init) {
+        if (isArrayLike(collection)) {
+            var args = getArgs(arguments);
+            return arrayProto.reduce.apply(collection, args);
+        }
+        var ks = keys(collection);
+        var ret;
+        var i;
+        if (arguments.length >= 3) {
+            ret = init;
+            i = 0;
+        }
+        else if (ks.length > 0) {
+            ret = collection[ks[0]];
+            i = 1;
+        }
+        for (; i < ks.length; i++) {
+            var key = ks[i];
+            ret = iteratee(ret, collection[key], key, collection);
+        }
         return ret;
     }
 
@@ -536,6 +585,7 @@ define(function (require) {
 
     // objectect Related
     exports.keysIn = keysIn;
+    exports.keys = keys;
     exports.get = get;
     exports.has = has;
     exports.forOwn = forOwn;
@@ -551,6 +601,7 @@ define(function (require) {
     exports.splice = splice;
     exports.forEach = forEach;
     exports.map = map;
+    exports.reduce = reduce;
     exports.toArray = toArray;
     exports.findIndex = findIndex;
 

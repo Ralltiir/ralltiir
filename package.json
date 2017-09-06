@@ -21,6 +21,9 @@
     "dist/ralltiir.js",
     "dist/ralltiir.min.js"
   ],
+  "amdDependencies": {
+    "@searchfe/assert": "^1.0.0"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",

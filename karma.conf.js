@@ -12,7 +12,7 @@ module.exports = function (config) {
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         // Important: 下列数组中文件将『逆序载入』
-        frameworks: ['mocha', 'chai-as-promised', 'chai-sinon', 'chai'],
+        frameworks: ['mocha', 'chai-as-promised', 'chai-sinon'],
 
         // list of files / patterns to load in the browser
         files: [
