@@ -16,3 +16,4 @@ dist/
 docs/_book/
 docs/api/
 node_modules/
+amd_modules/
