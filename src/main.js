@@ -24,6 +24,7 @@
     __inline('lang/promise.js');
     __inline('lang/assert.js');
     __inline('lang/map.js');
+    __inline('lang/set-immediate.js');
 
     // utils/uri
     __inline('utils/uri/URI.js');
@@ -48,20 +49,14 @@
     __inline('doc.js');
     __inline('config.js');
 
-    require(['sfr/utils/di', 'sfr/config'], function (DI, config) {
-        var amdModuleList = Object.keys(config)
-            .filter(function (key) {
-                return config[key].module;
-            })
-            .map(function (key) {
-                return config[key].module;
-            });
+    define('sfr', ['sfr/utils/di', 'sfr/config'], function (DI, config) {
+        var di = new DI(config);
 
-        define('sfr', amdModuleList, function () {
-            var di = new DI(config);
+        Object.keys(config).forEach(di.resolve, di);
+        return di.container;
+    });
 
-            Object.keys(config).forEach(di.resolve, di);
-            return di.container;
-        });
+    define(['sfr'], function (sfr) {
+        return sfr;
     });
 })();

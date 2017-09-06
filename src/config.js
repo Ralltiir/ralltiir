@@ -2,74 +2,74 @@
  * @file config.js DI assembly configuration
  * @author harttle<yangjun14@baidu.com>
  */
-define(function () {
+define(function (require) {
     var config = {
         // core
         action: {
             type: 'factory',
-            module: 'sfr/action',
+            module: require('./action'),
             args: ['router', 'location', 'history', 'doc', 'logger', 'emitter']
         },
         router: {
             type: 'factory',
-            module: 'sfr/router/router',
+            module: require('./router/router'),
             args: ['logger']
         },
         view: {
             type: 'value',
-            module: 'sfr/view'
+            module: require('./view')
         },
         service: {
             type: 'value',
-            module: 'sfr/service'
+            module: require('./service')
         },
         resource: {
             type: 'value',
-            module: 'sfr/resource'
+            module: require('./resource')
         },
         doc: {
             type: 'factory',
-            module: 'sfr/doc',
+            module: require('./doc'),
             args: ['document']
         },
         // Utils
         cache: {
             type: 'value',
-            module: 'sfr/utils/cache'
+            module: require('./utils/cache')
         },
         http: {
             type: 'value',
-            module: 'sfr/utils/http'
+            module: require('./utils/http')
         },
         url: {
             type: 'value',
-            module: 'sfr/utils/url'
+            module: require('./utils/url')
         },
         di: {
             type: 'value',
-            module: 'sfr/utils/di'
+            module: require('./utils/di')
         },
         emitter: {
             type: 'value',
-            module: 'sfr/utils/emitter'
+            module: require('./utils/emitter')
         },
         // Language Enhancements
         assert: {
             type: 'value',
-            module: 'sfr/lang/assert'
+            module: require('./lang/assert')
         },
         // eslint-disable-next-line
         _: {
             type: 'value',
-            module: 'sfr/lang/underscore'
+            module: require('./lang/underscore')
         },
         promise: {
             type: 'value',
-            module: 'sfr/lang/promise'
+            module: require('./lang/promise')
         },
         map: {
             type: 'value',
-            module: 'sfr/lang/map'
+            module: require('./lang/map')
         },
         // DOM/BOM APIs
         window: {
@@ -90,7 +90,7 @@ define(function () {
         },
         logger: {
             type: 'value',
-            module: 'sfr/utils/logger'
+            module: require('./utils/logger')
         }
     };
     return config;

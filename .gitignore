@@ -17,3 +17,4 @@ docs/_book/
 docs/api/
 node_modules/
 test-reports/
+amd_modules/

@@ -8,7 +8,6 @@
 /* eslint max-nested-callbacks: ["error", 5] */
 
 /* globals sinon: true */
-
 define(['lang/promise'], function (Promise) {
     describe('Promise', function () {
         this.timeout(5000);
@@ -27,6 +26,11 @@ define(['lang/promise'], function (Promise) {
                 }
                 expect(fn).to.throw(/callback/);
             });
+            it('should call fn syncly', function () {
+                var fn = sinon.spy();
+                new Promise(fn);
+                expect(fn).to.have.been.called;
+            });
             it('should be thenable and catchable', function () {
                 var p = new Promise(function () {});
                 expect(p.then).to.be.a('function');
@@ -34,7 +38,7 @@ define(['lang/promise'], function (Promise) {
             });
         });
         describe('#then()', function () {
-            it('should call then when resolved synchronously', function (done) {
+            it('should call then when resolved syncly', function (done) {
                 var p = new Promise(function (resolve) {
                     resolve('foo');
                 });
@@ -43,7 +47,7 @@ define(['lang/promise'], function (Promise) {
                     done();
                 });
             });
-            it('should call then when resolved asynchronously', function (done) {
+            it('should call then when resolved asyncly', function (done) {
                 var p = new Promise(function (resolve) {
                     setTimeout(function () {
                         resolve('foo');
@@ -53,6 +57,14 @@ define(['lang/promise'], function (Promise) {
                     expect(result).to.equal('foo');
                     done();
                 });
+            });
+            it('should always call then asyncly', function () {
+                var p = new Promise(function (resolve) {
+                    resolve('foo');
+                });
+                var spy = sinon.spy();
+                p.then(spy);
+                expect(spy).to.not.have.been.called;
             });
             it('should call chained then handlers in order', function () {
                 var h1 = sinon.stub();
@@ -119,6 +131,31 @@ define(['lang/promise'], function (Promise) {
                     throw 'bar';
                 }).catch(function (err) {
                     expect(err).to.equal('bar');
+                    done();
+                });
+            });
+            it('should not catch async exception', function (done) {
+                var spy = sinon.spy();
+                new Promise(function (resolve) {
+                    setTimeout(function () {
+                        throw 'foo';
+                    });
+                    resolve('bar');
+                })
+                .catch(spy)
+                .then(function () {
+                    try {
+                        expect(spy).to.not.have.been.called;
+                        done();
+                    }
+                    catch (e) {
+                        return done(e);
+                    }
+                });
+            });
+            it('should catch faraway rejection', function (done) {
+                Promise.reject('foo').then(function () {}).catch(function (e) {
+                    expect(e).to.equal('foo');
                     done();
                 });
             });
@@ -254,6 +291,21 @@ define(['lang/promise'], function (Promise) {
                         reason: 'foo',
                         type: 'unhandledrejection'
                     });
+                    done();
+                }, 500);
+            });
+            it('should throw PromiseRejectionEvent for defered rejection', function (done) {
+                var err = new Error('intended');
+                new Promise(function (resolve, reject) {
+                    setTimeout(resolve, 100);
+                }).then(function () {
+                    throw err;
+                });
+                setTimeout(function () {
+                    expect(handler).to.have.been.called;
+                    var arg = handler.args[0][0];
+                    expect(arg.reason).to.equal(err);
+                    expect(arg.type).to.equal('unhandledrejection');
                     done();
                 }, 500);
             });

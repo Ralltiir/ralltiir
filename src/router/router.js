@@ -352,6 +352,7 @@ define(function (require) {
         };
 
         router.ignoreRoot = controller.ignoreRoot;
+        router.createURL = controller.createURL;
 
         return router;
     }

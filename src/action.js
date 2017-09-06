@@ -11,6 +11,7 @@ define(function (require) {
      * @module action
      */
 
+    var cache = require('utils/cache');
     var Promise = require('lang/promise');
     var assert = require('lang/assert');
     var Map = require('lang/map');
@@ -20,7 +21,8 @@ define(function (require) {
 
     function actionFactory(router, location, history, doc, logger, Emitter) {
         var exports = new Emitter();
-        var serviceMap;
+        var services;
+        var pages;
         var backManually;
         var indexPageUrl;
         var isIndexPage;
@@ -38,7 +40,15 @@ define(function (require) {
          * @private
          */
         exports.init = function () {
-            exports.serviceMap = serviceMap = new Map();
+            exports.services = services = new Map();
+            exports.pages = pages = cache.create('pages', {
+                onRemove: function (page, url, evicted) {
+                    if (_.isFunction(page.onRemove)) {
+                        page.onRemove(url, evicted);
+                    }
+                },
+                limit: 32
+            });
             backManually = false;
             visitedClassName = 'visited';
             root = '/';
@@ -69,11 +79,11 @@ define(function (require) {
          *  action.regist(/^person\/\d+/, new Service());
          * */
         exports.regist = function (url, service) {
-            assert(url, 'illegal action url');
-            assert(isService(service), 'illegal service, make sure to extend from sfr/service');
-            assert(!serviceMap.has(url), 'path already registerd');
+            assert(url, 'invalid url pattern');
+            assert(isService(service), 'invalid service, make sure to extend sfr/service');
+            assert(!services.has(url), 'url already registerd');
             router.add(url, this.dispatch);
-            serviceMap.set(url, service);
+            services.set(url, service);
             logger.log('service registered to: ' + url);
             exports.emit('registered', url, service);
         };
@@ -84,11 +94,11 @@ define(function (require) {
          * @param {string|RestFul|RegExp} url The path of the service
          */
         exports.unregist = function (url) {
-            assert(url, 'illegal action url');
-            assert(serviceMap.has(url), 'path not registered');
+            assert(url, 'invalid url pattern');
+            assert(services.has(url), 'url not registered');
             router.remove(url);
-            var svc = serviceMap.get(url);
-            serviceMap.delete(url);
+            var svc = services.get(url);
+            services.delete(url);
             logger.log('service unregistered from: ' + url);
             exports.emit('unregistered', url, svc);
         };
@@ -136,9 +146,18 @@ define(function (require) {
 
             logger.log('action dispatching to: ' + current.url);
 
-            var currentService = serviceMap.get(current.pathPattern);
+            var currentService = services.get(current.pathPattern);
             current.service = currentService;
-            var prevService = serviceMap.get(prev.pathPattern);
+
+            if (!pages.contains(current.url)) {
+                pages.set(current.url, {
+                    id: pageId,
+                    isIndex: isIndexPage
+                });
+            }
+            current.page = pages.get(current.url);
+
+            var prevService = services.get(prev.pathPattern);
             prev.service = prevService;
 
             var data = stageData;
@@ -185,7 +204,11 @@ define(function (require) {
                     }
                     return currentService.attach(current, prev, data);
                 }
-            ]).exec();
+            ]).exec(function currAbort() {
+                if (currentService && currentService.abort) {
+                    currentService.abort(current, prev, data);
+                }
+            });
         };
 
         /**
@@ -212,10 +235,12 @@ define(function (require) {
             var MAX_THREAD_COUNT = 10000;
             // This is the ID of the currently running thread
             var threadID = 0;
+            var lastAbortCallback;
             var queue = [];
             var exports = {
                 reset: reset,
-                exec: exec
+                exec: exec,
+                aborted: false
             };
 
             /**
@@ -235,12 +260,17 @@ define(function (require) {
              * When exec called, current queue is executed in serial,
              * and a promise for the results of the functions is returned.
              *
+             * @param {Function} abortCallback The callback to be called when dispatch aborted
              * @return {Promise} The promise to be resolved when all tasks completed
              */
-            function exec() {
+            function exec(abortCallback) {
                 // Record the thread ID for current thread
                 // To ensure there's ONLY ONE thread running.
                 var thisThreadID = threadID;
+                if (_.isFunction(lastAbortCallback)) {
+                    lastAbortCallback();
+                }
+                lastAbortCallback = abortCallback;
                 return Promise.mapSeries(queue, function (cb) {
                     if (typeof cb !== 'function') {
                         return;
@@ -257,6 +287,8 @@ define(function (require) {
                     setTimeout(function () {
                         throw e;
                     });
+                }).then(function () {
+                    lastAbortCallback = null;
                 });
             }
 
@@ -271,7 +303,7 @@ define(function (require) {
          *  @return {any} the return value of Map#delete
          * */
         exports.remove = function (name) {
-            return serviceMap.delete(name);
+            return services.delete(name);
         };
 
         /**
@@ -282,7 +314,7 @@ define(function (require) {
          *  @return {boolean} Returns true if it has been registered, else false.
          * */
         exports.exist = function (name) {
-            return serviceMap.has(name);
+            return services.has(name);
         };
 
         /**
@@ -300,16 +332,6 @@ define(function (require) {
                 visitedClassName = options.visitedClassName;
             }
             router.config(options);
-        };
-
-        /**
-         *  Clear all registered service
-         *
-         *  @static
-         * */
-        exports.clear = function () {
-            serviceMap.clear();
-            router.clear();
         };
 
         /**
@@ -332,6 +354,9 @@ define(function (require) {
                 id: pageId++
             });
             try {
+                if (options.silent) {
+                    transferPageTo(url, query);
+                }
                 router.redirect(url, query, options);
             }
             catch (e) {
@@ -383,9 +408,18 @@ define(function (require) {
             if (isIndexPage) {
                 indexPageUrl = url;
             }
+
+            transferPageTo(url, query);
             _.assign(stageData, data);
             router.reset(url, query, options);
         };
+
+        function transferPageTo(url, query) {
+            var from = router.ignoreRoot(location.pathname + location.search);
+            var to = router.createURL(url, query).toString();
+            logger.log('[transfering page] from:', from, 'to:', to);
+            pages.rename(from, to);
+        }
 
         /**
          *  hijack global link href
@@ -459,6 +493,18 @@ define(function (require) {
         exports.stop = function () {
             document.body.removeEventListener('click', onAnchorClick);
             router.stop();
+            router.clear();
+        };
+
+        /**
+         * Destroy the action, eliminate side effects:
+         * DOM event listeners, cache namespaces, external states
+         */
+        exports.destroy = function () {
+            exports.stop();
+            cache.destroy('pages');
+            exports.pages = pages = undefined;
+            services.clear();
         };
 
         /**
@@ -472,7 +518,6 @@ define(function (require) {
          *  @return {Object} the action object
          * */
         exports.update = function (url, query, options, data) {
-
             options = options ? options : {};
 
             // use silent mode
@@ -480,17 +525,11 @@ define(function (require) {
                 options.silent = true;
             }
 
-            var prevUrl = router.ignoreRoot(location.pathname + location.search + location.hash);
+            var prevUrl = router.ignoreRoot(location.pathname + location.search);
             var currentUrl = router.ignoreRoot(url);
             var currentPath = (currentUrl || '').replace(/\?.*/, '');
-
-            var pathPattern = router.pathPattern(url);
             var routerOptions = router.getState();
 
-            if (!serviceMap.has(pathPattern)) {
-                throw new Error('service not found:' + currentPath);
-            }
-            var service = serviceMap.get(pathPattern);
             var transition = {
                 from: {
                     url: prevUrl
@@ -501,12 +540,56 @@ define(function (require) {
                 },
                 extra: data
             };
-            router.reset(url, query, options);
-
-            return Promise.resolve().then(function () {
-                return service.update(routerOptions, transition, data);
+            return exports.partialUpdate(url, {
+                replace: true,
+                state: routerOptions,
+                transition: transition,
+                to: data && data.container && data.container.get(0),
+                query: query,
+                options: options
             });
         };
+
+        /**
+         * Update partial content
+         *
+         * @param {string} [url=null] The url to update to, do not change url if null
+         * @param {string} [options=] Update options
+         * @param {string} [options.from=] The container element or the selector of the container element in the DOM of the retrieved HTML
+         * @param {string} [options.to=] The container element or the selector of the container element in the current DOM
+         * @param {string} [options.fromUrl=url] The url of the HTML to be retrieved
+         * @param {boolean} [options.replace=false] Whether or not to replace the contents of container element
+         * @return {Promise} A promise resolves when update finished successfully, rejected otherwise
+         */
+        exports.partialUpdate = function (url, options) {
+            var currUrl = router.ignoreRoot(location.pathname + location.search);
+            var page = pages.get(currUrl);
+            transferPageTo(url, options.query);
+
+            options = _.assign({}, {
+                fromUrl: url,
+                replace: false,
+                routerOptions: {},
+                page: page
+            }, options);
+
+            var service = getServiceByUrl(url);
+            var pending = service.partialUpdate(url, options);
+            options.routerOptions.silent = true;
+
+            // postpone URL change until fetch request is sent
+            router.reset(url || location.href, options.query, options.routerOptions);
+
+            return Promise.resolve(pending);
+        };
+
+        function getServiceByUrl(url) {
+            var pathPattern = router.pathPattern(url);
+            if (!services.has(pathPattern)) {
+                throw new Error('service not found for:' + url);
+            }
+            return services.get(pathPattern);
+        }
 
         exports.init();
 

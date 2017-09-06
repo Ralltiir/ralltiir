@@ -29,6 +29,11 @@ define(function (require) {
         return storage[name] = new Namespace(name, options);
     };
 
+    exports.destroy = function (name) {
+        assert(storage[name], 'namespace with ' + name + ' not exist');
+        delete storage[name];
+    };
+
     /**
      * Using a specific namespace
      *

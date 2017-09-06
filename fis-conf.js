@@ -1,3 +1,7 @@
+/**
+ * @file fis config
+ * @author harttle<yangjvn@126.com>
+ */
 fis.set('project.fileType.text', 'etpl');
 
 fis.set('project.ignore', [
@@ -12,7 +16,7 @@ fis.set('project.files', [
     'test-main.js'
 ]);
 
-fis.config.set("project.watch.usePolling", true);
+fis.config.set('project.watch.usePolling', true);
 
 fis.match('*', {
     release: false
@@ -44,7 +48,7 @@ fis.match('/test/(**).js', {
 });
 
 fis.match('/test-main.js', {
-    release: true,
+    release: true
 });
 
 fis.match('/lib/(**).js', {
@@ -65,10 +69,13 @@ fis.match('main.min.js', {
     isMod: false,
     optimizer: fis.plugin('uglify-js', {
         output: {
+            // eslint-disable-next-line
             max_line_len : 500
         },
         compress: {
+            // eslint-disable-next-line
             dead_code: true,
+            // eslint-disable-next-line
             pure_funcs: ['logger.debug', 'logger.log', 'logger.info', 'logger.error', 'logger.warn']
         }
     }),

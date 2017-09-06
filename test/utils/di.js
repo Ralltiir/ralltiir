@@ -12,7 +12,6 @@
 define(['utils/di'], function (DI) {
     describe('di', function () {
         var di;
-        var require;
         var modules;
         var config;
         beforeEach(function () {
@@ -28,23 +27,20 @@ define(['utils/di'], function (DI) {
                 },
                 family: {
                     type: 'factory',
-                    module: 'amd/family',
+                    module: modules['amd/family'],
                     args: ['child', 'man']
                 },
                 child: {
                     type: 'value',
-                    module: 'amd/child'
+                    module: modules['amd/child']
                 },
                 female: {
                     type: 'factory',
                     cache: false,
-                    module: 'amd/female'
+                    module: modules['amd/female']
                 }
             };
-            require = function (mod) {
-                return modules[mod];
-            };
-            di = new DI(config, require);
+            di = new DI(config);
         });
         describe('#resolve()', function () {
             it('should throw when name not found', function () {

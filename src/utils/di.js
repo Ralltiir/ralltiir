@@ -17,7 +17,7 @@ define(function (require) {
      * @param {Function} require Optional, the require used by DI, defaults to `window.require`
      */
     function DI(config, require) {
-        this.require = require || window.require;
+        // this.require = require || window.require;
         this.config = this.normalize(config);
         this.container = Object.create(null);
     }
@@ -33,7 +33,7 @@ define(function (require) {
 
         // AMD resolving
         if (decl.value === undefined && decl.module) {
-            decl.value = this.require(decl.module);
+            decl.value = decl.module;
         }
 
         switch (decl.type) {

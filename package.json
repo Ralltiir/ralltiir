@@ -1,6 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.6.0",
+  "version": "2.7.0-4",
   "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc-start": "gitbook serve --port 8883 docs",
@@ -9,7 +9,7 @@
     "test-watch": "make test-watch",
     "test-reports": "make test-reports",
     "preversion": "npm run lint && npm test",
-    "postversion": "git push origin master && git push --tags",
+    "postversion": "git push && git push --tags",
     "clean": "make clean",
     "lint": "fecs check src, test",
     "build": "make build",
@@ -21,19 +21,23 @@
     "dist/ralltiir.js",
     "dist/ralltiir.min.js"
   ],
+  "amdDependencies": {
+    "@searchfe/assert": "^1.0.0"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
-    "fecs": "^1.2.2",
+    "fecs": "^1.4.1",
     "fis3": "^3.4.33",
     "fis3-hook-amd": "^0.2.0",
     "fis3-hook-commonjs": "^0.1.25",
+    "gitbook-cli": "^2.3.0",
     "jsdoc-to-markdown": "^3.0.0",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
     "karma-chai-as-promised": "^0.1.2",
     "karma-chai-sinon": "^0.1.5",
-    "karma-chrome-launcher": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
     "karma-coveralls": "^1.1.2",
     "karma-html-reporter": "^0.2.7",
@@ -41,7 +45,6 @@
     "karma-mocha-reporter": "^2.0.4",
     "karma-phantomjs-launcher": "^1.0.4",
     "mocha": "^3.2.0",
-    "gitbook-cli": "^2.3.0",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.8.0"
   }

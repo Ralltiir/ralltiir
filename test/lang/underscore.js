@@ -23,9 +23,79 @@ define(function (require) {
         function func(a, b, c) {
             return a + '1' + b + '2' + c;
         }
+        describe('.reduce()', function () {
+            it('should call iteratee for Array type collection', function () {
+                var spy = sinon.spy();
+                var arr = ['a', 'b', 'c'];
+                _.reduce(arr, spy);
+                expect(spy).to.have.been.calledTwice;
+                expect(spy.args[0]).to.deep.equal(['a', 'b', 1, arr]);
+                expect(spy.args[1]).to.deep.equal([undefined, 'c', 2, arr]);
+            });
+            it('should call iteratee for Object type collection', function () {
+                var spy = sinon.spy();
+                var obj = {a: 'x', b: 'y', c: 'z'};
+                _.reduce(obj, spy);
+                expect(spy).to.have.been.calledTwice;
+                expect(spy.args[0]).to.deep.equal(['x', 'y', 'b', obj]);
+                expect(spy.args[1]).to.deep.equal([undefined, 'z', 'c', obj]);
+            });
+            it('should respect init value', function () {
+                var spy = sinon.spy();
+                var obj = {a: 'x'};
+                _.reduce(obj, spy, 'b');
+                expect(spy).to.have.been.calledOnce;
+                expect(spy.args[0]).to.deep.equal(['b', 'x', 'a', obj]);
+            });
+            it('should pass return value', function () {
+                var obj = {a: 'x'};
+                var ret = _.reduce(obj, function (prev, curr) {
+                    return prev + curr;
+                }, 'b');
+                expect(ret).to.equal('bx');
+            });
+        });
+        describe('.keys()', function () {
+            it('should return array of keys', function () {
+                expect(_.keys(obj)).to.deep.equal(['foo', 'bar', 'coo']);
+            });
+            it('should not include inherited keys', function () {
+                var foo = Object.create({bar: 'bar'});
+                foo.coo = 'coo';
+                expect(_.keys(foo)).to.deep.equal(['coo']);
+            });
+        });
         describe('.keysIn()', function () {
             it('should return array of keys', function () {
                 expect(_.keysIn(obj)).to.deep.equal(['foo', 'bar', 'coo']);
+            });
+            it('should include inherited keys', function () {
+                var foo = Object.create({bar: 'bar'});
+                foo.coo = 'coo';
+                expect(_.keysIn(foo)).to.deep.equal(['coo', 'bar']);
+            });
+        });
+        describe('.has()', function () {
+            it('should return true if direct property exists', function () {
+                expect(_.has(obj, 'foo')).to.be.true;
+            });
+            it('should return true if value is ""', function () {
+                expect(_.has({foo: ''}, 'foo')).to.be.true;
+            });
+            it('should return true if value is null', function () {
+                expect(_.has({foo: null}, 'foo')).to.be.true;
+            });
+            it('should return false if value not defined', function () {
+                expect(_.has({}, 'foo')).to.be.false;
+            });
+            it('should return false obj not defined', function () {
+                expect(_.has(undefined, 'foo')).to.be.false;
+            });
+            it('should return true if deep property exists', function () {
+                expect(_.has({foo: {bar: 'coo'}}, 'foo.bar')).to.be.true;
+            });
+            it('should return false if deep property not exists', function () {
+                expect(_.has({foo: {bar: 'coo'}}, 'foo.bar.coo')).to.be.false;
             });
         });
         describe('.get()', function () {
@@ -43,6 +113,39 @@ define(function (require) {
             });
             it('should return undefined if deep property not exist', function () {
                 expect(_.get(obj, 'coo.eww.2')).to.be.undefined;
+            });
+        });
+        describe('.isArrayLike()', function () {
+            it('should return false for undefined', function () {
+                expect(_.isArrayLike(undefined)).to.be.false;
+            });
+            it('should return false for null', function () {
+                expect(_.isArrayLike(null)).to.be.false;
+            });
+            it('should return false for functions', function () {
+                expect(_.isArrayLike(function () {})).to.be.false;
+            });
+            it('should return true for array', function () {
+                expect(_.isArrayLike([])).to.be.true;
+            });
+            it('should return true for array-like object', function () {
+                expect(_.isArrayLike({
+                    length: 2
+                })).to.be.true;
+            });
+        });
+        describe('.isLength()', function () {
+            it('should return false for -1', function () {
+                expect(_.isLength(-1)).to.be.false;
+            });
+            it('should return true for 0', function () {
+                expect(_.isLength(0)).to.be.true;
+            });
+            it('should return false for overflowed integer (which is treated as float)', function () {
+                expect(_.isLength(99999999999999999999999999999999999999999999)).to.be.false;
+            });
+            it('should return false for float number', function () {
+                expect(_.isLength(1.1)).to.be.false;
             });
         });
         describe('.contains()', function () {

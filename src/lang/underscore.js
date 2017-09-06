@@ -17,8 +17,11 @@ define(function (require) {
 
     var assert = require('./assert');
     var arrayProto = Array.prototype;
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
     var stringProto = String.prototype;
     var exports = {};
+    var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
 
     /**
      * Get deep property by path
@@ -33,6 +36,34 @@ define(function (require) {
             ret = ret ? ret[key] : undefined;
         });
         return ret;
+    }
+
+    /**
+     * Has deep property by path
+     *
+     * @param {any} obj The object to query with
+     * @param {string} path A dot-delimited path string
+     * @return {boolean} the value assiciated with path
+     */
+    function has(obj, path) {
+        var paths = path.split('.');
+        var i = 0;
+        while (hasFunc(obj, paths[i]) && i < paths.length) {
+            obj = obj[paths[i++]];
+        }
+        return i >= paths.length;
+    }
+
+    /**
+     * Test if obj has property key
+     *
+     * @private
+     * @param {any} obj The object to query with
+     * @param {string} key The key to test
+     * @return {boolean} the value assiciated with path
+     */
+    function hasFunc(obj, key) {
+        return obj !== null && obj !== undefined && hasOwnProperty.call(obj, key);
     }
 
     /**
@@ -60,7 +91,23 @@ define(function (require) {
      * @memberof underscore
      */
     function keysIn(object) {
-        return Object.keys(object);
+        var ret = [];
+        // eslint-disable-next-line
+        for (var key in object) {
+            ret.push(key);
+        }
+        return ret;
+    }
+
+    /**
+     * Creates an array of the own enumerable property names of object.
+     *
+     * @param {Object} object The object to query.
+     * @return {Array} Returns the array of property names.
+     * @memberof underscore
+     */
+    function keys(object) {
+        return Object.keys(Object(object));
     }
 
     /**
@@ -123,15 +170,48 @@ define(function (require) {
      * @memberof underscore
      */
     function map(collection, iteratee) {
-        if (isObject(collection)) {
-            var ret = [];
-            forOwn(collection, function () {
-                ret.push(iteratee.apply(null, arguments));
-            });
-            return ret;
+        if (isArrayLike(collection)) {
+            var args = getArgs(arguments);
+            return arrayProto.map.apply(collection || [], args);
         }
-        var args = getArgs(arguments);
-        return arrayProto.map.apply(collection || [], args);
+        var ret = [];
+        forOwn(collection, function () {
+            ret.push(iteratee.apply(null, arguments));
+        });
+        return ret;
+    }
+
+    /**
+     * Reduce array or object.
+     * The iteratee is invoked with three arguments: (prev, curr, index|key, collection).
+     *
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @param {any} init The initial value.
+     * @return {Array} Returns the new mapped array.
+     * @memberof underscore
+     */
+    function reduce(collection, iteratee, init) {
+        if (isArrayLike(collection)) {
+            var args = getArgs(arguments);
+            return arrayProto.reduce.apply(collection, args);
+        }
+        var ks = keys(collection);
+        var ret;
+        var i;
+        if (arguments.length >= 3) {
+            ret = init;
+            i = 0;
+        }
+        else if (ks.length > 0) {
+            ret = collection[ks[0]];
+            i = 1;
+        }
+        for (; i < ks.length; i++) {
+            var key = ks[i];
+            ret = iteratee(ret, collection[key], key, collection);
+        }
+        return ret;
     }
 
     /**
@@ -231,6 +311,42 @@ define(function (require) {
     function isObject(value) {
         var type = typeof value;
         return value != null && (type === 'object' || type === 'function');
+    }
+
+    /**
+     * Checks if value is a valid array-like length.
+     *
+     * @param {any} value the value to be checked
+     * @return {boolean} true if value is length, false otherwise
+     */
+    function isLength(value) {
+        return typeof value === 'number'
+            && value > -1
+            && value % 1 === 0
+            && value <= MAX_SAFE_INTEGER;
+    }
+
+    /**
+     * Checks if value is array-like
+     *
+     * @param {any} value the value to be checked
+     * @return {boolearn} true if value is array-like, false otherwise
+     */
+    function isArrayLike(value) {
+        return value != null && isLength(value.length) && !isFunction(value);
+    }
+
+    /**
+     * Checks if value is classified as a Function object.
+     *
+     * @param {any} value The value to check.
+     * @return {boolean} Returns true if value is a function, else false.
+     * @memberof underscore
+     */
+    function isFunction(value) {
+        // safari 9 bug is omited, since it's not a mobile browser
+        var type = typeof value;
+        return type  === 'function';
     }
 
     /**
@@ -469,7 +585,9 @@ define(function (require) {
 
     // objectect Related
     exports.keysIn = keysIn;
+    exports.keys = keys;
     exports.get = get;
+    exports.has = has;
     exports.forOwn = forOwn;
     exports.assign = assign;
     exports.merge = assign;
@@ -483,6 +601,7 @@ define(function (require) {
     exports.splice = splice;
     exports.forEach = forEach;
     exports.map = map;
+    exports.reduce = reduce;
     exports.toArray = toArray;
     exports.findIndex = findIndex;
 
@@ -492,12 +611,16 @@ define(function (require) {
 
     // Lang Related
     exports.isArray = isArray;
+    exports.isFunction = isFunction;
     exports.isEmpty = isEmpty;
     exports.isString = isString;
     exports.isObject = isObject;
+    exports.isArrayLike = isArrayLike;
+    exports.isLength = isLength;
     exports.isRegExp = isRegExp;
     exports.inherits = inherits;
     exports.contains = contains;
+    exports.noop = function () {};
 
     // Function Related
     exports.partial = partial;
