@@ -3,6 +3,9 @@
  * @author harttle<yangjun14@baidu.com>
  */
 (function () {
+    define(['sfr'], function (sfr) {
+        return sfr;
+    });
     // router
     __inline('router/router/URL.js');
     __inline('router/router/config.js');
@@ -54,9 +57,5 @@
 
         Object.keys(config).forEach(di.resolve, di);
         return di.container;
-    });
-
-    define(['sfr'], function (sfr) {
-        return sfr;
     });
 })();
