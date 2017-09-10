@@ -110,11 +110,6 @@ define(function (require) {
                     return action.regist();
                 }).to.throw(/invalid url pattern/);
             });
-            it('should throw with invalid service', function () {
-                expect(function () {
-                    return action.regist('key', {});
-                }).to.throw(/invalid service/);
-            });
             it('should throw upon invalid url', function () {
                 expect(function () {
                     return action.regist();
