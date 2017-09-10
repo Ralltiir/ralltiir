@@ -80,7 +80,6 @@ define(function (require) {
          * */
         exports.regist = function (url, service) {
             assert(url, 'invalid url pattern');
-            assert(isService(service), 'invalid service, make sure to extend sfr/service');
             assert(!services.has(url), 'url already registerd');
             router.add(url, this.dispatch);
             services.set(url, service);
@@ -102,22 +101,6 @@ define(function (require) {
             logger.log('service unregistered from: ' + url);
             exports.emit('unregistered', url, svc);
         };
-
-        /**
-         *  Check if value is a valid service instance
-         *
-         *  @param {any} value The value to check.
-         *  @return {boolean} Returns true if value is a service, else false.
-         * */
-        function isService(value) {
-            // duck test...
-            return _.isObject(value)
-                && value.create
-                && value.attach
-                && value.detach
-                && value.destroy
-                && value.update;
-        }
 
         /**
          *  Switch from the previous service to the current one.
@@ -156,6 +139,7 @@ define(function (require) {
                 });
             }
             current.page = pages.get(current.url);
+            prev.page = pages.get(prev.url);
 
             var prevService = services.get(prev.pathPattern);
             prev.service = prevService;
