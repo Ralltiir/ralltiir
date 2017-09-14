@@ -24,7 +24,7 @@ define(function (require) {
         var location;
         var history;
         var doc;
-        var serviceFactory;
+        var services;
 
         beforeEach(function () {
             router = {
@@ -58,7 +58,7 @@ define(function (require) {
                     }
                 })
             };
-            serviceFactory = require('service-factory')(router);
+            services = require('services')(router);
             history = {
                 back: sinon.spy()
             };
@@ -100,7 +100,7 @@ define(function (require) {
             doc = {
                 ensureAttached: sinon.spy()
             };
-            action = actionFactory(router, location, history, doc, Emitter, serviceFactory);
+            action = actionFactory(router, location, history, doc, Emitter, services);
         });
         afterEach(function () {
             action.destroy();

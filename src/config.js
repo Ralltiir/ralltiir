@@ -14,7 +14,7 @@ define(function (require) {
                 'history',
                 'doc',
                 'emitter',
-                'serviceFactory'
+                'services'
             ]
         },
         router: {
@@ -29,10 +29,10 @@ define(function (require) {
             type: 'value',
             module: require('./service')
         },
-        serviceFactory: {
+        services: {
             type: 'factory',
             args: ['router'],
-            module: require('./service-factory')
+            module: require('./services')
         },
         resource: {
             type: 'value',

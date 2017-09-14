@@ -1,6 +1,6 @@
 /**
- * @file ServiceFactory Factory for service instances and legacy static services
- * @author harttle<harttle@126.com>
+ * @file Services Service factory for service instances / legacy static services
+ * @author harttle<yangjvn@126.com>
  */
 
 define(function (require) {

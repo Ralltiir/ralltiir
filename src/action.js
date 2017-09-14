@@ -19,7 +19,7 @@ define(function (require) {
     var dom = require('utils/dom');
     var URL = require('utils/url');
 
-    function actionFactory(router, location, history, doc, Emitter, serviceFactory) {
+    function actionFactory(router, location, history, doc, Emitter, services) {
         var exports = new Emitter();
         var pages;
         var backManually;
@@ -39,7 +39,7 @@ define(function (require) {
          * @private
          */
         exports.init = function () {
-            serviceFactory.init(this.dispatch);
+            services.init(this.dispatch);
             exports.pages = pages = cache.create('pages', {
                 onRemove: function (page, url, evicted) {
                     if (_.isFunction(page.onRemove)) {
@@ -78,7 +78,7 @@ define(function (require) {
          *  action.regist(/^person\/\d+/, new Service());
          * */
         exports.regist = function (pathPattern, service) {
-            serviceFactory.register(pathPattern, service);
+            services.register(pathPattern, service);
         };
 
         /**
@@ -87,7 +87,7 @@ define(function (require) {
          * @param {string|RestFul|RegExp} pathPattern The path of the service
          */
         exports.unregist = function (pathPattern) {
-            serviceFactory.unRegister(pathPattern);
+            services.unRegister(pathPattern);
         };
 
         /**
@@ -117,7 +117,7 @@ define(function (require) {
 
             logger.log('action dispatching to: ' + current.url);
 
-            var currentService = serviceFactory.getByPathPattern(current.pathPattern);
+            var currentService = services.getByPathPattern(current.pathPattern);
             current.service = currentService;
 
             if (!pages.contains(current.url)) {
@@ -129,7 +129,7 @@ define(function (require) {
             current.page = pages.get(current.url);
             prev.page = pages.get(prev.url);
 
-            var prevService = serviceFactory.getByPathPattern(prev.pathPattern);
+            var prevService = services.getByPathPattern(prev.pathPattern);
             prev.service = prevService;
 
             var data = stageData;
@@ -275,7 +275,7 @@ define(function (require) {
          *  @return {boolean} Returns true if it has been registered, else false.
          * */
         exports.exist = function (urlPattern) {
-            return serviceFactory.isRegistered(urlPattern);
+            return services.isRegistered(urlPattern);
         };
 
         /**
@@ -465,7 +465,7 @@ define(function (require) {
             exports.stop();
             cache.destroy('pages');
             exports.pages = pages = undefined;
-            serviceFactory.unRegisterAll();
+            services.unRegisterAll();
         };
 
         /**
@@ -534,7 +534,7 @@ define(function (require) {
                 page: page
             }, options);
 
-            var service = serviceFactory.getByUrl(url);
+            var service = services.getByUrl(url);
             var pending = service.partialUpdate(url, options);
             options.routerOptions.silent = true;
 
