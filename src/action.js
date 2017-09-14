@@ -14,12 +14,13 @@ define(function (require) {
     var cache = require('utils/cache');
     var Promise = require('lang/promise');
     var assert = require('lang/assert');
+    var logger = require('utils/logger');
     var _ = require('lang/underscore');
     var dom = require('utils/dom');
     var URL = require('utils/url');
 
     // eslint-disable-next-line
-    function actionFactory(router, location, history, doc, logger, Emitter, serviceFactory) {
+    function actionFactory(router, location, history, doc, Emitter, serviceFactory) {
         var exports = new Emitter();
         var pages;
         var backManually;

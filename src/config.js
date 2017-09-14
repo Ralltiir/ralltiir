@@ -13,15 +13,13 @@ define(function (require) {
                 'location',
                 'history',
                 'doc',
-                'logger',
                 'emitter',
                 'serviceFactory'
             ]
         },
         router: {
             type: 'factory',
-            module: require('./router/router'),
-            args: ['logger']
+            module: require('./router/router')
         },
         view: {
             type: 'value',

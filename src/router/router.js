@@ -9,8 +9,9 @@ define(function (require) {
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
     var _ = require('../lang/underscore');
+    var logger = require('../utils/logger');
 
-    function routerFactory(logger) {
+    function routerFactory() {
         /**
          * @constructor
          * @alias module:Router

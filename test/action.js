@@ -12,7 +12,6 @@
 define(function (require) {
     var Promise = require('lang/promise');
     var actionFactory = require('action');
-    var logger = require('utils/logger');
     var Emitter = require('utils/emitter');
 
     describe('action', function () {
@@ -101,7 +100,7 @@ define(function (require) {
             doc = {
                 ensureAttached: sinon.spy()
             };
-            action = actionFactory(router, location, history, doc, logger, Emitter, serviceFactory);
+            action = actionFactory(router, location, history, doc, Emitter, serviceFactory);
         });
         afterEach(function () {
             action.destroy();
