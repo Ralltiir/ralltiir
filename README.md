@@ -30,3 +30,17 @@ Superframe 将同步的页面打开过程异步化，来减少用户等待和提
 Superframe 是由一系列技术构成的解决方案，为了最大限度地灵活和通用
 Superframe 采取分层设计，产品方可通过编写 Service 来控制具体的页面入场、渲染和退场行为。
 Superframe 整体架构中包括低层的 AMD 环境、 Superframe 框架核心。
+
+## Roadmap
+
+- [x] Assert 抽离
+- [x] Promise 抽离
+- [ ] Set-Immediate 抽离（文档、CI）
+- [ ] http 抽离（文档、CI）
+- [ ] cache 抽离（文档、CI）
+- [ ] emitter 抽离（文档、CI）
+- [ ] URL 抽离（文档、CI）
+- [ ] map 抽离（文档、CI）
+- [ ] Stream 抽离（文档、CI）
+- [ ] lodash-mobile 抽离（文档、CI）
+

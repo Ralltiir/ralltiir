@@ -25,6 +25,7 @@ define(function (require) {
         var location;
         var history;
         var doc;
+        var serviceFactory;
 
         beforeEach(function () {
             router = {
@@ -58,6 +59,7 @@ define(function (require) {
                     }
                 })
             };
+            serviceFactory = require('service-factory')(router);
             history = {
                 back: sinon.spy()
             };
@@ -99,7 +101,7 @@ define(function (require) {
             doc = {
                 ensureAttached: sinon.spy()
             };
-            action = actionFactory(router, location, history, doc, logger, Emitter);
+            action = actionFactory(router, location, history, doc, logger, Emitter, serviceFactory);
         });
         afterEach(function () {
             action.destroy();
@@ -108,12 +110,12 @@ define(function (require) {
             it('should throw with undefined key', function () {
                 expect(function () {
                     return action.regist();
-                }).to.throw(/invalid url pattern/);
+                }).to.throw(/invalid path pattern/);
             });
             it('should throw upon invalid url', function () {
                 expect(function () {
                     return action.regist();
-                }).to.throw(/invalid url pattern/);
+                }).to.throw(/invalid path pattern/);
             });
             it('should not regist invalid service', function () {
                 action.regist('key', fooService);
@@ -127,12 +129,12 @@ define(function (require) {
             it('should throw with undefined key', function () {
                 expect(function () {
                     return action.unregist();
-                }).to.throw(/invalid url pattern/);
+                }).to.throw(/invalid path pattern/);
             });
             it('should throw not when registered', function () {
                 expect(function () {
                     return action.unregist('not-registered');
-                }).to.throw(/url not registered/);
+                }).to.throw(/path not registered/);
             });
             it('should un-register', function () {
                 action.unregist('key');

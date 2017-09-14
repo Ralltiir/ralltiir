@@ -14,14 +14,13 @@ define(function (require) {
     var cache = require('utils/cache');
     var Promise = require('lang/promise');
     var assert = require('lang/assert');
-    var Map = require('lang/map');
     var _ = require('lang/underscore');
     var dom = require('utils/dom');
     var URL = require('utils/url');
 
-    function actionFactory(router, location, history, doc, logger, Emitter) {
+    // eslint-disable-next-line
+    function actionFactory(router, location, history, doc, logger, Emitter, serviceFactory) {
         var exports = new Emitter();
-        var services;
         var pages;
         var backManually;
         var indexPageUrl;
@@ -40,7 +39,7 @@ define(function (require) {
          * @private
          */
         exports.init = function () {
-            exports.services = services = new Map();
+            serviceFactory.init(this.dispatch);
             exports.pages = pages = cache.create('pages', {
                 onRemove: function (page, url, evicted) {
                     if (_.isFunction(page.onRemove)) {
@@ -71,35 +70,24 @@ define(function (require) {
          *  Register a service instance to action
          *
          *  @static
-         *  @param {string|RestFul|RegExp} url The path of the service
+         *  @param {string|RestFul|RegExp} pathPattern The path of the service
          *  @param {Object} service The service object to be registered
          *  @example
          *  action.regist('/person', new Service());
          *  action.regist('/person/:id', new Service());
          *  action.regist(/^person\/\d+/, new Service());
          * */
-        exports.regist = function (url, service) {
-            assert(url, 'invalid url pattern');
-            assert(!services.has(url), 'url already registerd');
-            router.add(url, this.dispatch);
-            services.set(url, service);
-            logger.log('service registered to: ' + url);
-            exports.emit('registered', url, service);
+        exports.regist = function (pathPattern, service) {
+            serviceFactory.register(pathPattern, service);
         };
 
         /**
          * Un-register a service by path
          *
-         * @param {string|RestFul|RegExp} url The path of the service
+         * @param {string|RestFul|RegExp} pathPattern The path of the service
          */
-        exports.unregist = function (url) {
-            assert(url, 'invalid url pattern');
-            assert(services.has(url), 'url not registered');
-            router.remove(url);
-            var svc = services.get(url);
-            services.delete(url);
-            logger.log('service unregistered from: ' + url);
-            exports.emit('unregistered', url, svc);
+        exports.unregist = function (pathPattern) {
+            serviceFactory.unRegister(pathPattern);
         };
 
         /**
@@ -129,7 +117,7 @@ define(function (require) {
 
             logger.log('action dispatching to: ' + current.url);
 
-            var currentService = services.get(current.pathPattern);
+            var currentService = serviceFactory.getByPathPattern(current.pathPattern);
             current.service = currentService;
 
             if (!pages.contains(current.url)) {
@@ -141,7 +129,7 @@ define(function (require) {
             current.page = pages.get(current.url);
             prev.page = pages.get(prev.url);
 
-            var prevService = services.get(prev.pathPattern);
+            var prevService = serviceFactory.getByPathPattern(prev.pathPattern);
             prev.service = prevService;
 
             var data = stageData;
@@ -287,7 +275,7 @@ define(function (require) {
          *  @return {any} the return value of Map#delete
          * */
         exports.remove = function (name) {
-            return services.delete(name);
+            return serviceFactory.services.delete(name);
         };
 
         /**
@@ -298,7 +286,7 @@ define(function (require) {
          *  @return {boolean} Returns true if it has been registered, else false.
          * */
         exports.exist = function (name) {
-            return services.has(name);
+            return serviceFactory.services.has(name);
         };
 
         /**
@@ -488,7 +476,7 @@ define(function (require) {
             exports.stop();
             cache.destroy('pages');
             exports.pages = pages = undefined;
-            services.clear();
+            serviceFactory.services.clear();
         };
 
         /**
@@ -557,7 +545,7 @@ define(function (require) {
                 page: page
             }, options);
 
-            var service = getServiceByUrl(url);
+            var service = serviceFactory.getByUrl(url);
             var pending = service.partialUpdate(url, options);
             options.routerOptions.silent = true;
 
@@ -566,14 +554,6 @@ define(function (require) {
 
             return Promise.resolve(pending);
         };
-
-        function getServiceByUrl(url) {
-            var pathPattern = router.pathPattern(url);
-            if (!services.has(pathPattern)) {
-                throw new Error('service not found for:' + url);
-            }
-            return services.get(pathPattern);
-        }
 
         exports.init();
 

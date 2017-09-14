@@ -8,7 +8,15 @@ define(function (require) {
         action: {
             type: 'factory',
             module: require('./action'),
-            args: ['router', 'location', 'history', 'doc', 'logger', 'emitter']
+            args: [
+                'router',
+                'location',
+                'history',
+                'doc',
+                'logger',
+                'emitter',
+                'serviceFactory'
+            ]
         },
         router: {
             type: 'factory',
@@ -22,6 +30,11 @@ define(function (require) {
         service: {
             type: 'value',
             module: require('./service')
+        },
+        serviceFactory: {
+            type: 'factory',
+            args: ['router'],
+            module: require('./service-factory')
         },
         resource: {
             type: 'value',

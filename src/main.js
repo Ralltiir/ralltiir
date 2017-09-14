@@ -47,6 +47,7 @@
     // core
     __inline('action.js');
     __inline('service.js');
+    __inline('service-factory.js');
     __inline('resource.js');
     __inline('view.js');
     __inline('doc.js');
