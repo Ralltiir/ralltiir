@@ -321,13 +321,6 @@ define(function (require) {
                 expect(second.options.src).to.not.equal('back');
             });
         });
-        describe('.remove()', function () {
-            it('should remove properly', function () {
-                action.regist('bar', fooService);
-                action.remove('bar');
-                expect(action.exist('bar')).to.be.false;
-            });
-        });
         describe('.redirect()', function () {
             beforeEach(function () {
                 // action.init();

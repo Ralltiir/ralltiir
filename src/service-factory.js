@@ -18,6 +18,7 @@ define(function (require) {
             getByUrl: getByUrl,
             getByPathPattern: getByPathPattern,
             isRegistered: isRegistered,
+            unRegisterAll: unRegisterAll,
             services: null
         };
 
@@ -33,6 +34,11 @@ define(function (require) {
 
         function isRegistered(pathPattern) {
             return services.has(pathPattern);
+        }
+
+        function unRegisterAll(pathPattern) {
+            services.keys().forEach(unRegister);
+            services.clear();
         }
 
         function unRegister(pathPattern) {

@@ -19,7 +19,6 @@ define(function (require) {
     var dom = require('utils/dom');
     var URL = require('utils/url');
 
-    // eslint-disable-next-line
     function actionFactory(router, location, history, doc, Emitter, serviceFactory) {
         var exports = new Emitter();
         var pages;
@@ -269,25 +268,14 @@ define(function (require) {
         }
 
         /**
-         *  Remove a registered service
-         *
-         *  @static
-         *  @param {string} name The path of the service
-         *  @return {any} the return value of Map#delete
-         * */
-        exports.remove = function (name) {
-            return serviceFactory.services.delete(name);
-        };
-
-        /**
          *  Check if the specified service has been registered
          *
          *  @static
-         *  @param {string} name The path of the service
+         *  @param {string} urlPattern The path of the service
          *  @return {boolean} Returns true if it has been registered, else false.
          * */
-        exports.exist = function (name) {
-            return serviceFactory.services.has(name);
+        exports.exist = function (urlPattern) {
+            return serviceFactory.isRegistered(urlPattern);
         };
 
         /**
@@ -477,7 +465,7 @@ define(function (require) {
             exports.stop();
             cache.destroy('pages');
             exports.pages = pages = undefined;
-            serviceFactory.services.clear();
+            serviceFactory.unRegisterAll();
         };
 
         /**

@@ -24,55 +24,74 @@ define(function (require) {
     /**
 	 * set key into the map
      *
-	 * @param {string|RegExp} k the key
-	 * @param {any} v the value
+	 * @param {string|RegExp} key the key
+	 * @param {any} value the value
 	 * @return {undefined}
 	 */
-    Map.prototype.set = function (k, v) {
-        k = fingerprint(k);
+    Map.prototype.set = function (key, value) {
+        var k = fingerprint(key);
         if (!this._data.hasOwnProperty(k)) {
-            this._data[k] = v;
+            this._data[k] = {
+                key: key,
+                value: value
+            };
             this.size++;
         }
 
     };
 
+    Map.prototype.keys = function (cb) {
+        var data = this._data;
+        return Object.keys(this._data).map(function (k) {
+            var item = data[k];
+            return item.key;
+        });
+    };
+
+    Map.prototype.forEach = function (cb) {
+        var data = this._data;
+        Object.keys(this._data).forEach(function (k) {
+            var item = data[k];
+            cb(item.value, item.key);
+        });
+    };
+
     /**
 	 * test if the key exists
      *
-	 * @param {string|RegExp} k the key
+	 * @param {string|RegExp} key the key
 	 * @param {any} v the value
 	 * @return {boolean} Returns true if contains k, return false otherwise.
 	 */
-    Map.prototype.has = function (k) {
-        k = fingerprint(k);
+    Map.prototype.has = function (key) {
+        var k = fingerprint(key);
         return this._data.hasOwnProperty(k);
     };
 
     /**
 	 * delete the specified key
      *
-	 * @param {string|RegExp} k the key
+	 * @param {string|RegExp} key the key
 	 * @return {undefined}
 	 */
-    Map.prototype.delete = function (k) {
-        k = fingerprint(k);
+    Map.prototype.delete = function (key) {
+        var k = fingerprint(key);
         if (this._data.hasOwnProperty(k)) {
             delete this._data[k];
             this.size--;
         }
-
     };
 
     /**
 	 * get value by key
      *
-	 * @param {string|RegExp} k the key
+	 * @param {string|RegExp} key the key
 	 * @return {any} the value associated to k
 	 */
-    Map.prototype.get = function (k) {
-        k = fingerprint(k);
-        return this._data[k];
+    Map.prototype.get = function (key) {
+        var k = fingerprint(key);
+        var item = this._data[k];
+        return item ? item.value : undefined;
     };
 
     /**
