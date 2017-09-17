@@ -180,7 +180,7 @@ define(function (require) {
                     return currentService.attach(current, prev, data);
                 }
             ]).exec(function currAbort() {
-                if (prevService.constructor.instancEnabled) {
+                if (prevService && prevService.constructor.instancEnabled) {
                     if (currentService && currentService.abort) {
                         currentService.destroy();
                     }
