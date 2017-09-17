@@ -1,8 +1,10 @@
 /**
- * @file Map Data Structure for JavaScript
- * @author harttle<yangjun14@baidu.com>
+ * @file map Map for JavaScript with ES6-compliant API but not ES6-compliant.
+ * @author harttle<harttle@harttle.com>
  *
- * Types of keys supported: String, RegExp
+ * Limitations:
+ * * Key equivalence is value based
+ * * Types of keys supported: String, RegExp
  */
 
 /* eslint-disable no-extend-native */

@@ -132,6 +132,10 @@ define(function (require) {
             return this;
         },
 
+        size: function () {
+            return this.list.length;
+        },
+
         /**
          * Clear the given namespace, or all namespaces if `name` not set.
          *

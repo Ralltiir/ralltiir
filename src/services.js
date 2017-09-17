@@ -5,62 +5,110 @@
 
 define(function (require) {
     var Map = require('lang/map');
+    var _ = require('lang/underscore');
     var assert = require('lang/assert');
     var logger = require('utils/logger');
+    var cache = require('utils/cache');
 
     return function (router) {
-        var services;
+        // 所有已经存在的 Service 实例：
+        // * 对于新 Service 为对应 Service 类的实例
+        // * 对于旧 Service 就是 Service 类本身
+        var serviceInstances;
+        var serviceClasses;
+
         var actionDispatcher;
+        var url2id;
         var exports = {
             init: init,
+            destroy: destroy,
             register: register,
             unRegister: unRegister,
-            getByUrl: getByUrl,
-            getByPathPattern: getByPathPattern,
+            getServiceClass: getServiceClass,
             isRegistered: isRegistered,
             unRegisterAll: unRegisterAll,
-            services: null
+            getOrCreate: getOrCreate,
+            serviceClasses: null
         };
+
+        function init(dispatcher) {
+            url2id = new Map();
+            actionDispatcher = dispatcher;
+            serviceClasses = exports.serviceClasses = new Map();
+            serviceInstances = exports.serviceInstances = cache.create('services', {
+                onRemove: function (service, url, evicted) {
+                    _.isFunction(service.destroyed) && service.destroyed(url, evicted);
+                },
+                limit: 8
+            });
+        }
+
+        function destroy() {
+            cache.destroy('services');
+        }
 
         function register(pathPattern, service) {
             assert(pathPattern, 'invalid path pattern');
-            assert(!services.has(pathPattern), 'path already registerd');
+            assert(!serviceClasses.has(pathPattern), 'path already registerd');
 
             router.add(pathPattern, actionDispatcher);
-            services.set(pathPattern, service);
+            serviceClasses.set(pathPattern, service);
 
             logger.log('service registered to: ' + pathPattern);
         }
 
         function isRegistered(pathPattern) {
-            return services.has(pathPattern);
+            return serviceClasses.has(pathPattern);
         }
 
         function unRegisterAll(pathPattern) {
-            services.keys().forEach(unRegister);
-            services.clear();
+            serviceClasses.keys().forEach(unRegister);
+            serviceClasses.clear();
         }
 
         function unRegister(pathPattern) {
             assert(pathPattern, 'invalid path pattern');
             assert(isRegistered(pathPattern), 'path not registered');
             router.remove(pathPattern);
-            services.delete(pathPattern);
+            serviceClasses.delete(pathPattern);
             logger.log('service unregistered from: ' + pathPattern);
         }
 
-        function init(dispatcher) {
-            services = exports.services = new Map();
-            actionDispatcher = dispatcher;
+        function getService(url) {
+            var id = url2id.get(url);
+            if (id === undefined) {
+                return undefined;
+            }
+            return serviceInstances.get(id);
         }
 
-        function getByUrl(url) {
-            var pathPattern = router.pathPattern(url);
-            return getByPathPattern(pathPattern);
+        function getServiceClass(pathPattern) {
+            return serviceClasses.get(pathPattern);
         }
 
-        function getByPathPattern(pathPattern) {
-            return services.get(pathPattern);
+        function addInstance(url, instance) {
+            var id = serviceInstances.size();
+            url2id.set(url, id);
+            serviceInstances.set(id, instance);
+            return instance;
+        }
+
+        function getOrCreate(url, pathPattern) {
+            // return if exist
+            var service = getService(url);
+            if (service) {
+                return service;
+            }
+
+            // use static service instance
+            if (arguments.length < 2) {
+                pathPattern = router.pathPattern(url);
+            }
+            var Service = getServiceClass(pathPattern);
+            if (Service) {
+                var instance = Service.instancEnabled ? new Service(url) : Service;
+                return addInstance(url, instance);
+            }
         }
 
         return exports;

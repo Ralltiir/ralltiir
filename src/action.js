@@ -5,9 +5,6 @@
 
 define(function (require) {
     /**
-     * A Service Management Singleton
-     * Accepts service registration and provides service switch,
-     * which is triggered by the Router
      * @module action
      */
 
@@ -117,7 +114,7 @@ define(function (require) {
 
             logger.log('action dispatching to: ' + current.url);
 
-            var currentService = services.getByPathPattern(current.pathPattern);
+            var currentService = services.getOrCreate(current.url, current.pathPattern);
             current.service = currentService;
 
             if (!pages.contains(current.url)) {
@@ -129,7 +126,7 @@ define(function (require) {
             current.page = pages.get(current.url);
             prev.page = pages.get(prev.url);
 
-            var prevService = services.getByPathPattern(prev.pathPattern);
+            var prevService = services.getOrCreate(prev.url, prev.pathPattern);
             prev.service = prevService;
 
             var data = stageData;
@@ -156,19 +153,25 @@ define(function (require) {
                     if (!prevService) {
                         return;
                     }
-                    return prevService.detach(current, prev, data);
+                    return prevService.constructor.instancEnabled
+                        ? prevService.beforeDetach(current, prev, data)
+                        : prevService.detach(current, prev, data);
                 },
                 function currCreate() {
                     if (!currentService) {
                         return;
                     }
-                    return currentService.create(current, prev, data);
+                    return currentService.constructor.instancEnabled
+                        ? currentService.beforeAttach(current, prev, data)
+                        : currentService.create(current, prev, data);
                 },
                 function prevDestroy() {
                     if (!prevService) {
                         return;
                     }
-                    return prevService.destroy(current, prev, data);
+                    return prevService.constructor.instancEnabled
+                        ? prevService.detach(current, prev, data)
+                        : prevService.destroy(current, prev, data);
                 },
                 function currAttach() {
                     if (!currentService) {
@@ -177,8 +180,15 @@ define(function (require) {
                     return currentService.attach(current, prev, data);
                 }
             ]).exec(function currAbort() {
-                if (currentService && currentService.abort) {
-                    currentService.abort(current, prev, data);
+                if (prevService.constructor.instancEnabled) {
+                    if (currentService && currentService.abort) {
+                        currentService.destroy();
+                    }
+                }
+                else {
+                    if (currentService && currentService.abort) {
+                        currentService.abort(current, prev, data);
+                    }
                 }
             });
         };
@@ -406,6 +416,8 @@ define(function (require) {
                     options = JSON.parse(options) || {};
                 }
                 catch (err) {
+                    // eslint-disable-next-line
+                    console.warn('JSON parse failed, fallback to empty options');
                     options = {};
                 }
                 options.src = 'hijack';
@@ -464,6 +476,7 @@ define(function (require) {
         exports.destroy = function () {
             exports.stop();
             cache.destroy('pages');
+            services.destroy();
             exports.pages = pages = undefined;
             services.unRegisterAll();
         };
@@ -534,7 +547,7 @@ define(function (require) {
                 page: page
             }, options);
 
-            var service = services.getByUrl(url);
+            var service = services.getOrCreate(url);
             var pending = service.partialUpdate(url, options);
             options.routerOptions.silent = true;
 

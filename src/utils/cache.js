@@ -70,6 +70,10 @@ define(function (require) {
         return usingNamespace(name).get(key);
     };
 
+    exports.size = function (name) {
+        return usingNamespace(name).size();
+    };
+
     /**
      * Rename a cache item
      *

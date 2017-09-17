@@ -70,6 +70,7 @@ define(function (require) {
                 hash: ''
             };
             fooService = {
+                name: 'fooService',
                 create: sinon.spy(),
                 attach: sinon.spy(),
                 detach: sinon.spy(),
@@ -79,6 +80,7 @@ define(function (require) {
                 update: sinon.spy()
             };
             barService = {
+                name: 'barService',
                 create: sinon.spy(),
                 attach: sinon.spy(),
                 detach: sinon.spy(),

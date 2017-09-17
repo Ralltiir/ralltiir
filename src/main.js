@@ -6,6 +6,9 @@
     define(['sfr'], function (sfr) {
         return sfr;
     });
+    define('ralltiir', ['sfr'], function (sfr) {
+        return sfr;
+    });
     // router
     __inline('router/router/URL.js');
     __inline('router/router/config.js');
@@ -46,8 +49,9 @@
 
     // core
     __inline('action.js');
+    // FIXME remove dependants to this
     __inline('service.js');
-    __inline('service-factory.js');
+    __inline('services.js');
     __inline('resource.js');
     __inline('view.js');
     __inline('doc.js');
