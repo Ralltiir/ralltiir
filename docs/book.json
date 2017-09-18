@@ -12,7 +12,7 @@
   ],
   "pluginsConfig": {
     "editlink": {
-      "base": "https://github.com/Ralltiir/ralltiir/docs/edit/master/",
+      "base": "https://github.com/Ralltiir/ralltiir/edit/master/docs/",
       "label": "编辑此页",
       "multilingual": false
     }
