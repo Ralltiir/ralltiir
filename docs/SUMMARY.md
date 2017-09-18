@@ -1,14 +1,14 @@
 # 目录
 
 * [概述](README.md)
-* [起步教程]
+* 起步教程
     *   [1\. Hello World](/get-started/1-hello-world.md)
     *   [2\. 编写 Service](/get-started/2-service.md)
     *   [3\. Action与路由](/get-started/3-action.md)
-* [高级主题](/advanced/readme.md)
+* 高级主题
     *   [框架 Debug](/advanced/debug.md)
     *   [生命周期概述](/advanced/life-cycle.md)
-* [API](/api/readme.md)
+* API
     *   [Action](/api/action.md)
     *   [Cache](/api/cache.md)
     *   [Cache Namespace](/api/cache-namespace.md)

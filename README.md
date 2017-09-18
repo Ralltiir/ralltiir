@@ -21,15 +21,54 @@ Superframe前端极速浏览框架，是一种前端异步单页技术。
 npm install -g ralltiir
 ```
 
-## 异步渲染
-
-Superframe 将同步的页面打开过程异步化，来减少用户等待和提供渲染优化的可能。
-
 ## 整体架构
 
 Superframe 是由一系列技术构成的解决方案，为了最大限度地灵活和通用
 Superframe 采取分层设计，产品方可通过编写 Service 来控制具体的页面入场、渲染和退场行为。
 Superframe 整体架构中包括低层的 AMD 环境、 Superframe 框架核心。
+
+
+## 开发指南
+
+有 Node.js 环境后，使用 npm 安装所有依赖：
+
+```bash
+npm install
+```
+
+完成开发后确保可以通过 Lint 和单元测试可以通过：
+
+```bash
+npm run lint
+npm run test
+```
+
+使用 NPM version 发布到 npm 和 Github，例如发布一个 patch 版本：
+
+```bash
+npm version patch
+npm publish
+```
+
+## 文档部署
+
+首先安装 gitbook 依赖：
+
+```bash
+npm run doc-install
+```
+
+本地预览文档：
+
+```bash
+npm run doc-preview
+```
+
+部署到 <superframe.github.io>：
+
+```bash
+npm run doc-deploy
+```
 
 ## Roadmap
 
@@ -40,7 +79,6 @@ Superframe 整体架构中包括低层的 AMD 环境、 Superframe 框架核心�
 - [ ] cache 抽离（文档、CI）
 - [ ] emitter 抽离（文档、CI）
 - [ ] URL 抽离（文档、CI）
-- [ ] map 抽离（文档、CI）
 - [ ] Stream 抽离（文档、CI）
 - [ ] lodash-mobile 抽离（文档、CI）
 

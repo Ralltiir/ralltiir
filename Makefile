@@ -76,7 +76,7 @@ doc-deploy: doc
 	git init; \
 	git add *; \
 	git commit -m 'doc publish'; \
-	git push -u git@github.com:searchfe/superframe.git master:gh-pages --force
+	git push -u git@github.com:Ralltiir/ralltiir.git master:gh-pages --force
 
 doc-api:
 	rm -rf ./docs/api && mkdir ./docs/api
