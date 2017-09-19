@@ -28,6 +28,7 @@ define(function (require) {
             isRegistered: isRegistered,
             unRegisterAll: unRegisterAll,
             getOrCreate: getOrCreate,
+            cacheLimit: 8,
             serviceClasses: null
         };
 
@@ -39,7 +40,7 @@ define(function (require) {
                 onRemove: function (service, url, evicted) {
                     _.isFunction(service.destroyed) && service.destroyed(url, evicted);
                 },
-                limit: 8
+                limit: exports.cacheLimit
             });
         }
 
