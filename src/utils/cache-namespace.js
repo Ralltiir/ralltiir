@@ -42,6 +42,10 @@ define(function (require) {
     Namespace.prototype = {
         constructor: Namespace,
 
+        setLimit: function (limit) {
+            this.options.limit = limit;
+        },
+
         /**
          * Get a cache item, and reset the item accessed to the tail.
          *
@@ -71,7 +75,7 @@ define(function (require) {
         set: function (key, value) {
             this.remove(key);
 
-            if (this.list.length === this.options.limit) {
+            while (this.list.length >= this.options.limit) {
                 var dropped = this.list.shift();
                 this.options.onRemove(dropped.value, dropped.key, true);
             }

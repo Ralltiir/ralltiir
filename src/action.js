@@ -115,6 +115,9 @@ define(function (require) {
             logger.log('action dispatching to: ' + current.url);
 
             var src = _.get(current, 'options.src');
+
+            var prevService = services.getOrCreate(prev.url, prev.pathPattern);
+            prev.service = prevService;
             var currentService = services.getOrCreate(
                 current.url,
                 current.pathPattern,
@@ -131,9 +134,6 @@ define(function (require) {
             }
             current.page = pages.get(current.url);
             prev.page = pages.get(prev.url);
-
-            var prevService = services.getOrCreate(prev.url, prev.pathPattern);
-            prev.service = prevService;
 
             var data = stageData;
             stageData = {};

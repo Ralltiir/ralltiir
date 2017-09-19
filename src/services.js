@@ -28,9 +28,14 @@ define(function (require) {
             isRegistered: isRegistered,
             unRegisterAll: unRegisterAll,
             getOrCreate: getOrCreate,
-            cacheLimit: 8,
+            setInstanceLimit: setInstanceLimit,
             serviceClasses: null
         };
+        var id = 0;
+
+        function setInstanceLimit(n) {
+            return exports.serviceInstances.setLimit(n);
+        }
 
         function init(dispatcher) {
             url2id = new Map();
@@ -38,9 +43,9 @@ define(function (require) {
             serviceClasses = exports.serviceClasses = new Map();
             serviceInstances = exports.serviceInstances = cache.create('services', {
                 onRemove: function (service, url, evicted) {
-                    _.isFunction(service.destroyed) && service.destroyed(url, evicted);
+                    _.isFunction(service.destroy) && service.destroy(url, evicted);
                 },
-                limit: exports.cacheLimit
+                limit: 8
             });
         }
 
@@ -88,19 +93,19 @@ define(function (require) {
         }
 
         function addInstance(url, instance) {
-            var id = serviceInstances.size();
-            url2id.set(url, id);
-            serviceInstances.set(id, instance);
+            var instanceId = id++;
+            url2id.set(url, instanceId);
+            instance.id = instanceId;
+            serviceInstances.set(instanceId, instance);
             return instance;
         }
 
+        // 由于目前还是 URL 索引页面，ignoreCache 为同样 URL 创建新的页面仍不可行
         function getOrCreate(url, pathPattern, ignoreCache) {
             // return if exist
-            if (!ignoreCache) {
-                var service = getService(url);
-                if (service) {
-                    return service;
-                }
+            var service = getService(url);
+            if (service) {
+                return service;
             }
 
             // use static service instance

@@ -33,13 +33,12 @@ define(function (require) {
     Map.prototype.set = function (key, value) {
         var k = fingerprint(key);
         if (!this._data.hasOwnProperty(k)) {
-            this._data[k] = {
-                key: key,
-                value: value
-            };
             this.size++;
         }
-
+        this._data[k] = {
+            key: key,
+            value: value
+        };
     };
 
     Map.prototype.keys = function (cb) {
