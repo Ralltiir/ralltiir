@@ -93,11 +93,13 @@ define(function (require) {
             return instance;
         }
 
-        function getOrCreate(url, pathPattern) {
+        function getOrCreate(url, pathPattern, ignoreCache) {
             // return if exist
-            var service = getService(url);
-            if (service) {
-                return service;
+            if (!ignoreCache) {
+                var service = getService(url);
+                if (service) {
+                    return service;
+                }
             }
 
             // use static service instance

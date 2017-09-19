@@ -84,12 +84,22 @@ define(function (require) {
         },
 
         /**
-         * Check whether the given key exists within the namespace, or whether the namespace exists if key not set.
+         * Alias to #has
          *
          * @param {string} key The key to check with
          * @return {Object} this
          */
         contains: function (key) {
+            return this.has(key);
+        },
+
+        /**
+         * Check whether the given key exists within the namespace, or whether the namespace exists if key not set.
+         *
+         * @param {string} key The key to check with
+         * @return {Object} this
+         */
+        has: function (key) {
             return this.findIndexByKey(key) > -1;
         },
 

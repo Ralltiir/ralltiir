@@ -114,7 +114,13 @@ define(function (require) {
 
             logger.log('action dispatching to: ' + current.url);
 
-            var currentService = services.getOrCreate(current.url, current.pathPattern);
+            var src = _.get(current, 'options.src');
+            var currentService = services.getOrCreate(
+                current.url,
+                current.pathPattern,
+                // 是 redirect 或 hijack
+                src !== 'history' && src !== 'back'
+            );
             current.service = currentService;
 
             if (!pages.contains(current.url)) {
