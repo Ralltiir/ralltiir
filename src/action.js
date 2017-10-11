@@ -392,7 +392,8 @@ define(function (require) {
         };
 
         function transferPageTo(url, query) {
-            var from = router.ignoreRoot(location.pathname + location.search);
+            var noRootUrl = router.ignoreRoot(location.pathname + location.search);
+            var from = router.createURL(noRootUrl).toString();
             var to = router.createURL(url, query).toString();
             logger.log('[transfering page] from:', from, 'to:', to);
             pages.rename(from, to);
@@ -504,8 +505,8 @@ define(function (require) {
             if (!options.hasOwnProperty('silent')) {
                 options.silent = true;
             }
-
-            var prevUrl = router.ignoreRoot(location.pathname + location.search);
+            var noRootUrl = router.ignoreRoot(location.pathname + location.search);
+            var prevUrl = router.createURL(noRootUrl).toString();
             var currentUrl = router.ignoreRoot(url);
             var currentPath = (currentUrl || '').replace(/\?.*/, '');
             var routerOptions = router.getState();
@@ -542,7 +543,8 @@ define(function (require) {
          * @return {Promise} A promise resolves when update finished successfully, rejected otherwise
          */
         exports.partialUpdate = function (url, options) {
-            var currUrl = router.ignoreRoot(location.pathname + location.search);
+            var noRootUrl = router.ignoreRoot(location.pathname + location.search);
+            var currUrl = router.createURL(noRootUrl).toString();
             var page = pages.get(currUrl);
             transferPageTo(url, options.query);
 
