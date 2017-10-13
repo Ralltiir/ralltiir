@@ -3,8 +3,14 @@
  * @file Karma 配置文件
  */
 
+var paths = {};
+
 module.exports = function (config) {
     config.set({
+        // Set globally available variables
+        globals: {
+            paths: JSON.stringify(paths)
+        },
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
@@ -23,6 +29,9 @@ module.exports = function (config) {
             }, {
                 pattern: 'test/**/*.js',
                 included: false
+            }, {
+                pattern: 'amd_modules/**/*.js',
+                included: false
             }
         ],
 
@@ -32,6 +41,7 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
+            'test-main.js': ['global'],
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)

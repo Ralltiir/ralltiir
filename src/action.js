@@ -1,6 +1,6 @@
 /**
  * @file action.js
- * @author harttle<yangjun14@baidu.com>
+ * @author harttle<harttle@harttle.com>
  */
 
 define(function (require) {
@@ -75,7 +75,7 @@ define(function (require) {
          *  action.regist(/^person\/\d+/, new Service());
          * */
         exports.regist = function (pathPattern, service) {
-            services.register(pathPattern, service);
+            services.register(pathPattern, null, service);
         };
 
         /**

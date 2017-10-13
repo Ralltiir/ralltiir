@@ -23,7 +23,8 @@
     "dist/ralltiir.min.js"
   ],
   "amdDependencies": {
-    "@searchfe/assert": "^1.0.0"
+    "@searchfe/assert": "^1.0.0",
+    "@searchfe/promise": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -41,6 +42,7 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
     "karma-coveralls": "^1.1.2",
+    "karma-global-preprocessor": "0.0.2",
     "karma-html-reporter": "^0.2.7",
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.0.4",

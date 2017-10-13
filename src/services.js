@@ -1,6 +1,6 @@
 /**
  * @file Services Service factory for service instances / legacy static services
- * @author harttle<yangjvn@126.com>
+ * @author harttle<harttle@harttle.com>
  */
 
 define(function (require) {
@@ -15,7 +15,7 @@ define(function (require) {
         // * 对于新 Service 为对应 Service 类的实例
         // * 对于旧 Service 就是 Service 类本身
         var serviceInstances;
-        var serviceClasses;
+        var urlEntries;
 
         var actionDispatcher;
         var url2id;
@@ -24,12 +24,11 @@ define(function (require) {
             destroy: destroy,
             register: register,
             unRegister: unRegister,
-            getServiceClass: getServiceClass,
             isRegistered: isRegistered,
             unRegisterAll: unRegisterAll,
             getOrCreate: getOrCreate,
             setInstanceLimit: setInstanceLimit,
-            serviceClasses: null
+            urlEntries: null
         };
         var id = 0;
 
@@ -40,7 +39,7 @@ define(function (require) {
         function init(dispatcher) {
             url2id = new Map();
             actionDispatcher = dispatcher;
-            serviceClasses = exports.serviceClasses = new Map();
+            urlEntries = exports.urlEntries = new Map();
             serviceInstances = exports.serviceInstances = cache.create('services', {
                 onRemove: function (service, url, evicted) {
                     _.isFunction(service.destroy) && service.destroy(url, evicted);
@@ -53,30 +52,30 @@ define(function (require) {
             cache.destroy('services');
         }
 
-        function register(pathPattern, service) {
+        function register(pathPattern, config, service) {
             assert(pathPattern, 'invalid path pattern');
-            assert(!serviceClasses.has(pathPattern), 'path already registerd');
+            assert(!urlEntries.has(pathPattern), 'path already registerd');
 
             router.add(pathPattern, actionDispatcher);
-            serviceClasses.set(pathPattern, service);
+            urlEntries.set(pathPattern, {service: service, config: config});
 
             logger.log('service registered to: ' + pathPattern);
         }
 
         function isRegistered(pathPattern) {
-            return serviceClasses.has(pathPattern);
+            return urlEntries.has(pathPattern);
         }
 
         function unRegisterAll(pathPattern) {
-            serviceClasses.keys().forEach(unRegister);
-            serviceClasses.clear();
+            urlEntries.keys().forEach(unRegister);
+            urlEntries.clear();
         }
 
         function unRegister(pathPattern) {
             assert(pathPattern, 'invalid path pattern');
             assert(isRegistered(pathPattern), 'path not registered');
             router.remove(pathPattern);
-            serviceClasses.delete(pathPattern);
+            urlEntries.delete(pathPattern);
             logger.log('service unregistered from: ' + pathPattern);
         }
 
@@ -86,10 +85,6 @@ define(function (require) {
                 return undefined;
             }
             return serviceInstances.get(id);
-        }
-
-        function getServiceClass(pathPattern) {
-            return serviceClasses.get(pathPattern);
         }
 
         function addInstance(url, instance) {
@@ -112,9 +107,11 @@ define(function (require) {
             if (arguments.length < 2) {
                 pathPattern = router.pathPattern(url);
             }
-            var Service = getServiceClass(pathPattern);
-            if (Service) {
-                var instance = Service.instancEnabled ? new Service(url) : Service;
+            var entry = urlEntries.get(pathPattern);
+            if (entry) {
+                var Service = entry.service;
+                var config = entry.config;
+                var instance = Service.instancEnabled ? new Service(url, config) : Service;
                 return addInstance(url, instance);
             }
         }
