@@ -113,6 +113,11 @@ define(function (require) {
             assert(current, 'cannot dispatch with options:' + current);
 
             logger.log('action dispatching to: ' + current.url);
+            exports.emit('dispatching', {
+                current: current,
+                prev: prev,
+                extra: stageData
+            });
 
             var src = _.get(current, 'options.src');
 

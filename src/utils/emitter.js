@@ -77,11 +77,11 @@ define(function () {
 
         var currentListeners = events[event].length;
         if (currentListeners >= maxListeners && maxListeners !== 0) {
-            throw new RangeError(
-                'Warning: possible Emitter memory leak detected. '
+            var msg = 'Warning: possible Emitter memory leak detected. '
                 + currentListeners
-                + ' listeners added.'
-           );
+                + ' listeners added.';
+            // eslint-disable-next-line
+            console.warn(msg);
         }
 
         events[event].push(listener);

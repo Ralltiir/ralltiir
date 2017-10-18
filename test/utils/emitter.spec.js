@@ -81,36 +81,6 @@ define(function (require) {
                     emitter.emit('foo', 'one', 'two');
                 });
 
-                it('.setMaxListeners(number)', function () {
-                    var done = false;
-                    var emitter = new Emitter();
-                    emitter.setMaxListeners(2);
-
-                    emitter.on('baz', function () {
-                        // eslint-disable-next-line
-                        console.log('a');
-                    });
-                    emitter.on('baz', function () {
-                        // eslint-disable-next-line
-                        console.log('b');
-                    });
-
-                    try {
-                        emitter.on('baz', function () {
-                        // eslint-disable-next-line
-                            console.log('c');
-                        });
-                    }
-                    catch (e) {
-                        if (e.name === 'RangeError') {
-                            done = true;
-                        }
-
-                    }
-
-                    expect(done).to.equal(true);
-                });
-
             });
 
             describe('.once(event, listener)', function () {
