@@ -17,7 +17,7 @@
     "version": "npm run dist",
     "dist": "make dist"
   },
-  "main": "./dist/ralltiir.min.js",
+  "main": "src/index.js",
   "files": [
     "dist/ralltiir.js",
     "dist/ralltiir.min.js"

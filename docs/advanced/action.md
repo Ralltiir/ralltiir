@@ -1,4 +1,4 @@
-# 3. Action 路由
+# Action 与路由
 
 在superframe中Action用来注册与切换Service。
 相关的路由信息会传递到service的生命周期方法中。
@@ -45,38 +45,46 @@ URL Pattern | 匹配的URL | 不匹配的URL
 
 ## 注册与跳转
 
-为了接下来的实验，我们基于[编写 Service][service]一节中的
-`index` service
-来配置一些URL入口：
+可以为每个 URL 配置一个它接管的 URL。对于单例 Service：
 
 ```javascript
 // 字符串格式
-sfr.action.regist('/', require('index'));
+rt.action.regist('/', require('index'));
 // RESTful
-sfr.action.regist('/todos/:id', require('todo'));
+rt.action.regist('/todos/:id', require('todo-service'));
 // RegExp
-sfr.action.regist(/\/lists\/(\d+)/, require('list'));
+rt.action.regist(/\/lists\/(\d+)/, require('list-service'));
 ```
 
-在`index`service渲染的页面中添加如下链接：
+对于实例化的 Service 注册方式略有不同：
 
 ```javascript
-<li><a data-sf-href="/todos/527">Todo 527</a></li>
-<li><a data-sf-href="/lists/238">List 238</a></li>
+// 字符串格式
+rt.services.register('/', {}, require('index'));
+// RESTful
+rt.services.register('/todos/:id', {}, require('todo-service'));
+// RegExp
+rt.services.register(/\/lists\/(\d+)/, {}, require('list-service'));
 ```
 
-`index`service渲染效果如下图所示：
+对于两种 Service，跳转链接的配置是完全相同的。例如：
 
-![][img/index]
+```javascript
+<li><a href="/todos/527" data-sf-href="/todos/527">Todo 527</a></li>
+<li><a href="/lists/238" data-sf-href="/lists/238">List 238</a></li>
+```
+
+> 为了更加健壮和标准，考虑在添加 `data-sf-href` 的同时添加 `href` 属性。
+> 例如禁用 JavaScript 的场景。
 
 ## Todo Service: RESTful路由
 
 在`todo`Service的生命周期回调中可以得到RESTful URL匹配的路由参数。
 
 ```javascript
-define(['sfr'], function() {
-    var sfr = require('sfr');
-    var todoService = new sfr.service();
+define(['ralltiir'], function() {
+    var rt = require('ralltiir');
+    var todoService = new rt.service();
 
     todoService.create = function(options) {
         this.el = document.createElement('div');
@@ -84,7 +92,7 @@ define(['sfr'], function() {
             '<p>This is Todo ' + options.params.id + '!</p>' +
             '<p>Current Path:' + options.path + '</p>' +
             '<p>Current URL:' + options.url + '</p>';
-        sfr.doc.appendChild(this.el);
+        rt.doc.appendChild(this.el);
     };
 
     todoService.destroy = function() {
@@ -104,9 +112,9 @@ define(['sfr'], function() {
 在`list`Service的生命周期中可以得到正则匹配得到的路由参数。
 
 ```javascript
-define(['sfr'], function() {
-    var sfr = require('sfr');
-    var todoService = new sfr.service();
+define(['ralltiir'], function() {
+    var rt = require('ralltiir');
+    var todoService = new rt.service();
 
     todoService.create = function(options) {
         this.el = document.createElement('div');
@@ -114,7 +122,7 @@ define(['sfr'], function() {
             '<p>This is List ' + options.params.$1 + '!</p>' +
             '<p>Current Path:' + options.path + '</p>' +
             '<p>Current URL:' + options.url + '</p>';
-        sfr.doc.appendChild(this.el);
+        rt.doc.appendChild(this.el);
     };
 
     todoService.destroy = function() {

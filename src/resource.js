@@ -4,8 +4,8 @@
  * @module resource
  */
 define(function (require) {
-    var http = require('utils/http');
-    var _ = require('lang/underscore');
+    var http = require('./utils/http');
+    var _ = require('./lang/underscore');
 
     /**
      * The REST resource CRUD utility

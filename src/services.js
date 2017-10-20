@@ -4,11 +4,11 @@
  */
 
 define(function (require) {
-    var Map = require('lang/map');
-    var _ = require('lang/underscore');
-    var assert = require('lang/assert');
-    var logger = require('utils/logger');
-    var cache = require('utils/cache');
+    var Map = require('./lang/map');
+    var _ = require('./lang/underscore');
+    var assert = require('./lang/assert');
+    var logger = require('./utils/logger');
+    var cache = require('./utils/cache');
 
     return function (router) {
         // 所有已经存在的 Service 实例：
@@ -111,7 +111,7 @@ define(function (require) {
             if (entry) {
                 var Service = entry.service;
                 var config = entry.config;
-                var instance = Service.instancEnabled ? new Service(url, config) : Service;
+                var instance = Service.singleton ? Service : new Service(url, config);
                 return addInstance(url, instance);
             }
         }

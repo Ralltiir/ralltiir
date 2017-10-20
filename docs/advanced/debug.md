@@ -6,7 +6,7 @@
 
 ## 下载安装
 
-需要首先在[发布][release]页面选择“development”版本下载后部署在你的环境中。
+需要首先在[发布][release]页面下载后选择非压缩版本并部署在你的环境中。
 如果在测试环境中，需要更新测试环境代码中对应的 Ralltiir 源码。
 
 ## 调试日志
@@ -28,4 +28,4 @@ http://localhost:8080/path?debug-server=http://example.com
 
 > 注意`debug-server`可能需要`encodeURIComponent`。
 
-[release]: https://github.com/ralltiir/ralltiir/release
+[release]: https://github.com/Ralltiir/ralltiir/releases

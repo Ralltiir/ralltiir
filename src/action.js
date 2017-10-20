@@ -8,13 +8,13 @@ define(function (require) {
      * @module action
      */
 
-    var cache = require('utils/cache');
-    var Promise = require('lang/promise');
-    var assert = require('lang/assert');
-    var logger = require('utils/logger');
-    var _ = require('lang/underscore');
-    var dom = require('utils/dom');
-    var URL = require('utils/url');
+    var cache = require('./utils/cache');
+    var Promise = require('./lang/promise');
+    var assert = require('./lang/assert');
+    var logger = require('./utils/logger');
+    var _ = require('./lang/underscore');
+    var dom = require('./utils/dom');
+    var URL = require('./utils/url');
 
     function actionFactory(router, location, history, doc, Emitter, services) {
         var exports = new Emitter();
@@ -75,6 +75,7 @@ define(function (require) {
          *  action.regist(/^person\/\d+/, new Service());
          * */
         exports.regist = function (pathPattern, service) {
+            service.singleton = true;
             services.register(pathPattern, null, service);
         };
 
@@ -164,7 +165,7 @@ define(function (require) {
                     if (!prevService) {
                         return;
                     }
-                    return prevService.constructor.instancEnabled
+                    return prevService.singleton
                         ? prevService.beforeDetach(current, prev, data)
                         : prevService.detach(current, prev, data);
                 },
@@ -172,7 +173,7 @@ define(function (require) {
                     if (!currentService) {
                         return;
                     }
-                    return currentService.constructor.instancEnabled
+                    return currentService.singleton
                         ? currentService.beforeAttach(current, prev, data)
                         : currentService.create(current, prev, data);
                 },
@@ -180,7 +181,7 @@ define(function (require) {
                     if (!prevService) {
                         return;
                     }
-                    return prevService.constructor.instancEnabled
+                    return prevService.singleton
                         ? prevService.detach(current, prev, data)
                         : prevService.destroy(current, prev, data);
                 },
@@ -191,8 +192,8 @@ define(function (require) {
                     return currentService.attach(current, prev, data);
                 }
             ]).exec(function currAbort() {
-                if (prevService && prevService.constructor.instancEnabled) {
-                    if (currentService && currentService.abort) {
+                if (prevService && prevService.singleton) {
+                    if (currentService && currentService.destroy) {
                         currentService.destroy();
                     }
                 }

@@ -1,23 +1,10 @@
 # 生命周期概述
 
-Ralltiir Service、View都提供了生命周期的托管。
-其中View的生命周期由Service自行调用。本文主要介绍Service的生命周期。
+本文介绍 Ralltiir 中 Service 的生命周期函数调用时机。
 
-## 声明周期回调
+## 单例 Service
 
-在创建Service实例时，需要继承自Ralltiir提供的Service基类。
-该基类提供了生命周期回调接口（实现为空函数）。子类可实现其中任何一个的行为。包括：
-
-1. `create`：该回调发生在切换到一个Service时。建议此时进行入场动画，以及启动异步数据获取。
-2. `attach`：该回调发生在切换到一个Service时，在上一个Service被destroy之后触发。建议进行视图渲染和重绘，事件绑定操作。
-3. `detach`：该回调发生在当前Service将被移出时，在Service即将发生切换时立即触发。建议进行当前DOM状态的记录（比如滚动位置）。
-4. `destroy`：该回调发生在当前Service被退场时（在上一个Service的create后触发），建议进行退场动画。在被移出Cache时也会触发，此时建议进行DOM移出和状态重置。
-
-> 同一个Service的上述声明周期会被多次调用。构造过程需要提供构造函数，析构过程可以防止destroy中（需要做好与退场动画的兼容）。
-
-## Service切换
-
-superframe中切换Service时涉及前后两个Service生命周期回调的执行，例如在从`prev`Service切换到`current`Service时，
+superframe中切换Service时涉及前后两个Service生命周期回调的执行，例如在从 `prev` Service 切换到 `current` Service 时，
 二者的生命周期回调会以下列顺序执行：
 
 1. prev.detach
@@ -33,15 +20,28 @@ superframe中切换Service时涉及前后两个Service生命周期回调的执�
 任何一个Promise被reject都会导致后续生命周期回调不被执行（错误栈仍然被抛出在控制台中）。
 四者都被顺序执行结束后，Dispatch运行完成。
 
-## 时序冲突与编程惯例
+## 实例化 Service
 
-在一个Dispatch尚在执行过程中，下一个Dispatch仍然可能会被触发。
-典型的情形如：Service载入过程中（生命周期回调返回的Promise仍然pending的状态），用户触发了浏览器返回。
-此时两个Dispatch流程并发进行，于是生命周期会乱序交替执行。此时Service状态和DOM状态可能会Crash，因为对于任何一个Service：
+实例化 Service 除了页面切换的 4 个生命周期函数之外，还有两个生命周期函数：创建和销毁。
+其中创建直接使用 JavaScript 的构造函数，销毁则约定为 `.destroy()` 实例方法。
 
-1. **create和destroy是互斥的，二者不可并发**
-2. **attach和detach是互斥的，二者不可并发**
-3. **attach和detach必须发生在create之后，destroy之前**
+下图是实例化 Service 的一次页面切换流程：
+
+![dispatch flowchart](/img/dispatch.png)
+
+上图中每个颜色表示一个 Service 实例，注意不同的实例可能来自同一个类。
+
+## 避免并发问题
+
+快速点击前进/后退时 Ralltiir 的页面切换存在并发问题。
+即在一个Dispatch尚在执行过程中，下一个Dispatch仍然可能会被触发。
+这一问题的本质在于：
+
+* 用户操作需要立即响应。
+* 异步过程（定时器、ajax、Promise）不可暂停。
+
+> 例如：Service载入过程中（生命周期回调返回的Promise仍然pending的状态），用户触发了浏览器返回。
+> 此时两个Dispatch流程并发进行，于是生命周期会乱序交替执行。此时Service状态和DOM状态可能会Crash。
 
 为了使返回操作立即响应，Superframe并未等待互斥操作顺序执行，
 而是跳过当前Dispatch流程中后续的生命周期回调，并立即开始下一个Dispatch流程。
