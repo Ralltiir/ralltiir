@@ -5,7 +5,7 @@
   "scripts": {
     "doc:install": "gitbook install ./docs",
     "doc:preview": "gitbook serve --port 8883 docs",
-    "doc:deploy": "cd docs && gitbook install && gitbook build && cd .. && make doc:deploy",
+    "doc:deploy": "cd docs && gitbook install && gitbook build && cd .. && make doc-deploy",
     "test": "make test",
     "test-watch": "make test-watch",
     "test-reports": "make test-reports",
