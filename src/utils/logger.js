@@ -1,5 +1,5 @@
 /**
- * @file logger.js Superframe Debug Utility
+ * @file logger.js Ralltiir Debug Utility
  * @author harttle<yangjun14@baidu.com>
  */
 

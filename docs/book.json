@@ -1,7 +1,7 @@
 {
   "title": "Ralltiir 项目文档",
-  "description": "Superframe 相关教程、设计和 API",
-  "author": "The Superframe Team",
+  "description": "Ralltiir 相关教程、设计和 API",
+  "author": "The Ralltiir Team",
   "language": "zh-hans",
   "plugins": [
     "expandable-chapters",

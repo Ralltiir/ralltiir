@@ -354,7 +354,7 @@ define(function (require) {
         function resolveUrl(url) {
             var urlObj = URL.parse(url);
 
-            // Superframe protocol, eg. sfr://root
+            // Ralltiir protocol, eg. sfr://root
             if (urlObj.scheme === 'sfr') {
                 if (urlObj.host === 'index') {
                     return indexPageUrl;
@@ -474,7 +474,7 @@ define(function (require) {
         };
 
         /**
-         * Stop superframe redirects
+         * Stop Ralltiir redirects
          */
         exports.stop = function () {
             document.body.removeEventListener('click', onAnchorClick);

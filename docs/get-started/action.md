@@ -1,7 +1,7 @@
 # Action 与路由
 
-在superframe中Action用来注册与切换Service。
-相关的路由信息会传递到service的生命周期方法中。
+在 Ralltiir 中 Action 用来注册与切换 Service。
+相关的路由信息会传递到 service 的生命周期方法中。
 
 ## URL匹配规则
 

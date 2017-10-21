@@ -4,7 +4,7 @@
 
 ## 单例 Service
 
-superframe中切换Service时涉及前后两个Service生命周期回调的执行，例如在从 `prev` Service 切换到 `current` Service 时，
+Ralltiir中切换Service时涉及前后两个Service生命周期回调的执行，例如在从 `prev` Service 切换到 `current` Service 时，
 二者的生命周期回调会以下列顺序执行：
 
 1. prev.detach
@@ -14,7 +14,7 @@ superframe中切换Service时涉及前后两个Service生命周期回调的执�
 
 在默认情况下（生命周期函数未实现或实现为空），上述四个函数会被顺序调用。
 任何一个抛出同步异常都会使得后续函数不会被调用。
-此时Superframe认为你的Service存在Fatal Error，请自行查看控制台的错误栈。
+此时Ralltiir认为你的Service存在Fatal Error，请自行查看控制台的错误栈。
 
 除此之外，四者都可返回Promise，在此情况下上述列表中后一个回调会等待前一个该Promise resolve。
 任何一个Promise被reject都会导致后续生命周期回调不被执行（错误栈仍然被抛出在控制台中）。
@@ -43,7 +43,7 @@ superframe中切换Service时涉及前后两个Service生命周期回调的执�
 > 例如：Service载入过程中（生命周期回调返回的Promise仍然pending的状态），用户触发了浏览器返回。
 > 此时两个Dispatch流程并发进行，于是生命周期会乱序交替执行。此时Service状态和DOM状态可能会Crash。
 
-为了使返回操作立即响应，Superframe并未等待互斥操作顺序执行，
+为了使返回操作立即响应，Ralltiir并未等待互斥操作顺序执行，
 而是跳过当前Dispatch流程中后续的生命周期回调，并立即开始下一个Dispatch流程。
 这要求Service实现中遵守以下惯例：
 
