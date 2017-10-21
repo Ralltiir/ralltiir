@@ -75,6 +75,8 @@ define(function (require) {
          *  action.regist(/^person\/\d+/, new Service());
          * */
         exports.regist = function (pathPattern, service) {
+            assert(pathPattern, 'invalid path pattern');
+            assert(service, 'invalid service');
             service.singleton = true;
             services.register(pathPattern, null, service);
         };
@@ -166,24 +168,24 @@ define(function (require) {
                         return;
                     }
                     return prevService.singleton
-                        ? prevService.beforeDetach(current, prev, data)
-                        : prevService.detach(current, prev, data);
+                        ? prevService.detach(current, prev, data)
+                        : prevService.beforeDetach(current, prev, data);
                 },
                 function currCreate() {
                     if (!currentService) {
                         return;
                     }
                     return currentService.singleton
-                        ? currentService.beforeAttach(current, prev, data)
-                        : currentService.create(current, prev, data);
+                        ? currentService.create(current, prev, data)
+                        : currentService.beforeAttach(current, prev, data);
                 },
                 function prevDestroy() {
                     if (!prevService) {
                         return;
                     }
                     return prevService.singleton
-                        ? prevService.detach(current, prev, data)
-                        : prevService.destroy(current, prev, data);
+                        ? prevService.destroy(current, prev, data)
+                        : prevService.detach(current, prev, data);
                 },
                 function currAttach() {
                     if (!currentService) {
@@ -192,15 +194,8 @@ define(function (require) {
                     return currentService.attach(current, prev, data);
                 }
             ]).exec(function currAbort() {
-                if (prevService && prevService.singleton) {
-                    if (currentService && currentService.destroy) {
-                        currentService.destroy();
-                    }
-                }
-                else {
-                    if (currentService && currentService.abort) {
-                        currentService.abort(current, prev, data);
-                    }
+                if (currentService && currentService.abort) {
+                    currentService.abort(current, prev, data);
                 }
             });
         };
