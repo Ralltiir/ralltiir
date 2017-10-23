@@ -31,6 +31,16 @@ rt.on('dispatching', function (curr, prev){
 
 * `event.url`：被打开的 URL。
 
+### `redirectFailed`
+
+Redirect 操作抛出了异常。参数：
+
+* `event.url`：被打开的 URL。
+* `event.message`：异常消息。
+* `event.stack`：异常调用栈。
+
+> 对，这就是一个 `Error` 对象。
+
 ## DOM 事件
 
 Ralltiir Application 中的视图元素（即 `.rt-view`）会派发 Ralltiir 视图相关的事件，

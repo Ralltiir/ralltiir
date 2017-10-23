@@ -53,8 +53,8 @@ Ralltiir Application 中，`.rt-head` 的每个部分都有清晰的含义，这
 
 ```html
 <div class="rt-actions">
-    <span class="rt-action"><i class="fa fa-twitter"></i></span>
-    <span class="rt-action"><i class="fa fa-share"></i></span>
+    <i class="fa fa-twitter"></i>
+    <i class="fa fa-share"></i>
 </div>
 ```
 
