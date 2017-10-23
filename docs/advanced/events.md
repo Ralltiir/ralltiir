@@ -8,14 +8,33 @@ Ralltiir 抛出的事件包括两种：
 
 ## Ralltiir 事件
 
+Ralltiir 单例上的事件用来监听页面级别的行为。例如：
+
+```javascript
+var rt = require('ralltiir');
+rt.on('dispatching', function (curr, prev){
+    console.log('page change:', curr.url, prev.url);
+});
+```
+
+### `dispatching`
+
+页面切换事件。参数：
+
+* `event.current`：当前页面参数。
+* `event.previous`：当前页面参数。
+* `event.extra`：发起页面跳转时的附加数据。
+
+### `redirecting`
+
+正在进行一次页面打开。参数：
+
+* `event.url`：被打开的 URL。
+
 ## DOM 事件
 
 Ralltiir Application 中的视图元素（即 `.rt-view`）会派发 Ralltiir 视图相关的事件，
-比如加载、更新等。
-
-### 一个例子
-
-视图事件是 Ralltiir 派发给 `.rt-view` DOM 元素的事件，可以通过 DOM API 监听。
+比如加载、更新等。视图事件是 Ralltiir 派发给 `.rt-view` DOM 元素的事件，可以通过 DOM API 监听。
 这些事件都以 `rt.` 为前缀。例如：
 
 ```javascript
@@ -39,7 +58,7 @@ view.addEventListener('rt.updated', function (event) {
 
 ### `rt-willUpdate`
 
-[局部更新][partial-update] 前（请求未发送） 触发
+[局部更新][partial-update] 前（请求未发送） 触发。
 
 参数：
 

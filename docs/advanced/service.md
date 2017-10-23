@@ -70,4 +70,4 @@ rt.services.register('/foo', {title: {html: 'Todo List Detail'}}, Service)
 3. `detach`：该回调发生在当前Service将被移出时，在Service即将发生切换时立即触发。建议进行当前DOM状态的记录（比如滚动位置）。
 4. `destroy`：该回调发生在当前Service被退场时（在上一个Service的create后触发），建议进行退场动画。在被移出Cache时也会触发，此时建议进行DOM移出和状态重置。
 
-[rt-app]: https://github.com/Ralltiir/ralltiir-application/wiki
+[rt-app]: https://github.com/Ralltiir/ralltiir-application

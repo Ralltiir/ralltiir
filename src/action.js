@@ -118,7 +118,7 @@ define(function (require) {
             logger.log('action dispatching to: ' + current.url);
             exports.emit('dispatching', {
                 current: current,
-                prev: prev,
+                previous: prev,
                 extra: stageData
             });
 
@@ -326,6 +326,7 @@ define(function (require) {
          * */
         exports.redirect = function (url, query, options, data) {
             logger.log('action redirecting to: ' + url);
+            exports.emit('redirecting', url);
             url = resolveUrl(url);
             _.assign(stageData, data);
             options = _.assign({}, options, {
@@ -340,10 +341,8 @@ define(function (require) {
             catch (e) {
                 url = URL.resolve(root, url);
                 location.replace(url);
-                exports.emit('redirect failed', url);
                 throw e;
             }
-            exports.emit('redirected', url);
         };
 
         function resolveUrl(url) {

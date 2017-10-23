@@ -1,6 +1,9 @@
 # 页面结构
 
 Ralltiir Application 是一个运行在浏览器中的异步浏览器。
+在启动 Ralltiir 之前需要先让你的页面结构符合 Ralltiir 的要求，
+这样才能识别页面内容并实现异步打开。本文介绍合法的 Ralltiir 页面结构。
+
 我们知道浏览器接受的 HTML 内容分为 `<head>` 和 `<body>` 两部分，
 Ralltiir Application 接受的 `.rt-view` 也需分为 `.rt-head` 和 `.rt-body` 两部分，
 它们构成了合法的 Ralltiir 页面。其中：
@@ -71,37 +74,3 @@ Ralltiir Application 中，`.rt-head` 的每个部分都有清晰的含义，这
 异步渲染 | 执行          | 不执行
 
 > 具体的 Ralltiir 渲染方式请参考 [[页面渲染]]。
-
-## 动态设置头部
-
-头部的每个元素都有 HTML 和点击事件，它们都是可选的。
-这一节介绍可以在脚本中动态调用的头部设置 API。
-
-通过 `<HTMLElement>.ralltiir` 来获得 `.rt-view` 元素对应的 Ralltiir 对象，它提供了视图相关的 API。
-比如设置头部的 `.setHead()`。
-
-```javascript
-var rt = document.querySelector('.rt-view.active').ralltiir
-rt.setHead({
-    title: {
-        html: '主标题',
-        onClick: function () {
-            console.log('主标题被点击')
-        }
-    },
-    subtitle: {
-        html: '副标题',
-    },
-    back: {
-        html: '<i class="c-icon">&#xe750;</i>'
-    },
-    actions: [{
-        html: '<i class="c-icon">&#xxxxx;</i>',
-        onClick: function () {
-            console.log('第一个按钮被点击')
-        }
-    },{
-        html: '<i class="c-icon">&#xxxxx;</i>'
-    }];
-})
-```
