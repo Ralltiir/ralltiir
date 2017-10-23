@@ -19,7 +19,7 @@
 1. 在 [注册 Service](/get-started/router.md) 时配置。
 2. 在 [Ralltiir 链接](/get-started/rt-link.md) 中配置。
 3. 在 [页面 HTML](/get-started/html-structure.md) 中直接编写。
-4. 通过 [.setView()](/get-started/set-view.md) API 设置。
+4. 通过 [view.setData()](/get-started/set-view.md) API 设置。
 
 ## 渲染策略
 

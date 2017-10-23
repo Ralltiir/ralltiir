@@ -6,7 +6,7 @@
     *   [Ralltiir 链接](/get-started/rt-link.md)
     *   [启动 Ralltiir](/get-started/start.md)
     *   [路由注册](/get-started/router.md)
-    *   [视图设置](/get-started/set-view.md)
+    *   [视图设置](/get-started/view-set-data.md)
     *   [局部更新](/get-started/partial-update.md)
     *   [视图参数](/get-started/view-options.md)
 * 高级主题

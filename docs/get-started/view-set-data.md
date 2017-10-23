@@ -18,7 +18,7 @@ var rt = document.querySelector('.rt-view.active').ralltiir
 获得视图实例后就可以用它设置视图内容和事件了。
 
 ```javascript
-rt.setView({
+rt.setData({
     title: {
         html: '主标题',
         onClick: function () {
@@ -31,4 +31,4 @@ rt.setView({
 })
 ```
 
-更多 `.setView()` 的参数说明请参考 [视图参数](/get-started/view-options.md)。
+更多 `.setData()` 的参数说明请参考 [视图参数](/get-started/view-options.md)。
