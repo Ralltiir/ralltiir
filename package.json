@@ -19,6 +19,7 @@
   },
   "main": "src/index.js",
   "files": [
+    "src/",
     "dist/ralltiir.js",
     "dist/ralltiir.min.js"
   ],
