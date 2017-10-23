@@ -39,6 +39,27 @@ define(function (require) {
     }
 
     /**
+     * Set deep property by path
+     *
+     * @param {Object} obj The object to set with
+     * @param {string} path A dot-delimited path string
+     * @param {string} val The value to be set
+     */
+    function set(obj, path, val) {
+        obj = obj || {};
+        var arr = (path || '').split('.');
+        arr.forEach(function (key, i) {
+            obj[key] = (obj[key] !== undefined) ? obj[key] : {};
+            if (i === arr.length - 1) {
+                obj[key] = val;
+            }
+            else {
+                obj = obj[key];
+            }
+        });
+    }
+
+    /**
      * Has deep property by path
      *
      * @param {any} obj The object to query with
@@ -587,6 +608,7 @@ define(function (require) {
     exports.keysIn = keysIn;
     exports.keys = keys;
     exports.get = get;
+    exports.set = set;
     exports.has = has;
     exports.forOwn = forOwn;
     exports.assign = assign;

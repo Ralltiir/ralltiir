@@ -385,22 +385,22 @@ define(function (require) {
                 catch (e) {}
                 expect(location.replace).to.have.been.calledWith('/not-defined-service');
             });
-            it('should emit "redirected" event with url', function (done) {
+            it('should emit "redirecting" event with url', function (done) {
                 var url = 'xx';
                 var query = 'bb';
                 var options = {};
-                action.once('redirected', function (u) {
+                action.once('redirecting', function (u) {
                     expect(u).to.equal(url);
                     done();
                 });
                 action.redirect(url, query, options);
             });
-            it('should "redirect failed" event with url', function (done) {
+            it('should "redirectFailed" event with url', function (done) {
                 function fn() {
                     action.redirect('/not-defined-service', {}, {});
                 }
-                action.once('redirect failed', function (url) {
-                    expect(url).to.equal('/not-defined-service');
+                action.once('redirectFailed', function (err) {
+                    expect(err.url).to.equal('/not-defined-service');
                     done();
                 });
                 expect(fn).to.throw(/service not found/);

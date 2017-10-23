@@ -339,8 +339,9 @@ define(function (require) {
                 router.redirect(url, query, options);
             }
             catch (e) {
-                url = URL.resolve(root, url);
-                location.replace(url);
+                e.url = URL.resolve(root, url);
+                location.replace(e.url);
+                exports.emit('redirectFailed', e);
                 throw e;
             }
         };
