@@ -14,15 +14,8 @@
 
 为了满足上述设计要求，Ralltiir Application 的头部有 4 钟配置方法：
 
-1. 在注册 Service 时配置。
-
-```javascript
-require(['ralltiir', 'ralltiir-application/service'], function(rt, Service) {
-    rt.services.register('/home', {title: '首页标题'}, Service);
-});
-```
-
-2. 在返回的页面中直接编写。
+1. 在[页面 HTML](/get-started/html-structure.md) 中直接编写。
+2. 在[注册 Service](/get-started/router.md) 时配置。
 
 ```html
 

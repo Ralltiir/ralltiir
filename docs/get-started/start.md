@@ -14,6 +14,9 @@ var Service = require('ralltiir-application/service');
 
 rt.services.register('/home', {title: {html: '主页标题'}}, Service);
 rt.services.register('/profile', {title: {html: '个人页标题'}}, Service);
+
+// 启动 Ralltiir
+rt.action.start();
 ```
 
 详细的 `.register()` 参数请参考 [路由与跳转](/get-started/router.md)。
