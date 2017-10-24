@@ -22,9 +22,8 @@ define(function (require) {
         var backManually;
         var indexPageUrl;
         var isIndexPage;
-        var root;
         var pageId;
-        var visitedClassName;
+        var config = {};
 
         // The state data JUST for the next dispatch
         var stageData = {};
@@ -46,8 +45,10 @@ define(function (require) {
                 limit: 32
             });
             backManually = false;
-            visitedClassName = 'visited';
-            root = '/';
+            config = {
+                root: '/',
+                visitedClassName: 'visited'
+            };
             indexPageUrl = '/';
             isIndexPage = true;
             pageId = 0;
@@ -299,17 +300,15 @@ define(function (require) {
          *  config the action, called by action.start
          *
          *  @param {Object} options key/value pairs to config the action
+         *  @return {Object} result config object
          *  @static
          * */
         exports.config = function (options) {
-            options = options || {};
-            if (options.root) {
-                root = options.root;
+            if (arguments.length !== 0) {
+                _.assign(config, options);
+                router.config(config);
             }
-            if (options.visitedClassName) {
-                visitedClassName = options.visitedClassName;
-            }
-            router.config(options);
+            return config;
         };
 
         /**
@@ -339,7 +338,7 @@ define(function (require) {
                 router.redirect(url, query, options);
             }
             catch (e) {
-                e.url = URL.resolve(root, url);
+                e.url = URL.resolve(config.root, url);
                 location.replace(e.url);
                 exports.emit('redirectFailed', e);
                 throw e;
@@ -434,7 +433,7 @@ define(function (require) {
                     anchor: targetEl
                 };
                 exports.redirect(link, null, options, extra);
-                dom.addClass(targetEl, visitedClassName);
+                dom.addClass(targetEl, config.visitedClassName);
             }
         }
 

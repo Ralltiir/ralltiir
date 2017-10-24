@@ -505,7 +505,10 @@ define(function (require) {
             it('should call router.config', function () {
                 var opts = {root: '/foo'};
                 action.config(opts);
-                expect(router.config).to.have.been.calledWith(opts);
+                expect(router.config).to.have.been.calledWithMatch({
+                    root: '/foo',
+                    visitedClassName: 'visited'
+                });
             });
         });
         describe('.update()', function () {
