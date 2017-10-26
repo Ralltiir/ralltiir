@@ -29,14 +29,8 @@ define(function (require) {
         var stageData = {};
         var dispatchQueue = mkDispatchQueue();
 
-        /**
-         * This is provided to reset closure variables which defines the inner state.
-         *
-         * @private
-         */
-        exports.init = function () {
-            services.init(this.dispatch);
-            exports.pages = pages = cache.create('pages', {
+        function createPages() {
+            var pages = cache.create('pages', {
                 onRemove: function (page, url, evicted) {
                     if (_.isFunction(page.onRemove)) {
                         page.onRemove(url, evicted);
@@ -44,6 +38,26 @@ define(function (require) {
                 },
                 limit: 32
             });
+            function normalizeKey(fn, thisArg) {
+                return function (url) {
+                    arguments[0] = url.replace(/#.*$/, '');
+                    return fn.apply(thisArg, arguments);
+                };
+            }
+            pages.get = normalizeKey(pages.get, pages);
+            pages.set = normalizeKey(pages.set, pages);
+            pages.contains = normalizeKey(pages.contains, pages);
+            return pages;
+        }
+
+        /**
+         * This is provided to reset closure variables which defines the inner state.
+         *
+         * @private
+         */
+        exports.init = function () {
+            services.init(this.dispatch);
+            exports.pages = pages = createPages();
             backManually = false;
             config = {
                 root: '/',
