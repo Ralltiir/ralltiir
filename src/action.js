@@ -40,7 +40,7 @@ define(function (require) {
             });
             function normalizeKey(fn, thisArg) {
                 return function (url) {
-                    arguments[0] = url.replace(/#.*$/, '');
+                    arguments[0] = (url || '').replace(/#.*$/, '');
                     return fn.apply(thisArg, arguments);
                 };
             }
@@ -421,7 +421,9 @@ define(function (require) {
          * */
         function onAnchorClick(event) {
             event = event || window.event;
-            var anchor = closest(event.target || event.srcElement, 'A');
+            var anchor = closest(event.target || event.srcElement, function (el) {
+                return el.tagName === 'A';
+            });
 
             if (!anchor) {
                 return;
@@ -453,7 +455,9 @@ define(function (require) {
         }
 
         function baseUrl(anchor) {
-            var rtView = closest(anchor, '.rt-view');
+            var rtView = closest(anchor, function (el) {
+                return /(^|\s)rt-view($|\s)/.test(el.className);
+            });
             if (!rtView) {
                 return '';
             }
@@ -465,12 +469,12 @@ define(function (require) {
          *
          * @private
          * @param {DOMElement} element The element from which to find
-         * @param {string} tagName The tagName to find
+         * @param {Function} predict The predict function, called with the element
          * @return {DOMElement} The closest ancester matching the tagName
          */
-        function closest(element, tagName) {
+        function closest(element, predict) {
             var parent = element;
-            while (parent !== null && parent.tagName !== tagName.toUpperCase()) {
+            while (parent !== null && !predict(parent)) {
                 parent = parent.parentNode;
             }
             return parent;
