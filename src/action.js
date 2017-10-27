@@ -421,15 +421,15 @@ define(function (require) {
          * */
         function onAnchorClick(event) {
             event = event || window.event;
-            var targetEl = closest(event.target || event.srcElement, 'A');
+            var anchor = closest(event.target || event.srcElement, 'A');
 
-            if (!targetEl) {
+            if (!anchor) {
                 return;
             }
 
             // link href only support url like pathname,e.g:/sf?params=
-            var link = targetEl.getAttribute('data-sf-href');
-            var options = targetEl.getAttribute('data-sf-options');
+            var link = anchor.getAttribute('data-sf-href');
+            var options = anchor.getAttribute('data-sf-options');
 
             if (link) {
                 event.preventDefault();
@@ -444,11 +444,20 @@ define(function (require) {
                 options.src = 'hijack';
                 var extra = {
                     event: event,
-                    anchor: targetEl
+                    anchor: anchor
                 };
-                exports.redirect(link, null, options, extra);
-                dom.addClass(targetEl, config.visitedClassName);
+                var url = baseUrl(anchor) + link;
+                exports.redirect(url, null, options, extra);
+                dom.addClass(anchor, config.visitedClassName);
             }
+        }
+
+        function baseUrl(anchor) {
+            var rtView = closest(anchor, '.rt-view');
+            if (!rtView) {
+                return '';
+            }
+            return rtView.getAttribute('data-base') || '';
         }
 
         /**
