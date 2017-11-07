@@ -35,7 +35,7 @@ Ralltiir Application 接受的 `.rt-view` 也需分为 `.rt-head` 和 `.rt-body`
 </div>
 ```
 
-这里有个 Live Demo：<https://ralltiir.github.io/ralltiir-application-demo/home.html>
+这里有个 Live Demo：<https://ralltiir.github.io/ralltiir-application-demo/home>
 
 ## 头部内容
 

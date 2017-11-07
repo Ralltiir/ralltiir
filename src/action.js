@@ -212,6 +212,12 @@ define(function (require) {
                 if (currentService && currentService.abort) {
                     currentService.abort(current, prev, data);
                 }
+            }, function errorHandler(e) {
+                // eslint-disable-next-line
+                console.error(e);
+                if (_.get(current, 'options.src') !== 'sync') {
+                    location.replace(location.href);
+                }
             });
         };
 
@@ -265,9 +271,10 @@ define(function (require) {
              * and a promise for the results of the functions is returned.
              *
              * @param {Function} abortCallback The callback to be called when dispatch aborted
+             * @param {Function} errorHandler The callback to be called when error occurred
              * @return {Promise} The promise to be resolved when all tasks completed
              */
-            function exec(abortCallback) {
+            function exec(abortCallback, errorHandler) {
                 // Record the thread ID for current thread
                 // To ensure there's ONLY ONE thread running.
                 var thisThreadID = threadID;
@@ -285,13 +292,9 @@ define(function (require) {
                     }
                     logger.log('calling lifecycle', cb.name);
                     return cb();
-                }).catch(function (e) {
-                    // throw asyncly rather than console.error(e.stack)
-                    // to enable browser console's error tracing.
-                    setTimeout(function () {
-                        throw e;
-                    });
-                }).then(function () {
+                })
+                .catch(errorHandler)
+                .then(function () {
                     lastAbortCallback = null;
                 });
             }
