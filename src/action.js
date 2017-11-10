@@ -409,9 +409,8 @@ define(function (require) {
         };
 
         function transferPageTo(url, query) {
-            var noRootUrl = router.ignoreRoot(location.pathname + location.search);
-            var from = router.createURL(noRootUrl).toString();
-            var to = router.createURL(url, query).toString();
+            var from = router.ignoreRoot(location.pathname + location.search);
+            var to = router.ignoreRoot(router.createURL(url, query).toString());
             logger.log('[transfering page] from:', from, 'to:', to);
             pages.rename(from, to);
         }
