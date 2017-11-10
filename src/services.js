@@ -42,7 +42,9 @@ define(function (require) {
             urlEntries = exports.urlEntries = new Map();
             serviceInstances = exports.serviceInstances = cache.create('services', {
                 onRemove: function (service, url, evicted) {
-                    _.isFunction(service.destroy) && service.destroy(url, evicted);
+                    if (!service.singleton && _.isFunction(service.destroy)) {
+                        return service.destroy(url, evicted);
+                    }
                 },
                 limit: 8
             });
