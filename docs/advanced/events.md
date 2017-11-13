@@ -58,7 +58,7 @@ view.addEventListener('rt.updated', function (event) {
 
 在 Attach [生命周期][life-cycle] 之后触发，此时视图已经加载到 DOM 树中。
 
-### `rt-willDttach`
+### `rt-willDetach`
 
 在 BeforeDetach [生命周期][life-cycle] 之后触发，此时视图仍然在 DOM 树中，但马上将会被移除。
 
