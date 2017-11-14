@@ -1,6 +1,6 @@
 # 贡献代码
 
-Superframe 以开放的心态接纳外部贡献，请按以下方法做出你的贡献。
+Ralltiir 以开放的心态接纳外部贡献，请按以下方法做出你的贡献。
 
 ## 准备
 
@@ -15,7 +15,7 @@ Superframe 以开放的心态接纳外部贡献，请按以下方法做出你的
 
 ## 改动
 
-* **Fork** superframe 仓库到你的个人命名空间中
+* **Fork** Ralltiir 仓库到你的个人命名空间中
 * 使用 `git clone` 将你的个人仓库拷贝克隆到本地
 * 使用 `git checkout -b` 创建一个新的分支以进行你的工作
   * 通常而言，它是基于 master 分支的
@@ -46,13 +46,13 @@ Superframe 以开放的心态接纳外部贡献，请按以下方法做出你的
 使用 npm 脚本进行文档预览：
 
 ```bash
-npm run doc-start
+npm run doc:preview
 ```
 
 文档发布也使用 npm 脚本（文档托管于 Github Pages，10 分钟内生效）：
 
 ```bash
-npm run doc-deploy
+npm run doc:deploy
 ```
 
 ## 软件发布
@@ -75,4 +75,4 @@ npm version major
 git log v2.5.11..v2.5.12
 ```
 
-[tags]: https://github.com/searchfe/superframe/tags
+[tags]: https://github.com/Ralltiir/ralltiir/releases

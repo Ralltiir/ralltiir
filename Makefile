@@ -24,9 +24,9 @@ build-dev: build-prepare
 
 build/banner.js: build-prepare
 	echo '/*' > $@
-	echo ' * Superframe' >> $@
+	echo ' * Ralltiir' >> $@
 	echo ' * Version: '$(NAME)-$(VERSION) >> $@
-	echo ' * Homepage: http://superframe.baidu.com' >> $@
+	echo ' * Homepage: https://ralltiir.github.io/ralltiir/' >> $@
 	echo ' * Build Date: '`date --iso-8601=seconds` >> $@
 	echo ' * Last Commit: '`git log -1 --oneline | sed "s/\*//g"` >> $@
 	echo ' */' >> $@
@@ -35,7 +35,7 @@ build-prod: build-prepare
 	fis3 release prod -d ./build
 	[ -d ./dist ] || mkdir ./dist
 
-dist-prepare: 
+dist-prepare:
 	[ -d ./dist ] || mkdir ./dist
 
 dist: build-prod dist-prepare build/banner.js

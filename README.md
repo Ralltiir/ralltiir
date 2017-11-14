@@ -6,7 +6,7 @@
 * 开发版本：<https://unpkg.com/ralltiir@2.5.15/dist/ralltiir.js>
 * 压缩版本：<https://unpkg.com/ralltiir@2.5.15/dist/ralltiir.min.js>
 
-Ralltiir 前端极速浏览框架，是一种前端异步单页技术。 
+Ralltiir 前端极速浏览框架，是一种前端异步单页技术。
 点击超链接或浏览器跳转时，异步地获取数据并将内容展现给用户。
 以此来减少用户等待时间，以及提高页面渲染速度。Ralltiir  主要特性如下：
 
@@ -55,19 +55,19 @@ npm publish
 首先安装 gitbook 依赖：
 
 ```bash
-npm run doc-install
+npm run doc:install
 ```
 
 本地预览文档：
 
 ```bash
-npm run doc-preview
+npm run doc:preview
 ```
 
 部署到 <ralltiir.github.io/ralltiir>：
 
 ```bash
-npm run doc-deploy
+npm run doc:deploy
 ```
 
 ## Roadmap
