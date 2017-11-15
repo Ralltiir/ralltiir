@@ -414,6 +414,10 @@ define(function (require) {
             var to = router.createURL(url, query).toString();
 
             logger.log('[transfering page] from:', from, 'to:', to);
+            if (!pages.contains(from)) {
+                console.warn('current page not found, cannot transfer to', url);
+                return;
+            }
             pages.rename(from, to);
         }
 
