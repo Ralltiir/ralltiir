@@ -130,13 +130,6 @@ define(function (require) {
         exports.dispatch = function (current, prev) {
             assert(current, 'cannot dispatch with options:' + current);
 
-            logger.log('action dispatching to: ' + current.url);
-            exports.emit('dispatching', {
-                current: current,
-                previous: prev,
-                extra: stageData
-            });
-
             var src = _.get(current, 'options.src');
 
             var prevService = services.getOrCreate(prev.url, prev.pathPattern);
@@ -173,6 +166,13 @@ define(function (require) {
             else {
                 isIndexPage = false;
             }
+
+            logger.log('action dispatching to: ' + current.url);
+            exports.emit('dispatching', {
+                current: current,
+                previous: prev,
+                extra: stageData
+            });
 
             doc.ensureAttached();
             // Abort currently the running dispatch queue,
