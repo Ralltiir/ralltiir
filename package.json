@@ -47,7 +47,6 @@
     "karma-html-reporter": "^0.2.7",
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.0.4",
-    "karma-phantomjs-launcher": "^1.0.4",
     "mocha": "^3.5.3",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.14.0"
