@@ -182,6 +182,19 @@ define(function (require) {
     }
 
     /**
+     * Creates an array with all falsey values removed. The values false, null, 0, "", undefined, and NaN are falsey.
+     *
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @return {Array} The filtered elements
+     * @memberof underscore
+     */
+    function filter(collection, iteratee) {
+        var args = getArgs(arguments);
+        return arrayProto.filter.apply(collection || [], args);
+    }
+
+    /**
      * Creates an array of values by running each element in collection thru iteratee.
      * The iteratee is invoked with three arguments: (value, index|key, collection).
      *
@@ -622,6 +635,7 @@ define(function (require) {
     exports.slice = slice;
     exports.splice = splice;
     exports.forEach = forEach;
+    exports.filter = filter;
     exports.map = map;
     exports.reduce = reduce;
     exports.toArray = toArray;

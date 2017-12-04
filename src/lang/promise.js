@@ -338,8 +338,11 @@ define(function (require) {
         if (typeof window.PromiseRejectionEvent === 'function') {
             RejectionEvent = window.PromiseRejectionEvent;
         }
-        else {
+        else if (typeof window.CustomEvent === 'function') {
             RejectionEvent = CustomEvent;
+        }
+        else {
+            RejectionEvent = Event;
         }
         var event = new RejectionEvent('unhandledrejection', {
             promise: promise,
