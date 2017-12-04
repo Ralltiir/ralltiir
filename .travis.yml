@@ -1,12 +1,11 @@
 language: node_js
 node_js:
     - lts/*
-env:
-    - BROWSER=PhantomJS
 cache:
   directories:
     - "node_modules"
 script:
+    - rm package-lock.json
     - npm install -g apmjs
     - apmjs install
     - npm run lint
