@@ -1,18 +1,24 @@
 # 页面结构
 
 Ralltiir Application 是一个运行在浏览器中的异步浏览器。
-在启动 Ralltiir 之前需要先让你的页面结构符合 Ralltiir 的要求，
-这样才能识别页面内容并实现异步打开。本文介绍合法的 Ralltiir 页面结构。
+只有符合 Ralltiir 页面结构的页面，才能被 Ralltiir 识别并正常打开。
+
+本文介绍合法的 Ralltiir 页面应用的 DOM 结构，以及各部分的语义。
+具体的 Ralltiir 渲染过程比如顺序、并发等细节请参考 [页面渲染][render]。
+
+## 概述
 
 我们知道浏览器接受的 HTML 内容分为 `<head>` 和 `<body>` 两部分，
-Ralltiir Application 接受的 `.rt-view` 也需分为 `.rt-head` 和 `.rt-body` 两部分，
+Ralltiir Application 接受的 `.rt-view` 应包含（并且只包含） `.rt-head` 和 `.rt-body` 两部分，
 它们构成了合法的 Ralltiir 页面。其中：
 
 * `.rt-head` 负责顶部导航栏的渲染；
 * `.rt-body` 负责当前页面内容的渲染。
 
-`<body>` 的其余部分不会被 Ralltiir Application 读取，但浏览器会执行它们。
-因此被用来包含首页独有的 HTML 和 JavaScript，比如注册 Ralltiir Application 的路由。
+`.rt-view` 可以位于 `<body>` 中的任何地方，`.rt-view` 之外的部分不会被 Ralltiir 识别和渲染，
+但如果直接用浏览器打开时，浏览器会执行它们。
+因此 `.rt-view` 之外适合放置只在同步页面执行的脚本（通常是框架性质的）。
+比如引入 Ralltiir，以及注册路由。
 
 ## 一个例子
 
@@ -39,7 +45,7 @@ Ralltiir Application 接受的 `.rt-view` 也需分为 `.rt-head` 和 `.rt-body`
 
 ## 头部内容
 
-Ralltiir Application 中，`.rt-head` 的每个部分都有清晰的含义，这些部分都是可选的。
+Ralltiir Application 中，`.rt-head` 的以下元素是必须出现的，但其内容可以置空。
 
 * 在 `.rt-back` 中添加返回按钮的内容
 * 在 `.rt-title` 中添加标题的内容
@@ -48,8 +54,8 @@ Ralltiir Application 中，`.rt-head` 的每个部分都有清晰的含义，这
 
 > 因为移动端页面的宽度有限，不建议编写太长的 `title`，也不建议包含 `subtitle`。
 
-每一部分的内容都可以是合法的 HTML，Ralltiir Application 会直接渲染。其中引用的 iconfont、样式表都会直接引用全局作用域。
-其中 `.rt-actions` 只能包含一个或两个子元素，例如：
+每一部分的内容都可以是合法的 HTML，Ralltiir Application 会直接渲染。
+其中 `.rt-actions` 只能包含 0-2 个子元素，例如：
 
 ```html
 <div class="rt-actions">
@@ -57,6 +63,9 @@ Ralltiir Application 中，`.rt-head` 的每个部分都有清晰的含义，这
     <i class="fa fa-share"></i>
 </div>
 ```
+
+`.rt-head` 中的其他内容 Ralltiir 也会进行渲染，按照 CSS -> DOM -> JavaScript 的顺序。
+这意味着 `.rt-head` 中的外部样式表会阻塞渲染。
 
 ## 主体内容
 
@@ -73,4 +82,4 @@ Ralltiir Application 中，`.rt-head` 的每个部分都有清晰的含义，这
 同步渲染 | 执行          | 执行
 异步渲染 | 执行          | 不执行
 
-> 具体的 Ralltiir 渲染方式请参考 [[页面渲染]]。
+[render]: advanced/load-and-render.md
