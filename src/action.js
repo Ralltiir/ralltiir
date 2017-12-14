@@ -56,6 +56,7 @@ define(function (require) {
          * @private
          */
         exports.init = function () {
+            exports.started = false;
             services.init(this.dispatch);
             exports.pages = pages = createPages();
             backManually = false;
@@ -500,6 +501,7 @@ define(function (require) {
             }
             document.body.addEventListener('click', onAnchorClick);
             router.start();
+            exports.started = true;
         };
 
         /**
@@ -509,6 +511,7 @@ define(function (require) {
             document.body.removeEventListener('click', onAnchorClick);
             router.stop();
             router.clear();
+            exports.started = false;
         };
 
         /**
