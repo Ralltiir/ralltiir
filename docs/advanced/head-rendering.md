@@ -24,7 +24,19 @@
 
 ## 渲染策略
 
-为方便表述，上述配置方法以 **配置X** 指代。另外称 **配置0** 为添加返回按钮的默认配置。
+为方便表述，上述配置方法以 **配置X** 指代。另外称 **配置0** 为添加返回按钮的默认配置：
+在 `.rt-back` 中显示 `View.backHTML`，其默认值为：
+
+```
+<i class="c-icon">&#xe750;</i>
+```
+
+这个值可以配置，比如把它设为 Font Awesome 字体库的返回按钮（注意这是全局配置，非页面级别配置）：
+
+```javascript
+var service = require('ralltiir-application/service');
+service.setBackHtml('<i class="fa fa-arrow-left"></i>');
+```
 
 **过渡态**
 
