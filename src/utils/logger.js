@@ -3,13 +3,22 @@
  * @author harttle<yangjun14@baidu.com>
  */
 
-define(function () {
-    var timing = !!location.search.match(/logger-timming/i);
-    var match = location.search.match(/logger-server=([^&]*)/i);
-    var server = match ? decodeURIComponent(match[1]) : false;
+/* eslint-disable no-console */
+define(function (require) {
+    var enableTiming = !!location.search.match(/rt-debug-timming/i);
+    var enable = !!location.search.match(/rt-debug/i);
+    var Emitter = require('../utils/emitter');
 
     var timeOffset = Date.now();
     var lastTime = timeOffset;
+
+    if (enable) {
+        // eslint-disable
+        console.log('Ralltiir debug enabled');
+    }
+    if (enableTiming) {
+        console.log('Ralltiir timming debug enabled');
+    }
 
     function reset() {
         lastTime = timeOffset = Date.now();
@@ -18,7 +27,7 @@ define(function () {
     function assemble() {
         var args = Array.prototype.slice.call(arguments);
 
-        if (timing) {
+        if (enableTiming) {
             args.unshift('[' + getTiming() + ']');
         }
 
@@ -53,27 +62,24 @@ define(function () {
     function send(impl, args) {
         var fn = new Function('impl', 'args', 'impl.apply(console, args);');
         fn(impl, args);
-        if (server) {
-            var img = new Image();
-            var msg = args.join(' ').replace(/\s+/g, ' ').trim();
-            img.src = server + '/sfr/log/' + msg;
-        }
     }
 
     function logFactory(level, impl) {
-        return function () {
+        return enable ? function () {
             var args = assemble.apply(null, arguments);
             send(impl, args);
-        };
+        } : function () {};
     }
 
-    return {
-        /* eslint-disable no-console */
-        log: logFactory('log', console.log),
-        debug: logFactory('debug', console.log),
-        info: logFactory('info', console.info),
-        warn: logFactory('warn', console.warn),
-        error: logFactory('error', console.error),
-        reset: reset
-    };
+
+    var exports = new Emitter();
+    exports.log = logFactory('log', console.log);
+    exports.debug = logFactory('debug', console.log);
+    exports.info = logFactory('info', console.info);
+    exports.warn = logFactory('warn', console.warn);
+    exports.error = logFactory('error', console.error);
+    exports.reset = reset;
+
+    return exports;
 });
+/* eslint-enable no-console */

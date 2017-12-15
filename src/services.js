@@ -61,7 +61,7 @@ define(function (require) {
             router.add(pathPattern, actionDispatcher);
             urlEntries.set(pathPattern, {service: service, config: config});
 
-            logger.log('service registered to: ' + pathPattern);
+            logger.info('service', service, 'registered to', pathPattern);
         }
 
         function isRegistered(pathPattern) {
@@ -78,7 +78,7 @@ define(function (require) {
             assert(isRegistered(pathPattern), 'path not registered');
             router.remove(pathPattern);
             urlEntries.delete(pathPattern);
-            logger.log('service unregistered from: ' + pathPattern);
+            logger.info('service unregistered from: ' + pathPattern);
         }
 
         function getService(url) {

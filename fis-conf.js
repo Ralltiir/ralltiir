@@ -72,12 +72,7 @@ fis.match('main.min.js', {
             // eslint-disable-next-line
             max_line_len : 500
         },
-        compress: {
-            // eslint-disable-next-line
-            dead_code: true,
-            // eslint-disable-next-line
-            pure_funcs: ['logger.debug', 'logger.log', 'logger.info', 'logger.error', 'logger.warn']
-        }
+        compress: true
     }),
     release: '/src/main.min.js'
 });

@@ -291,7 +291,7 @@ define(function (require) {
                     if (thisThreadID !== threadID) {
                         return;
                     }
-                    logger.log('calling lifecycle', cb.name);
+                    logger.log('calling lifecycle', cb.name || 'anonymous');
                     return cb();
                 })
                 .catch(errorHandler)
