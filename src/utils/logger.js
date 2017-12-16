@@ -11,6 +11,7 @@ define(function (require) {
 
     var timeOffset = Date.now();
     var lastTime = timeOffset;
+    var exports = new Emitter();
 
     if (enable) {
         // eslint-disable
@@ -59,20 +60,20 @@ define(function (require) {
         return ret;
     }
 
-    function send(impl, args) {
+    function send(level, impl, args) {
         var fn = new Function('impl', 'args', 'impl.apply(console, args);');
         fn(impl, args);
+        args.unshift(level);
+        exports.emit.apply(exports, args);
     }
 
     function logFactory(level, impl) {
         return enable ? function () {
             var args = assemble.apply(null, arguments);
-            send(impl, args);
+            send(level, impl, args);
         } : function () {};
     }
 
-
-    var exports = new Emitter();
     exports.log = logFactory('log', console.log);
     exports.debug = logFactory('debug', console.log);
     exports.info = logFactory('info', console.info);
