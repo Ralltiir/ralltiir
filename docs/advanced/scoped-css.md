@@ -34,25 +34,23 @@ fis.config.set('modules.parser.less', [function (content, file, settings) {
 
 > 注意：`html`, `head`, `body` 以及 `.rt-view` 上，前缀需要特殊处理。
 
-## 样式隔离降级
+## 强制样式隔离
 
 如果未能完成样式局部化，或者第三方库升级导致冲突。这时只能依赖 Ralltiir 进行样式隔离。
 这里介绍这一机制。
 
-### 设置方式
-
-设置 `isolateCSS` 即可启用 CSS 隔离。
+设置 `isolateCSS` 即可启用 CSS 隔离，记得设置 `name` 字段，
+让 Ralltiir 识别同一个 Web App 的页面，在它们之间不会有效果降级。
 
 ```javascript
 rt.services.register('/home', {
     title: 'Home',
+    name: 'zhaopin',
     isolateCSS: true
 }, Service);
 ```
 
-### 副作用
-
-由于要强制 CSS 隔离，不能允许两个页面共存。因此 Ralltiir 过渡态的效果会受到影响：
+由于要强制 CSS 隔离，不能允许两个页面共存。因此 Ralltiir 过渡态的效果会因此受到影响：
 
 * 返回到其他 Service 时，没有返回动画
 * 打开其他 Service 时，不可使用 DOM 缓存
