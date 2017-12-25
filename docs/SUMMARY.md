@@ -16,6 +16,7 @@
     *   [Service 编写](/advanced/service.md)
     *   [生命周期概述](/advanced/life-cycle.md)
     *   [实例缓存](/advanced/instance-cache.md)
+    *   [样式局部化](/advanced/scoped-css.md)
     *   [框架 Debug](/advanced/debug.md)
 * API
     *   [Action](/api/action.md)
