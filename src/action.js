@@ -346,7 +346,6 @@ define(function (require) {
          * @param {Object} data extended data being passed to `current.options`
          * */
         exports.redirect = function (url, query, options, data) {
-            var noRootUrl;
             var page;
             logger.log('action redirecting to: ' + url);
             exports.emit('redirecting', url);
@@ -355,16 +354,8 @@ define(function (require) {
             options = _.assign({}, options, {
                 id: pageId++
             });
-            noRootUrl = getCurrPageUrl();
-            page = pages.get(noRootUrl);
-
-            if (page) {
-                page.scrollTop = window.pageYOffset;
-            } else {
-                pages.set(noRootUrl, {
-                    scrollTop: window.pageYOffset
-                });
-            }
+            // 保存下浏览位置到当前url上；
+            setScrollTopToPage();
 
             try {
                 if (options.silent) {
@@ -394,17 +385,10 @@ define(function (require) {
             return url;
         }
 
-        /**
-         *  Back to last state
-         *
-         *  @static
-         * */
-        exports.back = function () {
+        function setScrollTopToPage() {
             var noRootUrl = getCurrPageUrl();
             var page;
-            backManually = true;
             page = pages.get(noRootUrl);
-
             if (page) {
                 page.scrollTop = window.pageYOffset;
             } else {
@@ -412,6 +396,16 @@ define(function (require) {
                     scrollTop: window.pageYOffset
                 });
             }
+        }
+        /**
+         *  Back to last state
+         *
+         *  @static
+         * */
+        exports.back = function () {
+            backManually = true;
+            // 保存下浏览位置到当前url上；
+            setScrollTopToPage();
             history.back();
         };
 
