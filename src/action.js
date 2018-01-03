@@ -36,7 +36,7 @@ define(function (require) {
                         page.onRemove(url, evicted);
                     }
                 },
-                limit: 32
+                limit: 1000000
             });
             function normalizeKey(fn, thisArg) {
                 return function (url) {
@@ -48,6 +48,10 @@ define(function (require) {
             pages.set = normalizeKey(pages.set, pages);
             pages.contains = normalizeKey(pages.contains, pages);
             return pages;
+        }
+
+        function getCurrPageUrl() {
+            return location.pathname + location.search;
         }
 
         /**
@@ -342,6 +346,8 @@ define(function (require) {
          * @param {Object} data extended data being passed to `current.options`
          * */
         exports.redirect = function (url, query, options, data) {
+            var noRootUrl;
+            var page;
             logger.log('action redirecting to: ' + url);
             exports.emit('redirecting', url);
             url = resolveUrl(url);
@@ -349,6 +355,17 @@ define(function (require) {
             options = _.assign({}, options, {
                 id: pageId++
             });
+            noRootUrl = getCurrPageUrl();
+            page = pages.get(noRootUrl);
+
+            if (page) {
+                page.scrollTop = window.pageYOffset;
+            } else {
+                pages.set(noRootUrl, {
+                    scrollTop: window.pageYOffset
+                });
+            }
+
             try {
                 if (options.silent) {
                     transferPageTo(url, query);
@@ -383,7 +400,18 @@ define(function (require) {
          *  @static
          * */
         exports.back = function () {
+            var noRootUrl = getCurrPageUrl();
+            var page;
             backManually = true;
+            page = pages.get(noRootUrl);
+
+            if (page) {
+                page.scrollTop = window.pageYOffset;
+            } else {
+                pages.set(noRootUrl, {
+                    scrollTop: window.pageYOffset
+                });
+            }
             history.back();
         };
 
@@ -419,7 +447,8 @@ define(function (require) {
                 console.warn('current page not found, cannot transfer to', url);
                 return;
             }
-            pages.rename(from, to);
+            pages.set(to, pages.get(from));
+            // pages.rename(from, to);
         }
 
         /**
@@ -518,13 +547,7 @@ define(function (require) {
          * Destroy the action, eliminate side effects:
          * DOM event listeners, cache namespaces, external states
          */
-        exports.destroy = function () {
-            exports.stop();
-            cache.destroy('pages');
-            services.destroy();
-            exports.pages = pages = undefined;
-            services.unRegisterAll();
-        };
+
 
         /**
          *  Update page, reset or replace current state accordingly
