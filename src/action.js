@@ -541,7 +541,7 @@ define(function (require) {
          * Destroy the action, eliminate side effects:
          * DOM event listeners, cache namespaces, external states
          */
-         exports.destroy = function () {
+        exports.destroy = function () {
             exports.stop();
             cache.destroy('pages');
             services.destroy();
