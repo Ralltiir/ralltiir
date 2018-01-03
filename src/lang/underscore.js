@@ -335,6 +335,40 @@ define(function (require) {
     }
 
     /**
+     * Creates a shallow clone of value.
+     *
+     * @param {any} value The value to clone.
+     * @return {any} Returns the cloned value.
+     */
+    function clone(value) {
+        if (!isObject(value)) {
+            return value;
+        }
+        var ret = {};
+        forOwn(value, function (val, key) {
+            ret[key] = val;
+        });
+        return ret;
+    }
+
+    /**
+     * This method is like _.clone except that it recursively clones value.
+     *
+     * @param {any} value The value to clone.
+     * @return {any} Returns the cloned value.
+     */
+    function cloneDeep(value) {
+        if (!isObject(value)) {
+            return value;
+        }
+        var ret = {};
+        forOwn(value, function (val, key) {
+            ret[key] = cloneDeep(val);
+        });
+        return ret;
+    }
+
+    /**
      * Checks if value is the language type of Object.
      * (e.g. arrays, functions, objects, regexes, new Number(0), and new String(''))
      *
@@ -625,6 +659,8 @@ define(function (require) {
     exports.has = has;
     exports.forOwn = forOwn;
     exports.assign = assign;
+    exports.clone = clone;
+    exports.cloneDeep = cloneDeep;
     exports.merge = assign;
     exports.extend = assign;
     exports.defaults = defaults;
