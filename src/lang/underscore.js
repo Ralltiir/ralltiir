@@ -358,6 +358,9 @@ define(function (require) {
      * @return {any} Returns the cloned value.
      */
     function cloneDeep(value) {
+        if (isFunction(value)) {
+            return value;
+        }
         if (!isObject(value)) {
             return value;
         }

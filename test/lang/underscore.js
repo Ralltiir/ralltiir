@@ -251,11 +251,12 @@ define(function (require) {
                 expect(b.foo.bar).to.equal('bar');
             });
             it('should handle function', function () {
-                function a() {}
-                a.foo = 'FOO';
-                var b = _.cloneDeep(a);
-                a.foo = 'BAR';
-                expect(b.foo).to.equal('FOO');
+                var foo = {
+                    a: function () {}
+                };
+                foo.a.b = 'b';
+                var bar = _.cloneDeep(foo);
+                expect(foo.a).to.equal(bar.a);
             });
         });
         describe('.assign', function () {
