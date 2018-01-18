@@ -35,6 +35,7 @@ var rt = require('ralltiir')
 rt.logger.on('warn', args => {
     (new Image).src = 'http://example.com?level=warn&msg=' + encodeURIComponent(args.join(' '))
 })
+```
 
 这样就可以把日志发到服务器啦，方便手机端调试。其中事件名包括：
 
