@@ -5,6 +5,7 @@
   "language": "zh-hans",
   "plugins": [
     "expandable-chapters",
+    "anchor-navigation-ex",
     "splitter",
     "atoc",
     "editlink",

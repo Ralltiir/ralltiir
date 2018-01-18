@@ -48,6 +48,17 @@ Ralltiir 会发送异步请求获取被打开的页面，这个页面需要是 [
 2. 移动所有 DOM 节点到对应位置。`.rt-head` 移动到 DOM 树的 `.rt-head` 处，`.rt-body` 移动到 DOM 树的 `.rt-body` 处。
 3. 执行所有内联我外链 JavaScript。注意为了性能考虑这些脚本的执行是并发的，无序的。因此接入 Ralltiir 的页面强烈建议 AMD 化。
 
+## 渲染错误
+
+网络错误或者渲染错误都会触发 Ralltiir 的容错机制，从而跳转同步页面。
+此时页面 URL 上会添加 `rt-err` 参数来标识错误原因，它们的值见下表：
+
+错误原因 | `rt-err`
+页面请求 4xx 或 5xx | XHR 的 HTTP 状态码
+页面请求 CORS 失败 | 901
+返回的[页面结构][html-structure]不合法 | 901
+返回页面的内联 `<script>` 抛出异常 | 901
+
 [rt-app]: https://github.com/Ralltiir/ralltiir-application
 [render.js]: https://github.com/Ralltiir/ralltiir-application/blob/master/view/render.js
 [html-structure]: /get-started/html-structure.md
