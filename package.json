@@ -12,16 +12,11 @@
     "preversion": "npm run lint && npm test",
     "postversion": "git push origin master && git push origin --tags",
     "clean": "make clean",
-    "lint": "fecs check src, test",
-    "build": "make build",
-    "version": "npm run dist",
-    "dist": "make dist"
+    "lint": "fecs check src, test"
   },
-  "main": "./dist/ralltiir.min.js",
+  "main": "./src/index.js",
   "files": [
-    "src/",
-    "dist/ralltiir.js",
-    "dist/ralltiir.min.js"
+    "src/"
   ],
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
