@@ -1,6 +1,8 @@
 # 生命周期概述
 
-本文介绍 Ralltiir 中 Service 的生命周期函数调用时机。
+本文介绍 Ralltiir 中 Service 的**生命周期方法**调用时机。
+注意**生命周期方法** 是指Service内部方法，业务代码请使用
+[Ralltiir 事件](/advanced/events.md)。
 
 ## 单例 Service
 
