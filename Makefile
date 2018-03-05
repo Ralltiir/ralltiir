@@ -80,8 +80,6 @@ doc-deploy: doc
 
 doc-api:
 	rm -rf ./docs/api && mkdir ./docs/api
-	$(DOC) src/lang/promise.js > docs/api/promise.md
-	$(DOC) src/lang/underscore.js > docs/api/underscore.md
 	$(DOC) src/utils/http.js > docs/api/http.md
 	$(DOC) src/utils/cache.js > docs/api/cache.md
 	$(DOC) src/utils/cache-namespace.js > docs/api/cache-namespace.md

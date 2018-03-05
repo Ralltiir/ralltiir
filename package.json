@@ -20,7 +20,8 @@
   ],
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
-    "@searchfe/promise": "^1.0.3"
+    "@searchfe/promise": "^1.0.3",
+    "@searchfe/underscore": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

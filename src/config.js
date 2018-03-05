@@ -67,16 +67,16 @@ define(function (require) {
         // Language Enhancements
         assert: {
             type: 'value',
-            module: require('./lang/assert')
+            module: require('@searchfe/assert')
         },
         // eslint-disable-next-line
         _: {
             type: 'value',
-            module: require('./lang/underscore')
+            module: require('@searchfe/underscore')
         },
         promise: {
             type: 'value',
-            module: require('./lang/promise')
+            module: require('@searchfe/promise')
         },
         map: {
             type: 'value',

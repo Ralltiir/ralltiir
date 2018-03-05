@@ -1,0 +1,17 @@
+{
+  "name": "ralltiir",
+  "version": "2.11.2",
+  "dependencies": {
+    "@searchfe/assert": {
+      "version": "1.0.0",
+      "integrity": "sha512-INeZlzcMK1ainjU9FpBf8jrqq7wzFF0eDb5JCrHpp/fMzdIlbdDfhM3bprtzrSmOo/rA7AdP4Ch8p4RNxuj2jg=="
+    },
+    "@searchfe/promise": {
+      "version": "1.0.3",
+      "integrity": "sha512-BuAjgs8AW1A3dvvUfaXx46rhpLWiOF/2FPL/S51Mw+Z4bV/WczfxX+LF61VD3MOSpjkhDSsAwqQ7jTxuulr0Tg=="
+    },
+    "@searchfe/underscore": {
+      "version": "1.0.1"
+    }
+  }
+}
