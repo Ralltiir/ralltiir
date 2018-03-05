@@ -6,8 +6,8 @@
  * @author harttle<yangjun14@baidu.com>
  */
 define(function (require) {
-    var assert = require('../lang/assert');
-    var _ = require('../lang/underscore');
+    var assert = require('@searchfe/assert');
+    var _ = require('@searchfe/underscore');
 
     /**
      * Create a IoC container

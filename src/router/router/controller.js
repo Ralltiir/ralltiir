@@ -4,7 +4,7 @@
  */
 
 define(function (require) {
-    var _ = require('../../lang/underscore');
+    var _ = require('@searchfe/underscore');
     var URL = require('./URL');
     var config = require('./config');
     var applyHandler;

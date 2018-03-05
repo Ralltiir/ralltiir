@@ -12,7 +12,7 @@ require.config({
     baseUrl: '/base/src',
     paths: {
         test: '/base/test',
-        apmjs: '/base/amd_modules'
+        '@searchfe': '/base/amd_modules/@searchfe'
     }
 });
 

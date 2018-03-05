@@ -9,10 +9,10 @@ define(function (require) {
      */
 
     var cache = require('./utils/cache');
-    var Promise = require('./lang/promise');
-    var assert = require('./lang/assert');
+    var Promise = require('@searchfe/promise');
+    var assert = require('@searchfe/assert');
     var logger = require('./utils/logger');
-    var _ = require('./lang/underscore');
+    var _ = require('@searchfe/underscore');
     var dom = require('./utils/dom');
     var URL = require('./utils/url');
 

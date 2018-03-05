@@ -5,7 +5,7 @@
  */
 define(function (require) {
     var http = require('./utils/http');
-    var _ = require('./lang/underscore');
+    var _ = require('@searchfe/underscore');
 
     /**
      * The REST resource CRUD utility

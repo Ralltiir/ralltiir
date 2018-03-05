@@ -7,7 +7,7 @@
 define(function (require) {
     var enableTiming = !!location.search.match(/rt-debug-timming/i);
     var enableDebug = !!location.search.match(/rt-debug/i);
-    var _ = require('../lang/underscore');
+    var _ = require('@searchfe/underscore');
     var Emitter = require('../utils/emitter');
 
     var timeOffset = Date.now();

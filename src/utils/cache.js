@@ -9,7 +9,7 @@
  */
 
 define(function (require) {
-    var assert = require('../lang/assert');
+    var assert = require('@searchfe/assert');
     var Namespace = require('./cache-namespace');
     var storage = {};
     var exports = {};

@@ -7,7 +7,7 @@ define(function (require) {
 
     var UNDEFINED;
 
-    var _ = require('../../../lang/underscore');
+    var _ = require('@searchfe/underscore');
 
     /**
      * 标准化URI数据

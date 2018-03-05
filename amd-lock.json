@@ -11,7 +11,8 @@
       "integrity": "sha512-BuAjgs8AW1A3dvvUfaXx46rhpLWiOF/2FPL/S51Mw+Z4bV/WczfxX+LF61VD3MOSpjkhDSsAwqQ7jTxuulr0Tg=="
     },
     "@searchfe/underscore": {
-      "version": "1.0.1"
+      "version": "1.0.1",
+      "integrity": "sha512-H4iktWJdRcG0XYOKkHOZoOvZH7Ag/FTwMTFhCH91ojy8dh2opcP36UUs3X8Jz7t6DKcKWLGpQJWmS5GMDymm/g=="
     }
   }
 }

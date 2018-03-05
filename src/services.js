@@ -5,8 +5,8 @@
 
 define(function (require) {
     var Map = require('./lang/map');
-    var _ = require('./lang/underscore');
-    var assert = require('./lang/assert');
+    var _ = require('@searchfe/underscore');
+    var assert = require('@searchfe/assert');
     var logger = require('./utils/logger');
     var cache = require('./utils/cache');
 

@@ -5,10 +5,10 @@
  */
 
 define(function (require) {
-    var extend = require('../lang/underscore').extend;
+    var extend = require('@searchfe/underscore').extend;
     var globalConfig = require('./router/config');
     var controller = require('./router/controller');
-    var _ = require('../lang/underscore');
+    var _ = require('@searchfe/underscore');
     var logger = require('../utils/logger');
 
     function routerFactory() {

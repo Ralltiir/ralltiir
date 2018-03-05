@@ -11,7 +11,7 @@
 
 define(function (require) {
 
-    var _ = require('./underscore');
+    var _ = require('@searchfe/underscore');
 
     /**
      * Map utility

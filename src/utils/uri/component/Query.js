@@ -4,7 +4,7 @@
  */
 
 define(function (require) {
-    var _ = require('../../../lang/underscore');
+    var _ = require('@searchfe/underscore');
     var Abstract = require('./Abstract');
     var parse = require('../util/parse-query');
     var stringify = require('../util/stringify-query');

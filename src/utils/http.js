@@ -5,8 +5,8 @@
  */
 
 define(function (require) {
-    var _ = require('../lang/underscore');
-    var Promise = require('../lang/promise');
+    var _ = require('@searchfe/underscore');
+    var Promise = require('@searchfe/promise');
     var Url = require('./url');
     var exports = {};
 

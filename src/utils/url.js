@@ -7,7 +7,7 @@
 define(function (require) {
 
     var URI = require('./uri/URI');
-    var _ = require('../lang/underscore');
+    var _ = require('@searchfe/underscore');
     var Path = require('./uri/component/Path');
     var uRIParser = require('./uri/util/uri-parser');
 

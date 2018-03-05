@@ -9,7 +9,7 @@ define(function (require) {
      * @module Namespace
      */
 
-    var _ = require('../lang/underscore');
+    var _ = require('@searchfe/underscore');
 
     /**
      * Event handler interfact used by Namespaceoptions.onRemove
