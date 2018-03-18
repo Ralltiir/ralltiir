@@ -144,7 +144,7 @@ define(function (require) {
 
         describe('#equal()', function () {
 
-            it('shoud return boolean', function () {
+            it('should return boolean', function () {
                 var url1 = new URL('../work/search?kw=xxx&t=10');
                 var url2 = new URL('../work/search');
 
@@ -171,7 +171,7 @@ define(function (require) {
         });
 
         describe('#equalWithFragment()', function () {
-            it('shoud return boolean', function () {
+            it('should return boolean', function () {
                 var url1 = new URL('../work/search?kw=xxx&t=10');
                 var url2 = new URL('../work/search?kw=xxx&t=10#www');
                 var url3 = new URL('../work/search?kw=xxx&t=10#www');
