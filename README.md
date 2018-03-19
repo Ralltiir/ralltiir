@@ -17,8 +17,14 @@ Ralltiir 前端极速浏览框架，是一种前端异步单页技术。
 
 ## 安装
 
+推荐通过 APM 安装和使用 ralltiir。
+
 ```bash
-npm install -g ralltiir
+# 安装 apm
+npm install -g apmjs
+# 安装 ralltiir 的依赖
+cd ralltiir
+apmjs install
 ```
 
 ## 整体架构
