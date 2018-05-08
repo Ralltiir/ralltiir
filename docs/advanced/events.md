@@ -12,7 +12,7 @@ Ralltiir 单例上的事件用来监听页面级别的行为。例如：
 
 ```javascript
 var rt = require('ralltiir');
-rt.on('dispatching', function (curr, prev){
+rt.action.on('dispatching', function (curr, prev){
     console.log('page change:', curr.url, prev.url);
 });
 ```
