@@ -10,6 +10,7 @@
 
 ```javascript
 {
+    name: 'baidu-zhaopin',
     title: {
         html: '主标题',
         onClick: function () {
@@ -37,6 +38,7 @@
 
 **视图参数** 中共有 4 项元素配置，分别是：
 
+* `name`: 用来指定页面名字，同样名字的一组页面可以 [互相通信][messaging]。
 * `title`：用来配置页面标题，它的值为一个 **元素配置**（见下文）。
 * `subtitle`：用来配置副标题。注意移动页面很小，副标题一般用来显示位置信息、状态信息等。它的值为一个 **元素配置**。
 * `back`：用来配置左侧返回按钮。它的值为一个 **元素配置**。
@@ -62,3 +64,4 @@
 [html]: /get-started/html-structure.md
 [register]: /get-started/router.md
 [link]: /get-started/rt-link.md
+[messaging]: /advanced/messaging.md

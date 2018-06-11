@@ -12,6 +12,7 @@
 * 高级主题
     *   [Ralltiir 事件](/advanced/events.md)
     *   [性能数据](/advanced/performance.md)
+    *   [页面通信](/advanced/messaging.md)
     *   [错误处理](/advanced/error-handling.md)
     *   [头部渲染策略](/advanced/head-rendering.md)
     *   [页面加载和渲染](/advanced/load-and-render.md)
