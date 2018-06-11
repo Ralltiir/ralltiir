@@ -20,7 +20,7 @@
   ],
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
-    "@searchfe/promise": "^1.0.3",
+    "@searchfe/promise": "^1.0.6",
     "@searchfe/underscore": "^1.0.1"
   },
   "devDependencies": {

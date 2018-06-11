@@ -183,36 +183,7 @@ define(function (require) {
             // Abort currently the running dispatch queue,
             // and initiate a new one.
             return dispatchQueue.reset([
-                function prevDetach() {
-                    if (!prevService) {
-                        return;
-                    }
-                    return prevService.singleton
-                        ? prevService.detach(current, prev, data)
-                        : prevService.beforeDetach(current, prev, data);
-                },
-                function currCreate() {
-                    if (!currentService) {
-                        return;
-                    }
-                    return currentService.singleton
-                        ? currentService.create(current, prev, data)
-                        : currentService.beforeAttach(current, prev, data);
-                },
-                function prevDestroy() {
-                    if (!prevService) {
-                        return;
-                    }
-                    return prevService.singleton
-                        ? prevService.destroy(current, prev, data)
-                        : prevService.detach(current, prev, data);
-                },
-                function currAttach() {
-                    if (!currentService) {
-                        return;
-                    }
-                    return currentService.attach(current, prev, data);
-                }
+                prevDetach, currCreate, prevDestroy, currAttach
             ]).exec(function currAbort() {
                 if (currentService && currentService.abort) {
                     currentService.abort(current, prev, data);
@@ -224,6 +195,41 @@ define(function (require) {
                     location.replace(location.href);
                 }
             });
+            function prevDetach() {
+                if (!prevService) {
+                    return;
+                }
+                var ret = prevService.singleton
+                    ? prevService.detach(current, prev, data)
+                    : prevService.beforeDetach(current, prev, data);
+                if (currentService && !currentService.singleton) {
+                    ret = currCreate();
+                    currCreate.done = true;
+                }
+                return ret;
+            }
+            function currCreate() {
+                if (!currentService || currCreate.done) {
+                    return;
+                }
+                return currentService.singleton
+                    ? currentService.create(current, prev, data)
+                    : currentService.beforeAttach(current, prev, data);
+            }
+            function prevDestroy() {
+                if (!prevService) {
+                    return;
+                }
+                return prevService.singleton
+                    ? prevService.destroy(current, prev, data)
+                    : prevService.detach(current, prev, data);
+            }
+            function currAttach() {
+                if (!currentService) {
+                    return;
+                }
+                return currentService.attach(current, prev, data);
+            }
         };
 
         /**
@@ -346,7 +352,6 @@ define(function (require) {
          * @param {Object} data extended data being passed to `current.options`
          * */
         exports.redirect = function (url, query, options, data) {
-            var page;
             logger.log('action redirecting to: ' + url);
             exports.emit('redirecting', url);
             url = resolveUrl(url);
@@ -391,12 +396,14 @@ define(function (require) {
             page = pages.get(noRootUrl);
             if (page) {
                 page.scrollTop = window.pageYOffset;
-            } else {
+            }
+            else {
                 pages.set(noRootUrl, {
                     scrollTop: window.pageYOffset
                 });
             }
         }
+
         /**
          *  Back to last state
          *
@@ -438,6 +445,7 @@ define(function (require) {
 
             logger.log('[transfering page] from:', from, 'to:', to);
             if (!pages.contains(from)) {
+                // eslint-disable-next-line
                 console.warn('current page not found, cannot transfer to', url);
                 return;
             }
