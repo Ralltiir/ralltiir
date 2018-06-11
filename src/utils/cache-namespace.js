@@ -146,6 +146,17 @@ define(function (require) {
             return this;
         },
 
+        /**
+         * Traverse all items available
+         *
+         * @param {Function} cb(value, key) The callback to iterate with
+         */
+        forEach: function (cb) {
+            this.list.forEach(function (item) {
+                cb(item.value, item.key);
+            });
+        },
+
         size: function () {
             return this.list.length;
         },
