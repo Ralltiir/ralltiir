@@ -359,7 +359,7 @@ define(function (require) {
 
             try {
                 if (options.silent) {
-                    transferPageTo(url, query);
+                    copyPageTo(url, query);
                 }
                 router.redirect(url, query, options);
             }
@@ -426,12 +426,12 @@ define(function (require) {
                 indexPageUrl = url;
             }
 
-            transferPageTo(url, query);
+            copyPageTo(url, query);
             _.assign(stageData, data);
             router.reset(url, query, options);
         };
 
-        function transferPageTo(url, query) {
+        function copyPageTo(url, query) {
             var noRootUrl = router.ignoreRoot(location.pathname + location.search);
             var from = router.createURL(noRootUrl).toString();
             var to = router.createURL(url, query).toString();
@@ -442,7 +442,6 @@ define(function (require) {
                 return;
             }
             pages.set(to, pages.get(from));
-            // pages.rename(from, to);
         }
 
         /**
@@ -607,7 +606,7 @@ define(function (require) {
             var noRootUrl = router.ignoreRoot(location.pathname + location.search);
             var currUrl = router.createURL(noRootUrl).toString();
             var page = pages.get(currUrl);
-            transferPageTo(url, options.query);
+            copyPageTo(url, options.query);
 
             options = _.assign({}, {
                 fromUrl: url,
