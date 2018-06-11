@@ -1,6 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.11.2",
+  "version": "2.11.3",
   "dependencies": {
     "@searchfe/assert": {
       "version": "1.0.0",
