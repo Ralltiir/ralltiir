@@ -10,7 +10,6 @@
     "test-watch": "make test-watch",
     "test-reports": "make test-reports",
     "preversion": "npm run lint && npm test",
-    "postversion": "git push origin master && git push origin --tags",
     "clean": "make clean",
     "lint": "fecs check src, test"
   },
