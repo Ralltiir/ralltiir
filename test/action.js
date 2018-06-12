@@ -666,7 +666,7 @@ define(function (require) {
                             .has.been.calledOnce;
                     });
                 });
-                it.only('should copy service instance when using magic', function () {
+                it('should copy service instance when using magic', function () {
                     return action.dispatch(current, {})
                     .then(function () {
                         return action.dispatch(magicCurrent, current);
