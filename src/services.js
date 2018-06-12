@@ -128,7 +128,7 @@ define(function (require) {
          */
         function copyServiceMapping(from, to) {
             var id = url2id.get(from);
-            if (id) {
+            if (id !== undefined) {
                 url2id.set(to, id);
                 return true;
             }
