@@ -11,7 +11,7 @@ export NAME = $(shell node -p 'require("./package.json").name')
 export VERSION = $(shell node -p 'require("./package.json").version')
 export DESCRIPTION = $(shell node -p 'require("./package.json").description')
 
-.PHONY: test dist doc
+.PHONY: test dist doc test-reports
 
 # Build Related
 
