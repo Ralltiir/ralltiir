@@ -11,6 +11,7 @@
 
 define(function (require) {
     var Promise = require('@searchfe/promise');
+    var _ = require('@searchfe/underscore');
     var actionFactory = require('action');
     var Emitter = require('utils/emitter');
 
@@ -549,6 +550,149 @@ define(function (require) {
                     expect(args[1].transition.to.url).to.equal('/foo?foo=bar');
                     expect(args[1].transition.to.path).to.equal('/foo');
                     expect(args[1].transition.extra).to.deep.equal(extra);
+                });
+            });
+        });
+
+        describe('services', function () {
+            var fooServiceClass;
+            var barServiceClass;
+            var fooSpy;
+            var barSpy;
+            var magicCurrent;
+            var magicCurrent2;
+            var fooInstance;
+            var fooPattern = '/foo';
+            var barPattern = '/bar';
+            var barCurrent;
+            beforeEach(function () {
+                fooServiceClass = function (url) {
+                    this.url = url;
+                    fooSpy(url);
+                    fooInstance = this;
+                };
+                barServiceClass = function (url) {
+                    this.url = url;
+                    barSpy(url);
+                };
+            });
+            beforeEach(function () {
+                fooSpy = sinon.spy();
+                barSpy = sinon.spy();
+                magicCurrent = _.cloneDeep(current);
+                magicCurrent.url = '/foo?c=d';
+                magicCurrent.options.superMagicRouter = true;
+                magicCurrent2 = _.cloneDeep(magicCurrent);
+                magicCurrent2.url = '/foo?e=f';
+                barCurrent = _.cloneDeep(prev);
+                fooServiceClass.prototype.beforeAttach = sinon.spy();
+                fooServiceClass.prototype.attach = sinon.spy();
+                fooServiceClass.prototype.beforeDetach = sinon.spy();
+                fooServiceClass.prototype.detach = sinon.spy();
+                fooServiceClass.prototype.destroy = sinon.spy();
+                barServiceClass.prototype.beforeAttach = sinon.spy();
+                barServiceClass.prototype.attach = sinon.spy();
+                barServiceClass.prototype.beforeDetach = sinon.spy();
+                barServiceClass.prototype.detach = sinon.spy();
+                barServiceClass.prototype.destroy = sinon.spy();
+                services.register(fooPattern, {}, fooServiceClass);
+                services.register(barPattern, {}, barServiceClass);
+            });
+            it('should register services as instance', function () {
+                expect(services.urlEntries.has(fooPattern)).to.be.true;
+                expect(services.urlEntries.get(fooPattern).service).equals(fooServiceClass);
+                expect(!!fooServiceClass.singleton).to.be.false;
+            });
+            it('should create instance when dispatching', function () {
+                action.dispatch(current, prev);
+                expect(fooSpy).to.has.been.calledWith(current.url);
+                expect(barSpy).to.has.been.calledWith(prev.url);
+            });
+            describe('superMagicRouter', function () {
+                it('should not trigger attach when using magic router', function () {
+                    return action.dispatch(current, {})
+                    .then(function () {
+                        expect(fooServiceClass.prototype.attach).has.been.calledOnce;
+                        return action.dispatch(magicCurrent, current);
+                    })
+                    .then(function () {
+                        expect(fooServiceClass.prototype.attach).has.been.calledOnce;
+                    });
+                });
+                it('should trigger attach when redirect to new service', function () {
+                    // 先切入 current
+                    return action.dispatch(current, {})
+                    .then(function () {
+                        expect(fooServiceClass.prototype.attach, 'foo.attach')
+                            .has.been.calledOnce;
+                        // current 再魔法子路由到 magicCurrent
+                        return action.dispatch(magicCurrent, current);
+                    })
+                    .then(function () {
+                        expect(barServiceClass.prototype.attach, 'bar.attach')
+                            .has.not.been.called;
+                        expect(fooServiceClass.prototype.detach, 'foo.detach')
+                            .has.not.been.called;
+                        // magicCurrent 离开当前 service 管辖区
+                        return action.dispatch(barCurrent, magicCurrent);
+                    })
+                    .then(function () {
+                        expect(fooServiceClass.prototype.attach, 'foo.attach')
+                            .has.been.calledOnce;
+                        expect(fooServiceClass.prototype.detach, 'foo.detach')
+                            .has.been.calledOnce;
+                        expect(barServiceClass.prototype.attach, 'bar.attach')
+                            .has.been.calledOnce;
+                    });
+                });
+                it('should trigger attach when back to service', function () {
+                    return action.dispatch(current, {})
+                    .then(function () {
+                        return action.dispatch(magicCurrent, current);
+                    })
+                    .then(function () {
+                        return action.dispatch(barCurrent, magicCurrent);
+                    })
+                    .then(function () {
+                        // 再返回，应该重新触发，重置两个 spy
+                        fooServiceClass.prototype.attach = sinon.spy();
+                        barServiceClass.prototype.detach = sinon.spy();
+                        return action.dispatch(magicCurrent, barCurrent);
+                    })
+                    .then(function () {
+                        expect(fooServiceClass.prototype.attach, 'foo.attach')
+                            .has.been.calledOnce;
+                        expect(barServiceClass.prototype.detach, 'bar.detach')
+                            .has.been.calledOnce;
+                    });
+                });
+                it.only('should copy service instance when using magic', function () {
+                    return action.dispatch(current, {})
+                    .then(function () {
+                        return action.dispatch(magicCurrent, current);
+                    })
+                    .then(function () {
+                        expect(fooSpy).has.been.calledOnce;
+                        // push 两个 magic
+                        return action.dispatch(magicCurrent2, magicCurrent);
+                    })
+                    .then(function () {
+                        // 检查是否只触发了一次
+                        expect(fooSpy, 'foo constructor(1)').has.been.calledOnce;
+                        return action.dispatch(barCurrent, magicCurrent2);
+                    })
+                    .then(function () {
+                        // 再返回
+                        expect(fooSpy, 'foo constructor(2)').has.been.calledOnce;
+                        fooServiceClass.prototype.attach = sinon.spy();
+                        return action.dispatch(magicCurrent2, barCurrent);
+                    })
+                    .then(function () {
+                        // 始终只触发一次
+                        expect(fooSpy, 'foo constructor(3)').has.been.calledOnce;
+                        expect(fooServiceClass.prototype.attach, 'foo.attach')
+                            .has.been.calledOn(fooInstance);
+                    });
                 });
             });
         });
