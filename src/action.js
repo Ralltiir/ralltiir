@@ -164,7 +164,7 @@ define(function (require) {
 
             // MAGIC: 魔法子路由需要的魔法
             // 在两个实例相等，又都不是单例的情况下，认为是被复制的；此时不做 dispatch
-            if (prevService === currentService && !prevService.singleton) {
+            if (prevService && prevService === currentService && !prevService.singleton) {
                 logger.log('prev service and current service are the same. disabled dispatch.');
                 return;
             }
