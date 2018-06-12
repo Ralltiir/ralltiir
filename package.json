@@ -1,6 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.11.3",
+  "version": "2.12.0-0",
   "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc:install": "gitbook install ./docs",
