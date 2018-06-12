@@ -28,6 +28,7 @@ define(function (require) {
             unRegisterAll: unRegisterAll,
             getOrCreate: getOrCreate,
             setInstanceLimit: setInstanceLimit,
+            copyServiceMapping: copyServiceMapping,
             urlEntries: null
         };
         var id = 0;
@@ -116,6 +117,22 @@ define(function (require) {
                 var instance = Service.singleton ? Service : new Service(url, config);
                 return addInstance(url, instance);
             }
+        }
+
+        /**
+         * 拷贝 service 和 url 的对应关系
+         *
+         * @param {string} from 拷贝源 url
+         * @param {string} to 拷贝目标 url
+         * @return {boolean} 是否拷贝成功（不成功是因为没有源 service）
+         */
+        function copyServiceMapping(from, to) {
+            var id = url2id.get(from);
+            if (id) {
+                url2id.set(to, id);
+                return true;
+            }
+            return false;
         }
 
         return exports;
