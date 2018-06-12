@@ -143,7 +143,7 @@ define(function (require) {
             if (isMagicRouter) {
                 var prevServiceEntry = services.urlEntries.get(prev.pathPattern);
                 var currentServiceEntry = services.urlEntries.get(current.pathPattern);
-                if (prevServiceEntry === currentServiceEntry) {
+                if (prevServiceEntry.service === currentServiceEntry.service) {
                     services.copyServiceMapping(prev.url, current.url);
                     logger.log('copy service from ' + prev.url + ' to ' + current.url);
                     return;
