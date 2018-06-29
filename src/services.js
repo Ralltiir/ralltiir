@@ -23,6 +23,7 @@ define(function (require) {
             init: init,
             destroy: destroy,
             register: register,
+            postMessage: postMessage,
             unRegister: unRegister,
             isRegistered: isRegistered,
             unRegisterAll: unRegisterAll,
@@ -63,6 +64,20 @@ define(function (require) {
             urlEntries.set(pathPattern, {service: service, config: config});
 
             logger.info('service', service, 'registered to', pathPattern);
+        }
+
+        function postMessage(msg, target) {
+            assert(target, 'message target should be set explicitly');
+            serviceInstances.forEach(function (service) {
+                if (!_.isFunction(service.onMessage)) {
+                    return;
+                }
+                if (target === '*' || target === service.name) {
+                    setTimeout(function () {
+                        service.onMessage(msg);
+                    });
+                }
+            });
         }
 
         function isRegistered(pathPattern) {
