@@ -137,6 +137,21 @@ define(function (require) {
 
             var src = _.get(current, 'options.src');
 
+            // MAGIC: 处理魔法 service 子路由
+            // 这类子路由可以让 service 拥有自己的子路由的同时，前进或后退到其它 service 时能够不监听 popstate。
+            var isMagicRouter = _.get(current, 'options.superMagicRouter');
+            if (isMagicRouter) {
+                var prevServiceEntry = services.urlEntries.get(prev.pathPattern);
+                var currentServiceEntry = services.urlEntries.get(current.pathPattern);
+                if (prevServiceEntry.service === currentServiceEntry.service) {
+                    services.copyServiceMapping(prev.url, current.url);
+                    logger.log('copy service from ' + prev.url + ' to ' + current.url);
+                    return;
+                }
+                // else
+                logger.log('magic router found, but service entry not equals.');
+            }
+
             var prevService = services.getOrCreate(prev.url, prev.pathPattern);
             prev.service = prevService;
             var currentService = services.getOrCreate(
@@ -146,6 +161,13 @@ define(function (require) {
                 src !== 'history' && src !== 'back'
             );
             current.service = currentService;
+
+            // MAGIC: 魔法子路由需要的魔法
+            // 在两个实例相等，又都不是单例的情况下，认为是被复制的；此时不做 dispatch
+            if (prevService && prevService === currentService && !prevService.singleton) {
+                logger.log('prev service and current service are the same. disabled dispatch.');
+                return;
+            }
 
             if (!pages.contains(current.url)) {
                 pages.set(current.url, {
@@ -359,7 +381,7 @@ define(function (require) {
 
             try {
                 if (options.silent) {
-                    transferPageTo(url, query);
+                    copyPageTo(url, query);
                 }
                 router.redirect(url, query, options);
             }
@@ -426,12 +448,12 @@ define(function (require) {
                 indexPageUrl = url;
             }
 
-            transferPageTo(url, query);
+            copyPageTo(url, query);
             _.assign(stageData, data);
             router.reset(url, query, options);
         };
 
-        function transferPageTo(url, query) {
+        function copyPageTo(url, query) {
             var noRootUrl = router.ignoreRoot(location.pathname + location.search);
             var from = router.createURL(noRootUrl).toString();
             var to = router.createURL(url, query).toString();
@@ -442,7 +464,6 @@ define(function (require) {
                 return;
             }
             pages.set(to, pages.get(from));
-            // pages.rename(from, to);
         }
 
         /**
@@ -607,7 +628,7 @@ define(function (require) {
             var noRootUrl = router.ignoreRoot(location.pathname + location.search);
             var currUrl = router.createURL(noRootUrl).toString();
             var page = pages.get(currUrl);
-            transferPageTo(url, options.query);
+            copyPageTo(url, options.query);
 
             options = _.assign({}, {
                 fromUrl: url,
