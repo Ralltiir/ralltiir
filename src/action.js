@@ -370,13 +370,7 @@ define(function (require) {
         exports.redirect = function (url, query, options, data) {
             var page;
             logger.log('action redirecting to: ' + url);
-            // exports.emit('redirecting', url);
-
-            var cancled = exports.emit('redirecting', url, query, options);
-            if (cancled) {
-                return;
-            }
-
+            exports.emit('redirecting', url);
             url = resolveUrl(url);
             _.assign(stageData, data);
             options = _.assign({}, options, {
@@ -450,12 +444,6 @@ define(function (require) {
          * @param {Object} data extended data being passed to `current.options`
          * */
         exports.reset = function (url, query, options, data) {
-
-            var cancled = exports.emit('reseting', url, query, options);
-            if (cancled) {
-                return;
-            }
-
             if (isIndexPage) {
                 indexPageUrl = url;
             }

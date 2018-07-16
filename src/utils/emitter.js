@@ -166,9 +166,6 @@ define(function () {
     proto.emit = function (event) {
         var events = this._getEvents();
         var listeners = events[event];
-        var ret = true;
-        var eventCancled = false;
-
         // 内联arguments的转化 提升性能
         var args = [];
         for (var i = 1; i < arguments.length; i++) {
@@ -179,10 +176,7 @@ define(function () {
             listeners = listeners.slice(0);
             for (i = 0; i < listeners.length; i++) {
                 try {
-                    ret = listeners[i].apply(this, args);
-                    if (ret === false) {
-                        eventCancled = true;
-                    }
+                    listeners[i].apply(this, args);
                 }
                 catch (e) {
                     // eslint-disable-next-line
@@ -191,7 +185,7 @@ define(function () {
             }
         }
 
-        return eventCancled;
+        return this;
     };
 
     /**
