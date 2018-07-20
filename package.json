@@ -1,7 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.12.2",
-  "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
+  "version": "2.12.2",  "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc:install": "gitbook install ./docs",
     "doc:preview": "gitbook serve --port 8883 docs",
@@ -13,6 +12,14 @@
     "clean": "make clean",
     "lint": "fecs check src, test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ralltiir/ralltiir.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ralltiir/ralltiir/issues"
+  },
+  "homepage": "https://ralltiir.github.io/ralltiir/",
   "main": "./src/index.js",
   "files": [
     "src/"
