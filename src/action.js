@@ -496,6 +496,7 @@ define(function (require) {
             // link href only support url like pathname,e.g:/sf?params=
             var link = anchor.getAttribute('data-sf-href');
             var options = anchor.getAttribute('data-sf-options');
+            var allowVisited = anchor.getAttribute('data-visited');
 
             if (link) {
                 event.preventDefault();
@@ -514,7 +515,9 @@ define(function (require) {
                 };
                 var url = baseUrl(anchor) + link;
                 exports.redirect(url, null, options, extra);
-                dom.addClass(anchor, config.visitedClassName);
+                if (allowVisited !== "off") {
+                    dom.addClass(anchor, config.visitedClassName);
+                }
             }
         }
 
