@@ -370,7 +370,6 @@ define(function (require) {
         exports.redirect = function (url, query, options, data) {
             var page;
             logger.log('action redirecting to: ' + url);
-            // exports.emit('redirecting', url);
 
             var cancled = exports.emit('redirecting', url, query, options);
             if (cancled) {
