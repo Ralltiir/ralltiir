@@ -386,12 +386,14 @@ define(function (require) {
                 catch (e) {}
                 expect(location.replace).to.have.been.calledWith('/not-defined-service');
             });
-            it('should emit "redirecting" event with url', function (done) {
+            it('should emit "redirecting" event with url query options', function (done) {
                 var url = 'xx';
                 var query = 'bb';
                 var options = {};
-                action.once('redirecting', function (u) {
+                action.once('redirecting', function (u, q, opt) {
                     expect(u).to.equal(url);
+                    expect(q).to.equal(query);
+                    expect(JSON.stringify(opt)).to.equal(JSON.stringify(options));
                     done();
                 });
                 action.redirect(url, query, options);
@@ -405,6 +407,16 @@ define(function (require) {
                     done();
                 });
                 expect(fn).to.throw(/service not found/);
+            });
+            it('should "redirecting" event cancled', function (done) {
+                var url = '/foo';
+                action.once('redirecting', function (u) {
+                    done();
+                    return false;
+                });
+                action.redirect(url);
+                expect(router.redirect).not.to.have.been.calledWith(url);
+
             });
         });
         describe('.reset()', function () {
@@ -437,6 +449,16 @@ define(function (require) {
                 }).then(function () {
                     expect(fooService.create.args[0][2].foo).to.be.undefined;
                 });
+            });
+            it('should reseting event cancled', function (done) {
+                var url = '/foo';
+                action.once('reseting', function (u) {
+                    done();
+                    return false;
+                });
+                action.reset(url);
+                expect(router.reset).not.to.have.been.calledWith(url);
+
             });
         });
         describe('.start(), .stop()', function () {
