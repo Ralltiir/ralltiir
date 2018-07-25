@@ -408,10 +408,9 @@ define(function (require) {
                 });
                 expect(fn).to.throw(/service not found/);
             });
-            it('should "redirecting" event cancled', function (done) {
+            it('should not call router when cancled', function () {
                 var url = '/foo';
                 action.once('redirecting', function (u) {
-                    done();
                     return false;
                 });
                 action.redirect(url);
@@ -450,15 +449,13 @@ define(function (require) {
                     expect(fooService.create.args[0][2].foo).to.be.undefined;
                 });
             });
-            it('should reseting event cancled', function (done) {
+            it('should not call router when cancled', function () {
                 var url = '/foo';
                 action.once('reseting', function (u) {
-                    done();
                     return false;
                 });
                 action.reset(url);
                 expect(router.reset).not.to.have.been.calledWith(url);
-
             });
         });
         describe('.start(), .stop()', function () {

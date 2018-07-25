@@ -424,6 +424,7 @@ define(function (require) {
                 });
             }
         }
+
         /**
          *  Back to last state
          *
@@ -515,7 +516,7 @@ define(function (require) {
                 };
                 var url = baseUrl(anchor) + link;
                 exports.redirect(url, null, options, extra);
-                if (allowVisited !== "off") {
+                if (allowVisited !== 'off') {
                     dom.addClass(anchor, config.visitedClassName);
                 }
             }

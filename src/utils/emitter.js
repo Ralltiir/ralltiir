@@ -102,7 +102,7 @@ define(function () {
 
         function on() {
             me.off(event, on);
-            listener.apply(this, arguments);
+            return listener.apply(this, arguments);
         }
         // 挂到on上以方便删除
         on.listener = listener;
