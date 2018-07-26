@@ -370,7 +370,12 @@ define(function (require) {
         exports.redirect = function (url, query, options, data) {
             var page;
             logger.log('action redirecting to: ' + url);
-            exports.emit('redirecting', url);
+
+            var cancled = exports.emit('redirecting', url, query, options);
+            if (cancled) {
+                return;
+            }
+
             url = resolveUrl(url);
             _.assign(stageData, data);
             options = _.assign({}, options, {
@@ -419,6 +424,7 @@ define(function (require) {
                 });
             }
         }
+
         /**
          *  Back to last state
          *
@@ -444,6 +450,12 @@ define(function (require) {
          * @param {Object} data extended data being passed to `current.options`
          * */
         exports.reset = function (url, query, options, data) {
+
+            var cancled = exports.emit('reseting', url, query, options);
+            if (cancled) {
+                return;
+            }
+
             if (isIndexPage) {
                 indexPageUrl = url;
             }
@@ -485,6 +497,7 @@ define(function (require) {
             // link href only support url like pathname,e.g:/sf?params=
             var link = anchor.getAttribute('data-sf-href');
             var options = anchor.getAttribute('data-sf-options');
+            var allowVisited = anchor.getAttribute('data-visited');
 
             if (link) {
                 event.preventDefault();
@@ -503,7 +516,9 @@ define(function (require) {
                 };
                 var url = baseUrl(anchor) + link;
                 exports.redirect(url, null, options, extra);
-                dom.addClass(anchor, config.visitedClassName);
+                if (allowVisited !== 'off') {
+                    dom.addClass(anchor, config.visitedClassName);
+                }
             }
         }
 

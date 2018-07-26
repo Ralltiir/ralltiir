@@ -1,7 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.12.1",
-  "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
+  "version": "2.12.2",  "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc:install": "gitbook install ./docs",
     "doc:preview": "gitbook serve --port 8883 docs",
@@ -11,7 +10,7 @@
     "test-reports": "make test-reports",
     "preversion": "npm run lint && npm test",
     "clean": "make clean",
-    "lint": "fecs check src, test"
+    "lint": "fecs check src test"
   },
   "repository": {
     "type": "git",

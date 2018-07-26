@@ -80,7 +80,15 @@ define(function (require) {
                     });
                     emitter.emit('foo', 'one', 'two');
                 });
-
+                it('should emit return boolean', function (done) {
+                    var emitter = new Emitter();
+                    emitter.on('foo', function () {
+                        done();
+                        return false;
+                    });
+                    var ret = emitter.emit('foo');
+                    expect(ret).to.equal(true);
+                });
             });
 
             describe('.once(event, listener)', function () {
