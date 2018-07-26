@@ -1,6 +1,6 @@
 /**
- * @file service.js service base class, service base lifecycle
- * @author taoqingqian01
+ * @file service.js service base class
+ * @author harttle<yangjvn@126.com>
  * @module service
  */
 

@@ -17,13 +17,13 @@ define(function (require) {
                 'services'
             ]
         },
+        transitions: {
+            type: 'value',
+            module: require('./transitions')
+        },
         router: {
             type: 'factory',
             module: require('./router/router')
-        },
-        view: {
-            type: 'value',
-            module: require('./view')
         },
         service: {
             type: 'value',
