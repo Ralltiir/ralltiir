@@ -14,8 +14,13 @@ define(function (require) {
                 'history',
                 'doc',
                 'emitter',
-                'services'
+                'services',
+                'dispatch'
             ]
+        },
+        dispatch: {
+            type: 'factory',
+            module: require('./dispatch')
         },
         transitions: {
             type: 'value',

@@ -13,11 +13,11 @@ define(function (require) {
     var assert = require('@searchfe/assert');
     var logger = require('./utils/logger');
     var _ = require('@searchfe/underscore');
-    var dispatch = require('./dispatch');
     var dom = require('./utils/dom');
     var URL = require('./utils/url');
 
-    function actionFactory(router, location, history, doc, Emitter, services) {
+    // eslint-disable-next-line
+    function actionFactory(router, location, history, doc, Emitter, services, dispatch) {
         var exports = new Emitter();
         var pages;
         var backManually;
