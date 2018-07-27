@@ -58,9 +58,10 @@ define(function (require) {
 
         function register(pathPattern, config, service) {
             assert(pathPattern, 'invalid path pattern');
+            assert(service, 'cannot register empty service');
             assert(!urlEntries.has(pathPattern), 'path already registerd');
 
-            config.pathPattern = pathPattern;
+            config = _.assign({}, config, {pathPattern: pathPattern});
             router.add(pathPattern, actionDispatcher);
             urlEntries.set(pathPattern, {service: service, config: config});
 

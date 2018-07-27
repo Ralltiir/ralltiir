@@ -30,7 +30,7 @@ define(function (require) {
             type: 'factory',
             module: require('./router/router')
         },
-        service: {
+        Service: {
             type: 'value',
             module: require('./service')
         },

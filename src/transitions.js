@@ -5,16 +5,18 @@
 
 define(function (require) {
     var transitions = [];
+    var _ = require('@searchfe/underscore');
 
     /**
      * 注册一个动画实现
      *
-     * @param {string} fromName 来源
-     * @param {string} toName   目标
-     * @param {Function} impl     动画实现
+     * @param {string} options.from     来源 Service 名称
+     * @param {string} options.to       目标 Service 名称
+     * @param {Function} options.impl   动画实现
      */
-    function register(fromName, toName, impl) {
-        transitions.push({fromName: fromName, toName: toName, impl: impl});
+    function register(options) {
+        options.impl = options.impl || _.noop;
+        transitions.push(options);
     }
 
     function getImpl(from, to) {
@@ -28,4 +30,3 @@ define(function (require) {
 
     return {register: register, getImpl: getImpl};
 });
-

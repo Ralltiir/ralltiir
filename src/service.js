@@ -19,14 +19,15 @@ define(function (require) {
     var Service = function (url, config) {
         this.url = url;
         this.config = _.defaults(config, this.defaultConfig);
+        this.name = this.config.name;
 
         if (this.config.isRendered) {
-            var rootElement = document.querySelector(config.rootSelector);
-            this.adopt(rootElement);
+            var element = document.querySelector(this.config.rootSelector);
+            this.adopt(element);
         }
         else {
-            this.rootElement = this.createRoot();
-            this.sandbox = new Sandbox(this.rootElement);
+            this.element = this.createRoot();
+            this.sandbox = new Sandbox(this.element);
             this.pendingFetch = this.fetch();
         }
     };
@@ -35,10 +36,11 @@ define(function (require) {
         if (!this.pendingFetch) {
             this.pendingFetch = this.fetch();
         }
+        var self = this;
         return this.pendingFetch.then(function (html) {
-            this.rootElement.innerHTML = html;
-            container.appendChild(this.rootElement);
-            this.sandbox.run();
+            self.element.innerHTML = html;
+            container.appendChild(self.element);
+            self.sandbox.run();
         });
     };
 
@@ -52,7 +54,7 @@ define(function (require) {
 
     Service.prototype.fetch = function () {
         var url = this.getBackendUrl();
-        this.pendingFetch = this.sandbox.window.fetch(url).then(function (res) {
+        return fetch(url).then(function (res) {
             return res.text();
         });
     };
@@ -62,6 +64,9 @@ define(function (require) {
         var url;
         if (_.isString(conf.backendUrl)) {
             url = this.url.replace(conf.pathPattern, conf.backendUrl);
+        }
+        else {
+            url = this.url;
         }
         if (_.isString(conf.origin)) {
             url = conf.origin + url;
@@ -75,10 +80,11 @@ define(function (require) {
         return root;
     };
 
-    Service.prototype.adopt = function (rootElement) {
-        this.sandbox = rootElement.sandbox;
+    Service.prototype.adopt = function (element) {
+        this.element = element;
+        this.sandbox = element.sandbox;
         if (!this.sandbox) {
-            this.sandbox = new Sandbox(rootElement);
+            this.sandbox = new Sandbox(element);
         }
         this.sandbox.run();
     };
