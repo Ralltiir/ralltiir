@@ -154,12 +154,9 @@ define(function (require) {
 
             var prevService = services.getOrCreate(prev.url, prev.pathPattern);
             prev.service = prevService;
-            var currentService = services.getOrCreate(
-                current.url,
-                current.pathPattern,
-                // 是 redirect 或 hijack
-                src !== 'history' && src !== 'back'
-            );
+            var currentService = services.getOrCreate(current.url, current.pathPattern, {
+                isRendered: !prevService
+            });
             current.service = currentService;
 
             // MAGIC: 魔法子路由需要的魔法
@@ -203,20 +200,7 @@ define(function (require) {
 
             doc.ensureAttached();
 
-            var transitionOptions = _.assign({}, current, data);
-            var legacyArgs = {
-                current: current,
-                prev: prev,
-                data: data,
-                currentService: currentService,
-                prevService: prevService
-            };
-            return dispatch(
-                prevService,
-                currentService,
-                transitionOptions,
-                legacyArgs
-            );
+            return dispatch(current, prev, data);
         };
 
         /**

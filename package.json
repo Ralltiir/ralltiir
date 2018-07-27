@@ -1,6 +1,7 @@
 {
   "name": "ralltiir",
-  "version": "2.12.2",  "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
+  "version": "2.12.2",
+  "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc:install": "gitbook install ./docs",
     "doc:preview": "gitbook serve --port 8883 docs",
@@ -27,9 +28,11 @@
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
     "@searchfe/promise": "^1.0.3",
+    "@searchfe/sandbox": "^1.5.1",
     "@searchfe/underscore": "^1.0.1"
   },
   "devDependencies": {
+    "apmjs": "^3.1.5",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "fecs": "^1.6.0",

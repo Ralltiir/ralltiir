@@ -26,28 +26,6 @@ define(function (require) {
         }
     }
 
-    function syncTransition(to, options) {
-        to.beforeAttach(options)
-        .then(function () {
-            to.attach(options);
-        });
-    }
-
-    function asyncTransition(from, to, options) {
-        from.beforeDetach(options);
-        to.beforeAttach(options)
-        .then(function () {
-            return from.detach(options);
-        })
-        .then(function () {
-            to.attach(options);
-        });
-    }
-
-    return {
-        register: register, getImpl: getImpl,
-        syncTransition: syncTransition,
-        asyncTransition: asyncTransition
-    };
+    return {register: register, getImpl: getImpl};
 });
 

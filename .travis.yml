@@ -13,7 +13,7 @@ cache:
     - "node_modules"
 script:
   - rm package-lock.json
-  - npm install -g apmjs
-  - apmjs install --loglevel silly
+  - npm install
+  - ./node_modules/.bin/apmjs install --loglevel silly
   - npm run lint
   - make test-reports-ci

@@ -60,6 +60,7 @@ define(function (require) {
             assert(pathPattern, 'invalid path pattern');
             assert(!urlEntries.has(pathPattern), 'path already registerd');
 
+            config.pathPattern = pathPattern;
             router.add(pathPattern, actionDispatcher);
             urlEntries.set(pathPattern, {service: service, config: config});
 
@@ -113,8 +114,7 @@ define(function (require) {
             return instance;
         }
 
-        // 由于目前还是 URL 索引页面，ignoreCache 为同样 URL 创建新的页面仍不可行
-        function getOrCreate(url, pathPattern, ignoreCache) {
+        function getOrCreate(url, pathPattern, conf) {
             // return if exist
             var service = getService(url);
             if (service) {
@@ -128,7 +128,7 @@ define(function (require) {
             var entry = urlEntries.get(pathPattern);
             if (entry) {
                 var Service = entry.service;
-                var config = entry.config;
+                var config = _.assign({}, entry.config, conf);
                 var instance = Service.singleton ? Service : new Service(url, config);
                 return addInstance(url, instance);
             }

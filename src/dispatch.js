@@ -14,54 +14,48 @@ define(function (require) {
         /**
          * 遗留的 Service 切换实现，只适用于遗留的 Service 之间的切换
          *
-         * @param {string} from 不可用
-         * @param {string} to 不可用
-         * @param {string} options 不可用
-         * @param {string} legacyArgs 遗留参数，不可在其他实现中使用
+         * @param {string} current 当前状态
+         * @param {string} prev 上一个状态
+         * @param {string} data 跳转配置
          * @return {Promise} 页面切换完成
          */
-        function legacyImpl(from, to, options, legacyArgs) {
+        function legacyImpl(current, prev, data) {
             // Abort currently the running dispatch queue,
             // and initiate a new one.
-            let prevService = legacyArgs.prevService;
-            let currentService = legacyArgs.currentService;
-            let current = legacyArgs.current;
-            let prev = legacyArgs.prev;
-            let data = legacyArgs.data;
             return dispatchQueue.reset([
                 function prevDetach() {
-                    if (!prevService) {
+                    if (!prev.service) {
                         return;
                     }
-                    return prevService.singleton
-                        ? prevService.detach(current, prev, data)
-                        : prevService.beforeDetach(current, prev, data);
+                    return prev.service.singleton
+                        ? prev.service.detach(current, prev, data)
+                        : prev.service.beforeDetach(current, prev, data);
                 },
                 function currCreate() {
-                    if (!currentService) {
+                    if (!current.service) {
                         return;
                     }
-                    return currentService.singleton
-                        ? currentService.create(current, prev, data)
-                        : currentService.beforeAttach(current, prev, data);
+                    return current.service.singleton
+                        ? current.service.create(current, prev, data)
+                        : current.service.beforeAttach(current, prev, data);
                 },
                 function prevDestroy() {
-                    if (!prevService) {
+                    if (!prev.service) {
                         return;
                     }
-                    return prevService.singleton
-                        ? prevService.destroy(current, prev, data)
-                        : prevService.detach(current, prev, data);
+                    return prev.service.singleton
+                        ? prev.service.destroy(current, prev, data)
+                        : prev.service.detach(current, prev, data);
                 },
                 function currAttach() {
-                    if (!currentService) {
+                    if (!current.service) {
                         return;
                     }
-                    return currentService.attach(current, prev, data);
+                    return current.service.attach(current, prev, data);
                 }
             ]).exec(function currAbort() {
-                if (currentService && currentService.abort) {
-                    currentService.abort(current, prev, data);
+                if (current.service && current.service.abort) {
+                    current.service.abort(current, prev, data);
                 }
             }, function errorHandler(e) {
                 // eslint-disable-next-line
@@ -146,17 +140,21 @@ define(function (require) {
         /**
          * 页面切换
          *
-         * @param {string} from 来源 Service
-         * @param {string} to 目标 Service
-         * @param {string} options 动画配置
-         * @param {string} legacyArgs 给遗留 Service 代码使用，新 Service 使用新接口
+         * @param {string} current 当前状态
+         * @param {string} prev 上一个状态
+         * @param {string} data 跳转配置
          * @return {Promise} 切换完成
          */
-        function dispatch(from, to, options, legacyArgs) {
-            var fromName = from && from.name;
-            var toName = to && to.name;
-            var transition = transitions.getImpl(fromName, toName) || legacyImpl;
-            return transition(from, to, options, legacyArgs);
+        function dispatch(current, prev, data) {
+            var fromName = prev.service && prev.service.name;
+            var toName = current.service && current.service.name;
+
+            var transition = transitions.getImpl(fromName, toName);
+            if (transition) {
+                var options = _.assign({}, current, data);
+                return transition(prev.service, current.service, options);
+            }
+            return legacyImpl(current, prev, data);
         }
 
         return dispatch;
