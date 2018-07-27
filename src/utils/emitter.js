@@ -102,7 +102,7 @@ define(function () {
 
         function on() {
             me.off(event, on);
-            listener.apply(this, arguments);
+            return listener.apply(this, arguments);
         }
         // 挂到on上以方便删除
         on.listener = listener;
@@ -166,6 +166,9 @@ define(function () {
     proto.emit = function (event) {
         var events = this._getEvents();
         var listeners = events[event];
+        var ret = true;
+        var eventCancled = false;
+
         // 内联arguments的转化 提升性能
         var args = [];
         for (var i = 1; i < arguments.length; i++) {
@@ -176,7 +179,10 @@ define(function () {
             listeners = listeners.slice(0);
             for (i = 0; i < listeners.length; i++) {
                 try {
-                    listeners[i].apply(this, args);
+                    ret = listeners[i].apply(this, args);
+                    if (ret === false) {
+                        eventCancled = true;
+                    }
                 }
                 catch (e) {
                     // eslint-disable-next-line
@@ -184,8 +190,7 @@ define(function () {
                 }
             }
         }
-
-        return this;
+        return eventCancled;
     };
 
     /**
