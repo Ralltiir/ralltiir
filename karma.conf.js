@@ -15,6 +15,21 @@ module.exports = function (config) {
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
 
+        plugins: [
+            'karma-coveralls',
+            'karma-chai',
+            'karma-chai-as-promised',
+            'karma-chai-sinon',
+            'karma-chrome-launcher',
+            'karma-coverage',
+            'karma-coveralls',
+            'karma-global-preprocessor',
+            'karma-html-reporter',
+            'karma-mocha',
+            'karma-mocha-reporter',
+            'karma-coverage'
+        ],
+
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         // Important: 下列数组中文件将『逆序载入』
