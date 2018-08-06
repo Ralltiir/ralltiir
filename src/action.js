@@ -135,8 +135,6 @@ define(function (require) {
         exports.dispatch = function (current, prev) {
             assert(current, 'cannot dispatch with options:' + current);
 
-            var src = _.get(current, 'options.src');
-
             // MAGIC: 处理魔法 service 子路由
             // 这类子路由可以让 service 拥有自己的子路由的同时，前进或后退到其它 service 时能够不监听 popstate。
             var isMagicRouter = _.get(current, 'options.superMagicRouter');
