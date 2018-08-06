@@ -19,6 +19,10 @@ define(function (require) {
         transitions.push(options);
     }
 
+    function clear() {
+        transitions = [];
+    }
+
     function getImpl(from, to) {
         for (var i = 0; i < transitions.length; i++) {
             var transition = transitions[i];
@@ -28,5 +32,5 @@ define(function (require) {
         }
     }
 
-    return {register: register, getImpl: getImpl};
+    return {register: register, getImpl: getImpl, clear: clear};
 });
