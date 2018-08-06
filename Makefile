@@ -1,57 +1,11 @@
 # @author: yangjun14(yangjun14@baidu.com)
 # Use npm scripts instead
 
-# Variables
-
 export PATH := $(shell npm bin):$(PATH)
 export PORT = 9877
 export TEST = karma --port $(PORT)
 export DOC = jsdoc2md
-export NAME = $(shell node -p 'require("./package.json").name')
-export VERSION = $(shell node -p 'require("./package.json").version')
-export DESCRIPTION = $(shell node -p 'require("./package.json").description')
-
-.PHONY: test dist doc test-reports
-
-# Build Related
-
-build-prepare:
-	rm -rf ./build/
-	[ -d ./build ] || mkdir ./build
-
-build-dev: build-prepare
-	fis3 release -d ./build
-
-build/banner.js: build-prepare
-	echo '/*' > $@
-	echo ' * Ralltiir' >> $@
-	echo ' * Version: '$(NAME)-$(VERSION) >> $@
-	echo ' * Homepage: https://ralltiir.github.io/ralltiir/' >> $@
-	echo ' * Build Date: '`date --iso-8601=seconds` >> $@
-	echo ' * Last Commit: '`git log -1 --oneline | sed "s/\*//g"` >> $@
-	echo ' */' >> $@
-
-build-prod: build-prepare
-	fis3 release prod -d ./build
-	[ -d ./dist ] || mkdir ./dist
-
-dist-prepare:
-	[ -d ./dist ] || mkdir ./dist
-
-dist: build-prod dist-prepare build/banner.js
-	which fis3
-	cat build/banner.js > dist/$(NAME).js
-	cat build/src/main.js >> dist/$(NAME).js
-	cat build/banner.js > dist/$(NAME).min.js
-	cat build/src/main.min.js >> dist/$(NAME).min.js
-
-clean:
-	rm -rf ./build/
-
-dist-clean: clean
-	rm -rf ./dist/
-
-# Test Related
+.PHONY: test doc test-reports
 
 test:
 	$(TEST) start --reporters mocha
@@ -64,8 +18,6 @@ test-reports:
 
 test-reports-ci:
 	$(TEST) start --reporters mocha,html,coverage,coveralls
-
-# Doc Related
 
 doc: doc-api
 	sed -i 's/\\|/\&#124;/g' docs/api/*.md
