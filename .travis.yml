@@ -13,5 +13,6 @@ cache:
     - "node_modules"
 script:
   - ./node_modules/.bin/apmjs install --loglevel silly
+  - npm ls | cat
   - npm run lint
   - make test-reports-ci
