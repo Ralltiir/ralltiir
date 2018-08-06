@@ -1,0 +1,10 @@
+{
+    "eslint": {
+        "env": {
+            "es6": false
+        },
+        "rules": {
+            "no-console": 0
+        }
+    }
+}

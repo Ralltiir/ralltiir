@@ -18,3 +18,4 @@ docs/api/
 node_modules/
 test-reports/
 amd_modules/
+package-lock.json
