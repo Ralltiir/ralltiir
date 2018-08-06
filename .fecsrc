@@ -1,7 +1,0 @@
-{
-    "eslint": {
-        "parserOptions": {
-            "ecmaVersion": 5
-        }
-    }
-}
