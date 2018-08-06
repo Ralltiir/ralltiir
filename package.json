@@ -12,7 +12,7 @@
     "preversion": "npm run lint && npm test",
     "postversion": "npm push --tags",
     "clean": "make clean",
-    "lint": "fecs check src test --es=5"
+    "lint": "fecs check src test --es 5"
   },
   "repository": {
     "type": "git",
