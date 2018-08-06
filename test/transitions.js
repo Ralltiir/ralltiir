@@ -10,7 +10,7 @@ define(function (require) {
     var transitions = require('transitions');
     var _ = require('@searchfe/underscore');
 
-    describe.only('transitions', function () {
+    describe('transitions', function () {
         beforeEach(function () {
             transitions.clear();
         });
