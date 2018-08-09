@@ -30,6 +30,10 @@ define(function (require) {
             type: 'factory',
             module: require('./router/router')
         },
+        Service: {
+            type: 'value',
+            module: require('./service')
+        },
         services: {
             type: 'factory',
             args: ['router'],

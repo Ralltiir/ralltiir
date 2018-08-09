@@ -151,7 +151,11 @@ define(function (require) {
 
             var transition = transitions.getImpl(fromName, toName);
             if (transition) {
-                var options = _.assign({}, current, data);
+                var legacy = {
+                    current: current,
+                    prev: prev
+                };
+                var options = _.assign({legacy: legacy}, current, data);
                 return transition(prev.service, current.service, options);
             }
             return legacyImpl(current, prev, data);
