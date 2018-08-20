@@ -627,6 +627,13 @@ define(function (require) {
                 expect(fooSpy).to.has.been.calledWith(current.url);
                 expect(barSpy).to.has.been.calledWith(prev.url);
             });
+            it('should return true/false when call copyServiceMapping', function () {
+                var url1 = '/url1';
+                var url2 = '/url2';
+                services.getOrCreate(url1);
+                expect(services.copyServiceMapping(url1, url2)).to.be.true
+                expect(services.copyServiceMapping('/url3', '/url4')).to.be.false
+            });
         });
     });
 });
