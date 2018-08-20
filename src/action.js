@@ -137,21 +137,6 @@ define(function (require) {
 
             var src = _.get(current, 'options.src');
 
-            // MAGIC: 处理魔法 service 子路由
-            // 这类子路由可以让 service 拥有自己的子路由的同时，前进或后退到其它 service 时能够不监听 popstate。
-            var isMagicRouter = _.get(current, 'options.superMagicRouter');
-            if (isMagicRouter) {
-                var prevServiceEntry = services.urlEntries.get(prev.pathPattern);
-                var currentServiceEntry = services.urlEntries.get(current.pathPattern);
-                if (prevServiceEntry.service === currentServiceEntry.service) {
-                    services.copyServiceMapping(prev.url, current.url);
-                    logger.log('copy service from ' + prev.url + ' to ' + current.url);
-                    return;
-                }
-                // else
-                logger.log('magic router found, but service entry not equals.');
-            }
-
             var prevService = services.getOrCreate(prev.url, prev.pathPattern);
             prev.service = prevService;
             var currentService = services.getOrCreate(
