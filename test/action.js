@@ -631,8 +631,8 @@ define(function (require) {
                 var url1 = '/url1';
                 var url2 = '/url2';
                 services.getOrCreate(url1);
-                expect(services.copyServiceMapping(url1, url2)).to.be.true
-                expect(services.copyServiceMapping('/url3', '/url4')).to.be.false
+                expect(services.copyServiceMapping(url1, url2)).to.be.true;
+                expect(services.copyServiceMapping('/url3', '/url4')).to.be.false;
             });
         });
     });
