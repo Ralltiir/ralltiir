@@ -1,6 +1,6 @@
 /**
  * @file action.js
- * @author harttle<harttle@harttle.com>
+ * @author harttle<yangjun14@baidu.com>
  */
 
 define(function (require) {
@@ -16,7 +16,8 @@ define(function (require) {
     var dom = require('./utils/dom');
     var URL = require('./utils/url');
 
-    function actionFactory(router, location, history, doc, Emitter, services) {
+    // eslint-disable-next-line
+    function actionFactory(router, location, history, doc, Emitter, services, dispatch) {
         var exports = new Emitter();
         var pages;
         var backManually;
@@ -27,7 +28,6 @@ define(function (require) {
 
         // The state data JUST for the next dispatch
         var stageData = {};
-        var dispatchQueue = mkDispatchQueue();
 
         function createPages() {
             var pages = cache.create('pages', {
@@ -135,16 +135,11 @@ define(function (require) {
         exports.dispatch = function (current, prev) {
             assert(current, 'cannot dispatch with options:' + current);
 
-            var src = _.get(current, 'options.src');
-
             var prevService = services.getOrCreate(prev.url, prev.pathPattern);
             prev.service = prevService;
-            var currentService = services.getOrCreate(
-                current.url,
-                current.pathPattern,
-                // 是 redirect 或 hijack
-                src !== 'history' && src !== 'back'
-            );
+            var currentService = services.getOrCreate(current.url, current.pathPattern, {
+                isRendered: !prevService
+            });
             current.service = currentService;
 
             // MAGIC: 魔法子路由需要的魔法
@@ -187,50 +182,8 @@ define(function (require) {
             });
 
             doc.ensureAttached();
-            // Abort currently the running dispatch queue,
-            // and initiate a new one.
-            return dispatchQueue.reset([
-                function prevDetach() {
-                    if (!prevService) {
-                        return;
-                    }
-                    return prevService.singleton
-                        ? prevService.detach(current, prev, data)
-                        : prevService.beforeDetach(current, prev, data);
-                },
-                function currCreate() {
-                    if (!currentService) {
-                        return;
-                    }
-                    return currentService.singleton
-                        ? currentService.create(current, prev, data)
-                        : currentService.beforeAttach(current, prev, data);
-                },
-                function prevDestroy() {
-                    if (!prevService) {
-                        return;
-                    }
-                    return prevService.singleton
-                        ? prevService.destroy(current, prev, data)
-                        : prevService.detach(current, prev, data);
-                },
-                function currAttach() {
-                    if (!currentService) {
-                        return;
-                    }
-                    return currentService.attach(current, prev, data);
-                }
-            ]).exec(function currAbort() {
-                if (currentService && currentService.abort) {
-                    currentService.abort(current, prev, data);
-                }
-            }, function errorHandler(e) {
-                // eslint-disable-next-line
-                console.error(e);
-                if (_.get(current, 'options.src') !== 'sync') {
-                    location.replace(location.href);
-                }
-            });
+
+            return dispatch(current, prev, data);
         };
 
         /**
@@ -242,77 +195,6 @@ define(function (require) {
             return isIndexPage;
         };
 
-        /**
-         * Execute a queue of functions in serial, and previous execution will be stopped.
-         * This is a singleton closure containing current execution queue and threadID.
-         *
-         * A thread (implemented by mapSeries) will be initiated for each execution.
-         * And anytime there's a new thread initiating, the previous threads will stop running.
-         *
-         * @return {Object} DispatchQueue interfaces: {reset, exec}
-         * @private
-         */
-        function mkDispatchQueue() {
-            // Since we cannot quit a promise, there can be multiple threads running, actually.
-            var MAX_THREAD_COUNT = 10000;
-            // This is the ID of the currently running thread
-            var threadID = 0;
-            var lastAbortCallback;
-            var queue = [];
-            var exports = {
-                reset: reset,
-                exec: exec,
-                aborted: false
-            };
-
-            /**
-             * When reset called, a thread containing a queue of functions is initialized,
-             * and latter functions in last thread will be ommited.
-             *
-             * @param {Array} q the tasks to be queued
-             * @return {Object} The DispatchQueue object
-             */
-            function reset(q) {
-                queue = q;
-                threadID = (threadID + 1) % MAX_THREAD_COUNT;
-                return exports;
-            }
-
-            /**
-             * When exec called, current queue is executed in serial,
-             * and a promise for the results of the functions is returned.
-             *
-             * @param {Function} abortCallback The callback to be called when dispatch aborted
-             * @param {Function} errorHandler The callback to be called when error occurred
-             * @return {Promise} The promise to be resolved when all tasks completed
-             */
-            function exec(abortCallback, errorHandler) {
-                // Record the thread ID for current thread
-                // To ensure there's ONLY ONE thread running.
-                var thisThreadID = threadID;
-                if (_.isFunction(lastAbortCallback)) {
-                    lastAbortCallback();
-                }
-                lastAbortCallback = abortCallback;
-                return Promise.mapSeries(queue, function (cb) {
-                    if (typeof cb !== 'function') {
-                        return;
-                    }
-                    // Just stop running
-                    if (thisThreadID !== threadID) {
-                        return;
-                    }
-                    logger.log('calling lifecycle', cb.name || 'anonymous');
-                    return cb();
-                })
-                .catch(errorHandler)
-                .then(function () {
-                    lastAbortCallback = null;
-                });
-            }
-
-            return exports;
-        }
 
         /**
          *  Check if the specified service has been registered
@@ -353,7 +235,6 @@ define(function (require) {
          * @param {Object} data extended data being passed to `current.options`
          * */
         exports.redirect = function (url, query, options, data) {
-            var page;
             logger.log('action redirecting to: ' + url);
 
             var cancled = exports.emit('redirecting', url, query, options);
@@ -403,7 +284,8 @@ define(function (require) {
             page = pages.get(noRootUrl);
             if (page) {
                 page.scrollTop = window.pageYOffset;
-            } else {
+            }
+            else {
                 pages.set(noRootUrl, {
                     scrollTop: window.pageYOffset
                 });
@@ -457,6 +339,7 @@ define(function (require) {
 
             logger.log('[transfering page] from:', from, 'to:', to);
             if (!pages.contains(from)) {
+                // eslint-disable-next-line
                 console.warn('current page not found, cannot transfer to', url);
                 return;
             }

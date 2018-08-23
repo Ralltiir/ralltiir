@@ -14,6 +14,7 @@ define(function (require) {
     var _ = require('@searchfe/underscore');
     var actionFactory = require('action');
     var Emitter = require('utils/emitter');
+    var dispatchFactory = require('dispatch');
 
     describe('action', function () {
         var action;
@@ -23,6 +24,7 @@ define(function (require) {
         var current;
         var prev;
         var location;
+        var dispatch;
         var history;
         var doc;
         var services;
@@ -103,7 +105,8 @@ define(function (require) {
             doc = {
                 ensureAttached: sinon.spy()
             };
-            action = actionFactory(router, location, history, doc, Emitter, services);
+            dispatch = dispatchFactory(location);
+            action = actionFactory(router, location, history, doc, Emitter, services, dispatch);
         });
         afterEach(function () {
             action.destroy();
