@@ -14,20 +14,21 @@ define(function (require) {
                 'history',
                 'doc',
                 'emitter',
-                'services'
+                'services',
+                'dispatch'
             ]
+        },
+        dispatch: {
+            type: 'factory',
+            module: require('./dispatch')
+        },
+        transitions: {
+            type: 'value',
+            module: require('./transitions')
         },
         router: {
             type: 'factory',
             module: require('./router/router')
-        },
-        view: {
-            type: 'value',
-            module: require('./view')
-        },
-        service: {
-            type: 'value',
-            module: require('./service')
         },
         services: {
             type: 'factory',

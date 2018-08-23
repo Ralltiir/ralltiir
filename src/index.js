@@ -1,6 +1,6 @@
 /**
  * @file index.js The AMD entry
- * @author harttle<harttle@harttle.com>
+ * @author harttle<yangjun14@baidu.com>
  */
 
 define(['./utils/di', './config'], function (DI, config) {
