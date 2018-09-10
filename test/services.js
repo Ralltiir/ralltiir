@@ -12,7 +12,7 @@ define(function (require) {
     var routerFactory = require('router/router');
     var servicesFactory = require('services');
 
-    describe.only('services', function () {
+    describe('services', function () {
         var router;
         var services;
         var dispatcher;
