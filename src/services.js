@@ -115,6 +115,7 @@ define(function (require) {
             return instance;
         }
 
+        // function getOrCreate(url)
         function getOrCreate(url, pathPattern, conf) {
             // return if exist
             var service = getService(url);
