@@ -152,8 +152,8 @@ define(function (require) {
             var transition = transitions.getImpl(fromName, toName);
             if (transition) {
                 var options = _.assign({
-                    _prev: prev,
-                    _current: current
+                    prev: prev,
+                    current: current
                 }, current, data);
                 return transition(prev.service, current.service, options);
             }
