@@ -1,6 +1,6 @@
-# 启动 Ralltiir 
+# 启动 Ralltiir
 
-本文介绍如何使用 Ralltiir Application，启动一个简单的 Ralltiir 应用。
+本文介绍如何启动一个简单的 Ralltiir 应用。
 在此之前你需要让你的 HTML 符合 [Ralltiir 页面结构][html]。
 
 ## 注册 Service
@@ -10,7 +10,7 @@
 
 ```javascript
 var rt = require('ralltiir');
-var Service = require('ralltiir-application/service');
+var Service = require('ralltiir/service');
 
 rt.services.register('/home', {title: {html: '主页标题'}}, Service);
 rt.services.register('/profile', {title: {html: '个人页标题'}}, Service);

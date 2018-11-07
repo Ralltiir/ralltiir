@@ -1,14 +1,13 @@
 # 目录
 
 * [概述](README.md)
-* [起步教程](/get-started/README.md)
+* 起步教程
     *   [HTML 结构](/get-started/html-structure.md)
     *   [Ralltiir 链接](/get-started/rt-link.md)
     *   [启动 Ralltiir](/get-started/start.md)
     *   [路由注册](/get-started/router.md)
     *   [视图设置](/get-started/view-set-data.md)
     *   [局部更新](/get-started/partial-update.md)
-    *   [视图参数](/get-started/view-options.md)
 * 高级主题
     *   [Ralltiir 事件](/advanced/events.md)
     *   [性能数据](/advanced/performance.md)
@@ -21,6 +20,7 @@
     *   [实例缓存](/advanced/instance-cache.md)
     *   [样式局部化](/advanced/scoped-css.md)
     *   [框架 Debug](/advanced/debug.md)
+    *   [Ralltiir 开发](/advanced/develop.md)
 * API
     *   [Action](/api/action.md)
     *   [Cache](/api/cache.md)
