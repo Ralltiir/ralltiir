@@ -20,7 +20,7 @@ test-reports-ci:
 	$(TEST) start --reporters mocha,html,coverage,coveralls
 
 doc: doc-api
-	sed -i 's/\\|/\&#124;/g' docs/api/*.md
+	sed -i '' 's/\\|/\&#124;/g' docs/api/*.md
 	gitbook build docs
 
 doc-deploy: doc
@@ -40,5 +40,5 @@ doc-api:
 	$(DOC) src/action.js > docs/api/action.md
 	$(DOC) src/router/router.js > docs/api/router.md
 	$(DOC) src/utils/url.js > docs/api/url.md
-	$(DOC) src/service.js > docs/api/service.md
-	$(DOC) src/view.js > docs/api/view.md
+	$(DOC) src/services.js > docs/api/service.md
+	# $(DOC) src/view.js > docs/api/view.md
