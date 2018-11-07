@@ -1,0 +1,804 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>路由注册 · Ralltiir 项目文档</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="The Ralltiir Team">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchor-navigation-ex/style/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-atoc/atoc.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="view-set-data.html" />
+    
+    
+    <link rel="prev" href="start.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    起步教程
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="html-structure.html">
+            
+                <a href="html-structure.html">
+            
+                    
+                    HTML 结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="rt-link.html">
+            
+                <a href="rt-link.html">
+            
+                    
+                    Ralltiir 链接
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="start.html">
+            
+                <a href="start.html">
+            
+                    
+                    启动 Ralltiir
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.4" data-path="router.html">
+            
+                <a href="router.html">
+            
+                    
+                    路由注册
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="view-set-data.html">
+            
+                <a href="view-set-data.html">
+            
+                    
+                    视图设置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="partial-update.html">
+            
+                <a href="partial-update.html">
+            
+                    
+                    局部更新
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    高级主题
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../advanced/events.html">
+            
+                <a href="../advanced/events.html">
+            
+                    
+                    Ralltiir 事件
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../advanced/performance.html">
+            
+                <a href="../advanced/performance.html">
+            
+                    
+                    性能数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../advanced/messaging.html">
+            
+                <a href="../advanced/messaging.html">
+            
+                    
+                    页面通信
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../advanced/error-handling.html">
+            
+                <a href="../advanced/error-handling.html">
+            
+                    
+                    错误处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../advanced/head-rendering.html">
+            
+                <a href="../advanced/head-rendering.html">
+            
+                    
+                    头部渲染策略
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../advanced/load-and-render.html">
+            
+                <a href="../advanced/load-and-render.html">
+            
+                    
+                    页面加载和渲染
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="../advanced/service.html">
+            
+                <a href="../advanced/service.html">
+            
+                    
+                    Service 编写
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.8" data-path="../advanced/life-cycle.html">
+            
+                <a href="../advanced/life-cycle.html">
+            
+                    
+                    生命周期概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.9" data-path="../advanced/instance-cache.html">
+            
+                <a href="../advanced/instance-cache.html">
+            
+                    
+                    实例缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.10" data-path="../advanced/scoped-css.html">
+            
+                <a href="../advanced/scoped-css.html">
+            
+                    
+                    样式局部化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.11" data-path="../advanced/debug.html">
+            
+                <a href="../advanced/debug.html">
+            
+                    
+                    框架 Debug
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.12" data-path="../advanced/develop.html">
+            
+                <a href="../advanced/develop.html">
+            
+                    
+                    Ralltiir 开发
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../api/action.html">
+            
+                <a href="../api/action.html">
+            
+                    
+                    Action
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../api/cache.html">
+            
+                <a href="../api/cache.html">
+            
+                    
+                    Cache
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../api/cache-namespace.html">
+            
+                <a href="../api/cache-namespace.html">
+            
+                    
+                    Cache Namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../api/emitter.html">
+            
+                <a href="../api/emitter.html">
+            
+                    
+                    Emitter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../api/http.html">
+            
+                <a href="../api/http.html">
+            
+                    
+                    Http
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../api/promise.md">
+            
+                <span>
+            
+                    
+                    Promise
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../api/resource.html">
+            
+                <a href="../api/resource.html">
+            
+                    
+                    Resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../api/router.html">
+            
+                <a href="../api/router.html">
+            
+                    
+                    Router
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="../api/service.html">
+            
+                <a href="../api/service.html">
+            
+                    
+                    Service
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="../api/underscore.md">
+            
+                <span>
+            
+                    
+                    Underscore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="../api/url.html">
+            
+                <a href="../api/url.html">
+            
+                    
+                    Url
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="../api/view.md">
+            
+                <span>
+            
+                    
+                    View
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <a target="_blank" href="https://github.com/Ralltiir/ralltiir/releases">
+            
+                    
+                    版本
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >路由注册</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div id="anchor-navigation-ex-navbar"><i class="fa fa-navicon"></i><ul><li><span class="title-icon "></span><a href="#&#x8DEF;&#x7531;&#x6CE8;&#x518C;"><b>1. </b>&#x8DEF;&#x7531;&#x6CE8;&#x518C;</a></li><ul><li><span class="title-icon "></span><a href="#&#x5B57;&#x7B26;&#x4E32;"><b>1.1. </b>&#x5B57;&#x7B26;&#x4E32;</a></li><li><span class="title-icon "></span><a href="#restful&#x5B57;&#x7B26;&#x4E32;"><b>1.2. </b>RESTful&#x5B57;&#x7B26;&#x4E32;</a></li><li><span class="title-icon "></span><a href="#&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;"><b>1.3. </b>&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;</a></li></ul></ul></div><a href="#&#x8DEF;&#x7531;&#x6CE8;&#x518C;" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><h1 id="&#x8DEF;&#x7531;&#x6CE8;&#x518C;"><a name="&#x8DEF;&#x7531;&#x6CE8;&#x518C;" class="anchor-navigation-ex-anchor" href="#&#x8DEF;&#x7531;&#x6CE8;&#x518C;"><i class="fa fa-link" aria-hidden="true"></i></a>1. &#x8DEF;&#x7531;&#x6CE8;&#x518C;</h1>
+<p>&#x5728; Ralltiir &#x4E2D;&#x6BCF;&#x4E2A;&#x9700;&#x8981;&#x5F02;&#x6B65;&#x6253;&#x5F00;&#x7684; URL &#x90FD;&#x9700;&#x8981;&#x6CE8;&#x518C;&#xFF0C;&#x4E0D;&#x5339;&#x914D;&#x7684; Ralltiir &#x8DF3;&#x8F6C;&#x4F1A;&#x5BFC;&#x81F4; JavaScript &#x9519;&#x8BEF;&#x3002;
+&#x53EF;&#x4EE5;&#x4E3A;&#x6BCF;&#x4E2A; URL Pattern &#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x63A5;&#x7BA1;&#x5B83;&#x7684; Service&#x3002;&#x4F8B;&#x5982;&#xFF1A;</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// &#x5B57;&#x7B26;&#x4E32;&#x683C;&#x5F0F;</span>
+rt.services.register(<span class="hljs-string">&apos;/&apos;</span>, {}, <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;index&apos;</span>));
+<span class="hljs-comment">// RESTful</span>
+rt.services.register(<span class="hljs-string">&apos;/todos/:id&apos;</span>, {}, <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;todo-service&apos;</span>));
+<span class="hljs-comment">// RegExp</span>
+rt.services.register(<span class="hljs-regexp">/\/lists\/(\d+)/</span>, {}, <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;list-service&apos;</span>));
+</code></pre>
+<ul>
+<li>URL Pattern&#x3002;&#x7B2C;&#x4E00;&#x4E2A;&#x53C2;&#x6570;&#x53EF;&#x4EE5;&#x662F;&#x5B57;&#x7B26;&#x4E32;&#x3001;Rest&#x5B57;&#x7B26;&#x4E32;&#x3001;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#xFF0C;&#x89C1;&#x4E0B;&#x6587;&#x3002;</li>
+<li>View Options&#x3002;&#x7B2C;&#x4E8C;&#x4E2A;&#x53C2;&#x6570;&#x662F; <a href="view-options.md">&#x89C6;&#x56FE;&#x53C2;&#x6570;</a>&#x3002;</li>
+<li>Service&#x3002;&#x7B2C;&#x4E09;&#x4E2A;&#x53C2;&#x6570;&#x662F;&#x63A5;&#x7BA1;&#x7684; Service&#xFF0C;&#x6BD4;&#x5982; <code>&quot;ralltiir-application/service&quot;</code>&#x3002;</li>
+</ul>
+<h2 id="&#x5B57;&#x7B26;&#x4E32;"><a name="&#x5B57;&#x7B26;&#x4E32;" class="anchor-navigation-ex-anchor" href="#&#x5B57;&#x7B26;&#x4E32;"><i class="fa fa-link" aria-hidden="true"></i></a>1.1. &#x5B57;&#x7B26;&#x4E32;</h2>
+<p>&#x5B57;&#x7B26;&#x4E32;&#x5168;&#x5339;&#x914D;URL&#x4E2D;&#x7684;path&#x90E8;&#x5206;&#xFF0C;&#x57FA;&#x4E8E;&#x542F;&#x52A8; Action &#x65F6;&#x7684;<code>root</code>&#x914D;&#x7F6E;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; <code>&apos;/&apos;</code>&#x3002;
+&#x4F8B;&#x5982;&#x5BF9;&#x4E8E;&#x4E0B;&#x5217;root&#x914D;&#x7F6E;&#xFF1A;</p>
+<pre><code class="lang-javascript">rt.action.start({
+    root: <span class="hljs-string">&apos;/root&apos;</span>
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>URL Pattern</th>
+<th>&#x5339;&#x914D;&#x7684;URL</th>
+<th>&#x4E0D;&#x5339;&#x914D;&#x7684;URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/foo</code></td>
+<td><code>/root/foo</code>, <code>/root/foo?author=harttle</code></td>
+<td><code>/root/foo/bar</code></td>
+</tr>
+<tr>
+<td><code>/foo/bar</code></td>
+<td><code>/root/foo/bar</code>, <code>/root/foo/bar?date=20161118</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="restful&#x5B57;&#x7B26;&#x4E32;"><a name="restful&#x5B57;&#x7B26;&#x4E32;" class="anchor-navigation-ex-anchor" href="#restful&#x5B57;&#x7B26;&#x4E32;"><i class="fa fa-link" aria-hidden="true"></i></a>1.2. RESTful&#x5B57;&#x7B26;&#x4E32;</h2>
+<p>&#x4F7F;&#x7528;RESTful&#x98CE;&#x683C;&#x5339;&#x914D;path&#x90E8;&#x5206;&#x3002;&#x4EE5;<code>root: &apos;/root&apos;</code>&#x914D;&#x7F6E;&#x4E3A;&#x4F8B;&#xFF1A;</p>
+<table>
+<thead>
+<tr>
+<th>URL Pattern</th>
+<th>&#x5339;&#x914D;&#x7684;URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/person/:id</code></td>
+<td><code>/root/person/32</code>, <code>/root/person/harttle</code></td>
+</tr>
+<tr>
+<td><code>/person/:id/code/:cid</code></td>
+<td><code>/root/person/harttle/code/2333</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;"><a name="&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;" class="anchor-navigation-ex-anchor" href="#&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;"><i class="fa fa-link" aria-hidden="true"></i></a>1.3. &#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;</h2>
+<p>&#x4F7F;&#x7528;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x5339;&#x914D;path&#x90E8;&#x5206;&#x3002;</p>
+<table>
+<thead>
+<tr>
+<th>URL Pattern</th>
+<th>&#x5339;&#x914D;&#x7684;URL</th>
+<th>&#x4E0D;&#x5339;&#x914D;&#x7684;URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/person/(\d+)</code></td>
+<td><code>/root/person/32</code></td>
+<td><code>/root/person/harttle</code></td>
+</tr>
+<tr>
+<td><code>/person/(\w+)/code/(\d+)</code></td>
+<td><code>/root/person/harttle/code/2333</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="start.html" class="navigation navigation-prev " aria-label="Previous page: 启动 Ralltiir">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="view-set-data.html" class="navigation navigation-next " aria-label="Next page: 视图设置">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"路由注册","level":"1.2.4","depth":2,"next":{"title":"视图设置","level":"1.2.5","depth":2,"path":"get-started/view-set-data.md","ref":"get-started/view-set-data.md","articles":[]},"previous":{"title":"启动 Ralltiir","level":"1.2.3","depth":2,"path":"get-started/start.md","ref":"get-started/start.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","anchor-navigation-ex","splitter","atoc","editlink","-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"editlink":{"label":"编辑此页","multilingual":false,"base":"https://github.com/Ralltiir/ralltiir/edit/master/docs/"},"atoc":{},"splitter":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"anchor-navigation-ex":{"associatedWithSummary":true,"float":{"floatIcon":"fa fa-navicon","level1Icon":"","level2Icon":"","level3Icon":"","showLevelIcon":false},"mode":"float","multipleH1":true,"pageTop":{"level1Icon":"","level2Icon":"","level3Icon":"","showLevelIcon":false},"printLog":false,"showGoTop":true,"showLevel":true},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{}},"theme":"default","author":"The Ralltiir Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Ralltiir 项目文档","language":"zh-hans","gitbook":"*","description":"Ralltiir 相关教程、设计和 API"},"file":{"path":"get-started/router.md","mtime":"2018-10-30T01:44:57.236Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-11-07T01:55:58.291Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-atoc/atoc.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-editlink/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

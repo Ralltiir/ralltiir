@@ -1,0 +1,32 @@
+.is-loading.book::before {
+    opacity: 0.7;
+    pointer-events: auto;
+}
+.book::before {
+    transition: all 500ms;
+    content: '加载中...';
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    color: #fff;
+    z-index: 999;
+    cursor: progress;
+    opacity: 0;
+    pointer-events: none;
+}
+html, html body, div.book.font-family-1 {
+    font-family:"Lantinghei SC","微软雅黑","Microsoft Yahei","文泉驿微米黑","WenQuanYi Micro Hei";
+}
+div.book.font-family-0 {
+    font-family: "仿宋", "楷体", Georgia, serif;
+}
+.markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4, .markdown-section h5, .markdown-section h6, .markdown-section b, .markdown-section strong {
+    font-weight: 600;
+}
+.book .book-summary .exc-trigger {
+    color: #ddd;
+}
