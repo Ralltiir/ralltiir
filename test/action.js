@@ -630,6 +630,18 @@ define(function (require) {
                 expect(fooSpy).to.has.been.calledWith(current.url);
                 expect(barSpy).to.has.been.calledWith(prev.url);
             });
+            it('should reuse instance incoming parameters redirecting/reseting ', function () {
+                var urla = '/foo?g=h';
+                var urlb = '/foo?j=i';
+                var reuseService = services.getOrCreate(urla);
+                expect(fooSpy).to.has.been.calledWith(urla);
+
+                action.redirect(urlb, {}, null, {service: reuseService});
+                expect(fooSpy).has.been.calledOnce;
+
+                action.redirect(prev.url, {}, null, {service: reuseService});
+                expect(barSpy).has.not.been.called;
+            });
         });
     });
 });

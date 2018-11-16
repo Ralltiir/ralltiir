@@ -30,7 +30,8 @@ define(function (require) {
             getOrCreate: getOrCreate,
             setInstanceLimit: setInstanceLimit,
             copyServiceMapping: copyServiceMapping,
-            urlEntries: null
+            urlEntries: null,
+            urlIsAndSaveServiceIns: urlIsAndSaveServiceIns
         };
         var id = 0;
 
@@ -148,6 +149,31 @@ define(function (require) {
             if (id !== undefined) {
                 url2id.set(to, id);
                 return true;
+            }
+            return false;
+        }
+        /**
+         * 判读 url是否是service实例对应
+         * @param {string} url 检测url
+         * @param {object} service service实例
+         */
+        function urlIsAndSaveServiceIns(url, service) {
+            var entry = urlEntries.get(router.pathPattern(url));
+            if (entry) {
+                var Service = entry.service;
+                var isIns = Service.singleton ? service === Service : service instanceof Service;
+                if (isIns && url2id.get(url) === undefined) {
+                    var matchInstanceId;
+                    serviceInstances.forEach(function (sval, instanceId) {
+                        if (sval === service) {
+                            matchInstanceId = instanceId;
+                        }
+                    });
+                    if (matchInstanceId) {
+                        url2id.set(url, matchInstanceId);
+                        return false;
+                    }
+                }
             }
             return false;
         }
