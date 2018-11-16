@@ -202,5 +202,13 @@ define(function (require) {
             var instance2 = services.getOrCreate('/foo?id=2');
             expect(instance).not.equals(instance2);
         });
+
+        it('should successfully urlIsAndSaveServiceIns', function () {
+            services.register('/foo', null, fooService);
+            services.register('/bar', null, barService);
+            var instance = services.getOrCreate('/foo?id=2');
+            expect(services.urlIsAndSaveServiceIns('/foo?id=3', instance)).to.be.ture;
+            expect(services.urlIsAndSaveServiceIns('/bar?id=3', instance)).to.be.false;
+        });
     });
 });

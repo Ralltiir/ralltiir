@@ -171,7 +171,7 @@ define(function (require) {
                     });
                     if (matchInstanceId) {
                         url2id.set(url, matchInstanceId);
-                        return false;
+                        return true;
                     }
                 }
             }
