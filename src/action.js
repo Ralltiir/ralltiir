@@ -245,7 +245,7 @@ define(function (require) {
 
             url = resolveUrl(url);
 
-            useService(url, data);
+            useService(url, _.get(data, 'service'));
 
             _.assign(stageData, data);
             options = _.assign({}, options, {
@@ -269,12 +269,8 @@ define(function (require) {
         };
 
         // 透传service实例, 并存储至 url2id
-        function useService(url, data) {
-            var usedServiceIns = _.get(data, 'service');
-            if (usedServiceIns) {
-                services.setInstance(router.createURL(url).toString(), usedServiceIns);
-                delete data.service;
-            }
+        function useService(url, service) {
+            service && services.setInstance(router.createURL(url).toString(), service);
         }
 
         function resolveUrl(url) {
@@ -336,7 +332,7 @@ define(function (require) {
                 return;
             }
 
-            useService(url, data);
+            useService(url, _.get(data, 'service'));
 
             if (isIndexPage) {
                 indexPageUrl = url;
