@@ -243,10 +243,9 @@ define(function (require) {
                 return;
             }
 
-
             url = resolveUrl(url);
 
-            reuseService(url, data);
+            useService(url, data);
 
             _.assign(stageData, data);
             options = _.assign({}, options, {
@@ -269,11 +268,11 @@ define(function (require) {
             }
         };
 
-        // 透传service实例, 判断合法性，并存储至 url2id
-        function reuseService(url, data) {
-            var reusedServiceIns = _.get(data, 'service');
-            if (reusedServiceIns) {
-                services.urlIsAndSaveServiceIns(router.createURL(url).toString(), reusedServiceIns);
+        // 透传service实例, 并存储至 url2id
+        function useService(url, data) {
+            var usedServiceIns = _.get(data, 'service');
+            if (usedServiceIns) {
+                services.setInstance(router.createURL(url).toString(), usedServiceIns);
                 delete data.service;
             }
         }
@@ -337,7 +336,7 @@ define(function (require) {
                 return;
             }
 
-            reuseService(url, data);
+            useService(url, data);
 
             if (isIndexPage) {
                 indexPageUrl = url;

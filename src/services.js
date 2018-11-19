@@ -31,7 +31,7 @@ define(function (require) {
             setInstanceLimit: setInstanceLimit,
             copyServiceMapping: copyServiceMapping,
             urlEntries: null,
-            urlIsAndSaveServiceIns: urlIsAndSaveServiceIns
+            setInstance: setInstance
         };
         var id = 0;
 
@@ -152,30 +152,19 @@ define(function (require) {
             }
             return false;
         }
+
         /**
-         * 判读 url是否是service实例对应
-         * @param {string} url 检测url
+         * 设置url对应service关系
+         * @param {string} url url
          * @param {object} service service实例
          */
-        function urlIsAndSaveServiceIns(url, service) {
-            var entry = urlEntries.get(router.pathPattern(url));
-            if (entry) {
-                var Service = entry.service;
-                var isIns = Service.singleton ? service === Service : service instanceof Service;
-                if (isIns && url2id.get(url) === undefined) {
-                    var matchInstanceId;
-                    serviceInstances.forEach(function (sval, instanceId) {
-                        if (sval === service) {
-                            matchInstanceId = instanceId;
-                        }
-                    });
-                    if (matchInstanceId) {
-                        url2id.set(url, matchInstanceId);
-                        return true;
-                    }
-                }
+        function setInstance(url, instance) {
+            if (instance.id !== undefined) {
+                url2id.set(url, instance.id);
             }
-            return false;
+            else {
+                addInstance(url, instance);
+            }
         }
 
         return exports;
