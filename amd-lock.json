@@ -1,6 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.13.4-0",
+  "version": "2.13.4-1",
   "dependencies": {
     "@searchfe/assert": {
       "version": "1.0.0",
@@ -11,8 +11,8 @@
       "integrity": "sha512-BuAjgs8AW1A3dvvUfaXx46rhpLWiOF/2FPL/S51Mw+Z4bV/WczfxX+LF61VD3MOSpjkhDSsAwqQ7jTxuulr0Tg=="
     },
     "@searchfe/sandbox": {
-      "version": "1.5.4",
-      "integrity": "sha512-a+g+OafJu5fkAQoKvdk86AFJHCQ6E4i5sgljObnsIX+HvlOScdlMPFHqd8eAS2fmQxgssoIuuF7pvgR1PZ9rdA=="
+      "version": "1.5.5",
+      "integrity": "sha512-KnHstdNLs8alSkSmswpe7Zd2Io9uyRUGoacu4LEa72d/OM88vI+7Wpfn8gKHHlDkdGJB2E4aRh/ctqkgUD4tkA=="
     },
     "@searchfe/underscore": {
       "version": "1.0.1",

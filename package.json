@@ -29,7 +29,7 @@
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
     "@searchfe/promise": "^1.0.3",
-    "@searchfe/sandbox": "^1.5.4",
+    "@searchfe/sandbox": "^1.5.5",
     "@searchfe/underscore": "^1.0.1"
   },
   "devDependencies": {
