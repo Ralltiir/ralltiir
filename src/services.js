@@ -30,7 +30,8 @@ define(function (require) {
             getOrCreate: getOrCreate,
             setInstanceLimit: setInstanceLimit,
             copyServiceMapping: copyServiceMapping,
-            urlEntries: null
+            urlEntries: null,
+            setInstance: setInstance
         };
         var id = 0;
 
@@ -150,6 +151,20 @@ define(function (require) {
                 return true;
             }
             return false;
+        }
+
+        /**
+         * 设置url对应service关系
+         * @param {string} url url
+         * @param {object} service service实例
+         */
+        function setInstance(url, instance) {
+            if (instance.id !== undefined) {
+                url2id.set(url, instance.id);
+            }
+            else {
+                addInstance(url, instance);
+            }
         }
 
         return exports;

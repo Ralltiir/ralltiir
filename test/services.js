@@ -202,5 +202,23 @@ define(function (require) {
             var instance2 = services.getOrCreate('/foo?id=2');
             expect(instance).not.equals(instance2);
         });
+
+        it('should successfully setInstance', function () {
+            services.register('/foo', null, fooService);
+            services.register('/bar', null, barService);
+            var urla = '/foo?id=2';
+            var urlb = '/foo?id=3';
+
+            var urlc = '/foo?id=4';
+            var urld = '/foo?id=5';
+            var instancea = services.getOrCreate(urla);
+            services.setInstance(urlb, instancea);
+            expect(services.getOrCreate(urlb)).equals(instancea);
+
+            var Service = services.urlEntries.get(router.pathPattern(urlc)).service;
+            var instanceb = new Service(urlc, {});
+            services.setInstance(urld, instanceb);
+            expect(services.getOrCreate(urld)).equals(instanceb);
+        });
     });
 });

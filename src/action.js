@@ -233,6 +233,7 @@ define(function (require) {
          * @param {boolean} options.force Optional, 是否强制跳转
          * @param {boolean} options.silent Optional, 是否静默跳转（不改变URL）
          * @param {Object} data extended data being passed to `current.options`
+         * @param {Object} data.service reuseed service instance
          * */
         exports.redirect = function (url, query, options, data) {
             logger.log('action redirecting to: ' + url);
@@ -243,6 +244,9 @@ define(function (require) {
             }
 
             url = resolveUrl(url);
+
+            useService(url, _.get(data, 'service'));
+
             _.assign(stageData, data);
             options = _.assign({}, options, {
                 id: pageId++
@@ -263,6 +267,11 @@ define(function (require) {
                 throw e;
             }
         };
+
+        // 透传service实例, 并存储至 url2id
+        function useService(url, service) {
+            service && services.setInstance(router.createURL(url).toString(), service);
+        }
 
         function resolveUrl(url) {
             var urlObj = URL.parse(url);
@@ -322,6 +331,8 @@ define(function (require) {
             if (cancled) {
                 return;
             }
+
+            useService(url, _.get(data, 'service'));
 
             if (isIndexPage) {
                 indexPageUrl = url;
