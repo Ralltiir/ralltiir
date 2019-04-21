@@ -75,10 +75,6 @@ define(function (require) {
             type: 'value',
             module: require('@searchfe/underscore')
         },
-        promise: {
-            type: 'value',
-            module: require('@searchfe/promise')
-        },
         map: {
             type: 'value',
             module: require('./lang/map')

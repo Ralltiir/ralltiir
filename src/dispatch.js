@@ -6,7 +6,6 @@
 define(function (require) {
     var transitions = require('./transitions');
     var _ = require('@searchfe/underscore');
-    var Promise = require('@searchfe/promise');
 
     return function dispatchFactory(location) {
         var dispatchQueue = mkDispatchQueue();
@@ -118,7 +117,25 @@ define(function (require) {
                     lastAbortCallback();
                 }
                 lastAbortCallback = abortCallback;
-                return Promise.mapSeries(queue, function (cb) {
+
+                var mapSeries = function (iterable, iteratee) {
+                    var ret = Promise.resolve('init');
+                    var result = [];
+                    iterable.forEach(function (item, idx) {
+                        ret = ret
+                    .then(function () {
+                        return iteratee(item, idx, iterable);
+                    })
+                    .then(function (x) {
+                        return result.push(x);
+                    });
+                    });
+                    return ret.then(function () {
+                        return result;
+                    });
+                };
+
+                return mapSeries(queue, function (cb) {
                     if (typeof cb !== 'function') {
                         return;
                     }

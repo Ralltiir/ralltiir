@@ -9,7 +9,6 @@ define(function (require) {
      */
 
     var cache = require('./utils/cache');
-    var Promise = require('@searchfe/promise');
     var assert = require('@searchfe/assert');
     var logger = require('./utils/logger');
     var _ = require('@searchfe/underscore');
