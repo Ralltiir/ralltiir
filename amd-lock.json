@@ -6,10 +6,6 @@
       "version": "1.0.0",
       "integrity": "sha512-INeZlzcMK1ainjU9FpBf8jrqq7wzFF0eDb5JCrHpp/fMzdIlbdDfhM3bprtzrSmOo/rA7AdP4Ch8p4RNxuj2jg=="
     },
-    "@searchfe/promise": {
-      "version": "1.0.3",
-      "integrity": "sha512-BuAjgs8AW1A3dvvUfaXx46rhpLWiOF/2FPL/S51Mw+Z4bV/WczfxX+LF61VD3MOSpjkhDSsAwqQ7jTxuulr0Tg=="
-    },
     "@searchfe/sandbox": {
       "version": "1.5.4",
       "integrity": "sha512-a+g+OafJu5fkAQoKvdk86AFJHCQ6E4i5sgljObnsIX+HvlOScdlMPFHqd8eAS2fmQxgssoIuuF7pvgR1PZ9rdA=="
