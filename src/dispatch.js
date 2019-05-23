@@ -163,6 +163,21 @@ define(function (require) {
          * @return {Promise} 切换完成
          */
         function dispatch(current, prev, data) {
+
+            // 如果存在守卫则调用
+            if (current.service && current.service.guard) {
+                if (current.service.guard(current, prev) === false) {
+                    return false;
+                }
+            }
+
+            // 如果存在守卫则调用
+            if (prev.service && prev.service.guard) {
+                if (prev.service.guard(current, prev) === false) {
+                    return false;
+                }
+            }
+
             var fromName = prev.service && prev.service.name;
             var toName = current.service && current.service.name;
 
