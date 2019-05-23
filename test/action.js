@@ -641,6 +641,22 @@ define(function (require) {
                 action.redirect(prev.url, {}, null, {service: reuseService});
                 expect(barSpy).has.not.been.called;
             });
+            it('dispatch break by current guard', function () {
+                var rs = dispatch({
+                    service: {
+                        guard: function () {return false; }
+                    }
+                });
+                expect(rs).to.be.equal(false);
+            });
+            it('dispatch break by prev guard', function () {
+                var rs = dispatch({}, {
+                    service: {
+                        guard: function () {return false; }
+                    }
+                });
+                expect(rs).to.be.equal(false);
+            });
         });
     });
 });
