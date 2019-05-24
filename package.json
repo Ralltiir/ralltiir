@@ -1,6 +1,6 @@
 {
   "name": "ralltiir",
-  "version": "2.13.6",
+  "version": "2.13.7",
   "discription": "前端极速浏览框架，目标是提升用户体验，提供沉浸式浏览方式。",
   "scripts": {
     "doc:install": "gitbook install ./docs",
@@ -28,6 +28,7 @@
   ],
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
+    "@searchfe/promise": "^1.0.3",
     "@searchfe/sandbox": "^1.5.4",
     "@searchfe/underscore": "^1.0.1"
   },

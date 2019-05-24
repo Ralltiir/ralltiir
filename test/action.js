@@ -10,6 +10,7 @@
 /* globals sinon: true */
 
 define(function (require) {
+    var Promise = require('@searchfe/promise');
     var _ = require('@searchfe/underscore');
     var actionFactory = require('action');
     var Emitter = require('utils/emitter');
