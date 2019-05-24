@@ -77,7 +77,7 @@ define(function (require) {
         },
         promise: {
             type: 'value',
-            module: window.Promise
+            module: require('@searchfe/promise')
         },
         map: {
             type: 'value',

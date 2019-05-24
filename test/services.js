@@ -8,6 +8,7 @@
 /* globals sinon: true */
 
 define(function (require) {
+    var Promise = require('@searchfe/promise');
     var routerFactory = require('router/router');
     var servicesFactory = require('services');
 
