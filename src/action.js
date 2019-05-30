@@ -234,11 +234,12 @@ define(function (require) {
          * @param {boolean} options.silent Optional, 是否静默跳转（不改变URL）
          * @param {Object} data extended data being passed to `current.options`
          * @param {Object} data.service reuseed service instance
+         * @param {string} target The original URL to redirect
          * */
-        exports.redirect = function (url, query, options, data) {
+        exports.redirect = function (url, query, options, data, target) {
             logger.log('action redirecting to: ' + url);
 
-            var cancled = exports.emit('redirecting', url, query, options);
+            var cancled = exports.emit('redirecting', url, query, options, target);
             if (cancled) {
                 return;
             }
