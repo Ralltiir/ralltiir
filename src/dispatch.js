@@ -117,7 +117,7 @@ define(function (require) {
                     lastAbortCallback();
                 }
                 lastAbortCallback = abortCallback;
-                
+
                 var mapSeries = function (iterable, iteratee) {
                     var ret = Promise.resolve('init');
                     var result = [];
