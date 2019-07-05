@@ -393,13 +393,15 @@ define(function (require) {
                 var url = 'xx';
                 var query = 'bb';
                 var options = {};
-                action.once('redirecting', function (u, q, opt) {
+                var extra = {foo: 'bar'};
+                action.once('redirecting', function (u, q, opt, target, data) {
                     expect(u).to.equal(url);
                     expect(q).to.equal(query);
                     expect(JSON.stringify(opt)).to.equal(JSON.stringify(options));
+                    expect(JSON.stringify(data)).to.equal(JSON.stringify(extra));
                     done();
                 });
-                action.redirect(url, query, options);
+                action.redirect(url, query, options, extra);
             });
             it('should "redirectFailed" event with url', function (done) {
                 function fn() {
