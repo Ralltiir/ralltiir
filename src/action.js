@@ -239,7 +239,7 @@ define(function (require) {
         exports.redirect = function (url, query, options, data, target) {
             logger.log('action redirecting to: ' + url);
 
-            var cancled = exports.emit('redirecting', url, query, options, target);
+            var cancled = exports.emit('redirecting', url, query, options, target, data);
             if (cancled) {
                 return;
             }
