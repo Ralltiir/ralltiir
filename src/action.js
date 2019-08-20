@@ -10,7 +10,6 @@ define(function (require) {
 
     var cache = require('./utils/cache');
     var assert = require('@searchfe/assert');
-    var Promise = require('@searchfe/promise');
     var logger = require('./utils/logger');
     var _ = require('@searchfe/underscore');
     var dom = require('./utils/dom');
