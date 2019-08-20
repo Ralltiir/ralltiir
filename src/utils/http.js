@@ -6,7 +6,6 @@
 
 define(function (require) {
     var _ = require('@searchfe/underscore');
-    var Promise = require('@searchfe/promise');
     var Url = require('./url');
     var exports = {};
 
