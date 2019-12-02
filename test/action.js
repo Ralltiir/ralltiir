@@ -382,7 +382,6 @@ define(function (require) {
                 function fn() {
                     action.redirect('/not-defined-service', {}, {});
                 }
-                expect(fn).to.throw(/service not found/);
                 try {
                     fn();
                 }
