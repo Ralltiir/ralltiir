@@ -263,9 +263,13 @@ define(function (require) {
             }
             catch (e) {
                 e.url = URL.resolve(config.root, url);
-                location.replace(e.url);
+
+                setTimeout(function () {
+                    location.replace(e.url);
+                }, 0);
+
                 exports.emit('redirectFailed', e);
-                throw e;
+                // throw e;
             }
         };
 
