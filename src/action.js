@@ -263,7 +263,6 @@ define(function (require) {
             }
             catch (e) {
                 e.url = URL.resolve(config.root, url);
-                location.replace(e.url);
                 exports.emit('redirectFailed', e);
                 // throw e;
             }
